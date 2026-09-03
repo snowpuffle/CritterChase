@@ -7,6 +7,7 @@ import javafx.scene.layout.Pane;
 
 import models.levels.Level;
 import models.levels.Level_1;
+import models.utils.Direction;
 
 // GameController Controls Gameplay and User Input
 public class GameController {
@@ -102,15 +103,20 @@ public class GameController {
     }
 
     private boolean handleMovement(String playerInput) {
+
         switch (playerInput) {
             case "w":
-                return level.movePlayer(Level.UP, Level.NO_MOVEMENT);
+                return level.movePlayer(Direction.UP);
+
             case "a":
-                return level.movePlayer(Level.NO_MOVEMENT, Level.LEFT);
+                return level.movePlayer(Direction.LEFT);
+
             case "s":
-                return level.movePlayer(Level.DOWN, Level.NO_MOVEMENT);
+                return level.movePlayer(Direction.DOWN);
+
             case "d":
-                return level.movePlayer(Level.NO_MOVEMENT, Level.RIGHT);
+                return level.movePlayer(Direction.RIGHT);
+
             default:
                 return false;
         }

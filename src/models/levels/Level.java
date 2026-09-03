@@ -7,6 +7,7 @@ import models.objects.Food;
 import models.utils.GameObjectType;
 import models.utils.LevelBuilder;
 import models.utils.EnemyManager;
+import models.utils.Direction;
 import models.entities.Player;
 
 // Level Owns the Player, Board, Score, Health, and Level Mechanics.
@@ -15,13 +16,6 @@ public abstract class Level {
     // Board Dimensions
     protected static final int WIDTH = 15;
     protected static final int HEIGHT = 15;
-
-    // Movement Constants
-    public static final int UP = -1;
-    public static final int DOWN = 1;
-    public static final int LEFT = -1;
-    public static final int RIGHT = 1;
-    public static final int NO_MOVEMENT = 0;
 
     // Level Components
     protected final Player player;
@@ -53,41 +47,30 @@ public abstract class Level {
     }
 
     // Move Player
-    public boolean movePlayer(int rowChange, int colChange) {
+    public boolean movePlayer(Direction direction) {
 
         // Calculate New Position
-        int newRow = player.getRow() + rowChange;
-        int newCol = player.getCol() + colChange;
+        int newRow = player.getRow() + direction.getRowChange();
+        int newCol = player.getCol() + direction.getColChange();
 
-        // Check if the New Position is Valid and Handle Collisions
-        if (!gameBoard.isValidPosition(
-                newRow,
-                newCol)) {
+        // Check if the New Position is Valid
+        if (!gameBoard.isValidPosition(newRow, newCol)) {
             return false;
         }
 
         // Handle Player Collision with Enemies
-        if (enemyManager.handlePlayerCollision(
-                newRow,
-                newCol)) {
-
+        if (enemyManager.handlePlayerCollision(newRow, newCol)) {
             return false;
         }
 
         // Handle Player Collision with Static Objects
-        if (!handleCollision(
-                newRow,
-                newCol)) {
-
+        if (!handleCollision(newRow, newCol)) {
             return false;
         }
 
-        // Move the Player to the New Position
-        player.move(
-                rowChange,
-                colChange);
+        // Move the Player
+        player.move(direction.getRowChange(), direction.getColChange());
 
-        // Return True to Indicate Successful Movement
         return true;
     }
 
