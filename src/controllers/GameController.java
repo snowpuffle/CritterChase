@@ -31,67 +31,35 @@ public class GameController {
     // Start Level 1
     private void startLevel() {
 
-        // Create Level 1
         level = new Level_1();
 
-        // Create Level Renderer
-        levelRenderer = new LevelRenderer(gamePane, level.getPlayer(), level.getEnemyManager(), level.getGameBoard());
+        levelRenderer = new LevelRenderer(
+                gamePane,
+                level.getPlayer(),
+                level.getEnemyManager(),
+                level.getGameBoard());
 
-        // Draw Level
         levelRenderer.drawLevel();
 
-        // Enable Keyboard Input
         gamePane.setFocusTraversable(true);
         gamePane.requestFocus();
 
-        // Handle Keyboard Input
-        gamePane.setOnKeyPressed(event -> handleKeyPress(event.getCode()));
-    }
-
-    // Convert JavaFX KeyCode into Player Input
-    private String convertKeyToInput(KeyCode keyCode) {
-
-        switch (keyCode) {
-
-            // Move the Player Up
-            case W:
-            case UP:
-                return "w";
-
-            // Move the Player Left
-            case A:
-            case LEFT:
-                return "a";
-
-            // Move the Player Down
-            case S:
-            case DOWN:
-                return "s";
-
-            // Move the Player Right
-            case D:
-            case RIGHT:
-                return "d";
-
-            // Invalid Input
-            default:
-                return null;
-        }
+        gamePane.setOnKeyPressed(
+                event -> handleKeyPress(event.getCode()));
     }
 
     // Handle Keyboard Input
     private void handleKeyPress(KeyCode keyCode) {
 
-        // Convert JavaFX KeyCode into Player Input
-        String playerInput = convertKeyToInput(keyCode);
+        Direction direction = convertKeyToDirection(keyCode);
 
         // Ignore Invalid Input
-        if (playerInput == null) {
+        if (direction == null) {
             return;
         }
 
         // Move the Player
-        boolean moved = handleMovement(playerInput);
+        boolean moved = level.movePlayer(direction);
 
         // Stop if Player Did Not Move
         if (!moved) {
@@ -102,23 +70,28 @@ public class GameController {
         levelRenderer.drawLevel();
     }
 
-    private boolean handleMovement(String playerInput) {
+    // Convert JavaFX KeyCode into Game Direction
+    private Direction convertKeyToDirection(KeyCode keyCode) {
 
-        switch (playerInput) {
-            case "w":
-                return level.movePlayer(Direction.UP);
+        switch (keyCode) {
+            case W:
+            case UP:
+                return Direction.UP;
 
-            case "a":
-                return level.movePlayer(Direction.LEFT);
+            case A:
+            case LEFT:
+                return Direction.LEFT;
 
-            case "s":
-                return level.movePlayer(Direction.DOWN);
+            case S:
+            case DOWN:
+                return Direction.DOWN;
 
-            case "d":
-                return level.movePlayer(Direction.RIGHT);
+            case D:
+            case RIGHT:
+                return Direction.RIGHT;
 
             default:
-                return false;
+                return null;
         }
     }
 }
