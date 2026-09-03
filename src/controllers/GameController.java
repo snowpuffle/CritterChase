@@ -2,107 +2,107 @@ package controllers;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import models.Maze;
 
+import models.levels.Level;
+import models.levels.Level_1;
+
+// GameController Controls Gameplay and User Input
 public class GameController {
 
+    // Game Pane
     @FXML
     private Pane gamePane;
 
-    private final Maze maze = new Maze();
+    // Current Level
+    private Level level;
 
-    private final Image woodWallImage = new Image("file:lib/assets/walls/wood_wall.png");
+    // Level Renderer
+    private LevelRenderer levelRenderer;
 
-    private final Image clayWallImage = new Image("file:lib/assets/walls/clay_wall.png");
-
-    private final Image exitImage = new Image("file:lib/assets/others/exit.png");
-
-    private final Image mouseImage = new Image("file:lib/assets/animals/mouse.png");
-
-    private final Image catImage = new Image("file:lib/assets/animals/cat.png");
-
-    private final Image cheeseImage = new Image("file:lib/assets/food/cheese.png");
-
+    // Initialize the Game
     @FXML
     public void initialize() {
-        Platform.runLater(this::drawLevel);
+        Platform.runLater(this::startLevel);
     }
 
-    private void drawLevel() {
+    // Start Level 1
+    private void startLevel() {
 
-        gamePane.getChildren().clear();
+        // Create Level 1
+        level = new Level_1();
 
-        char[][] layout = maze.getLevel1();
+        // Create Level Renderer
+        levelRenderer = new LevelRenderer(gamePane, level.getPlayer(), level.getEnemyManager(), level.getGameBoard());
 
-        double tileSize = 35;
+        // Draw Level
+        levelRenderer.drawLevel();
 
-        double mazeWidth = layout[0].length * tileSize;
-        double mazeHeight = layout.length * tileSize;
+        // Enable Keyboard Input
+        // gamePane.setFocusTraversable(true);
+        // gamePane.requestFocus();
 
-        double offsetX = (gamePane.getWidth() - mazeWidth) / 2;
-        double offsetY = (gamePane.getHeight() - mazeHeight) / 2;
-
-        for (int row = 0; row < layout.length; row++) {
-
-            for (int col = 0; col < layout[row].length; col++) {
-
-                char tile = layout[row][col];
-
-                double x = offsetX + col * tileSize;
-                double y = offsetY + row * tileSize;
-
-                switch (tile) {
-
-                    case '#':
-                        addImage(woodWallImage, x, y, tileSize);
-                        break;
-
-                    case '%':
-                        addImage(clayWallImage, x, y, tileSize);
-                        break;
-
-                    case 'F':
-                        addImage(cheeseImage, x, y, tileSize);
-                        break;
-
-                    case 'P':
-                        addImage(mouseImage, x, y, tileSize);
-                        break;
-
-                    case 'E':
-                        addImage(catImage, x, y, tileSize);
-                        break;
-
-                    case 'X':
-                        addImage(exitImage, x, y, tileSize);
-                        break;
-
-                    case ' ':
-                        // Empty space
-                        break;
-                }
-            }
-        }
+        // Handle Keyboard Input
+        // gamePane.setOnKeyPressed(event -> handleKeyPress(event.getCode()));
     }
 
-    private void addImage(
-            Image image,
-            double x,
-            double y,
-            double size) {
+    // Handle Keyboard Input
+    // private void handleKeyPress(KeyCode keyCode) {
 
-        ImageView imageView = new ImageView(image);
+    // boolean moved = false;
 
-        imageView.setFitWidth(size);
-        imageView.setFitHeight(size);
+    // switch (keyCode) {
 
-        imageView.setX(x);
-        imageView.setY(y);
+    // // Move Player Up
+    // case W:
+    // case UP:
+    // moved = level.movePlayer(
+    // Level.UP,
+    // Level.NO_MOVEMENT);
+    // break;
 
-        gamePane.getChildren().add(imageView);
-    }
+    // // Move Player Left
+    // case A:
+    // case LEFT:
+    // moved = level.movePlayer(
+    // Level.NO_MOVEMENT,
+    // Level.LEFT);
+    // break;
 
+    // // Move Player Down
+    // case S:
+    // case DOWN:
+    // moved = level.movePlayer(
+    // Level.DOWN,
+    // Level.NO_MOVEMENT);
+    // break;
+
+    // // Move Player Right
+    // case D:
+    // case RIGHT:
+    // moved = level.movePlayer(
+    // Level.NO_MOVEMENT,
+    // Level.RIGHT);
+    // break;
+
+    // default:
+    // return;
+    // }
+
+    // // Stop if Player Did Not Move
+    // if (!moved) {
+    // return;
+    // }
+
+    // // Check if Level is Complete
+    // if (level.isLevelComplete()) {
+    // return;
+    // }
+
+    // // Move Enemies
+    // level.moveEnemies();
+
+    // // Redraw Level
+    // levelRenderer.drawLevel();
+    // }
 }

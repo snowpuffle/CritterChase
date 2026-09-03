@@ -31,6 +31,7 @@ public abstract class Level {
     protected final String levelName;
     protected final EnemyManager enemyManager;
 
+    // Level Renderer
     private final LevelBuilder levelBuilder;
 
     // Level Constructor

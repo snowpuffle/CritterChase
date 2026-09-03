@@ -71,19 +71,23 @@ public class BFSPathFinder {
     // Check if the Enemy Can Move to the Specified Position
     private boolean canEnemyMoveTo(int row, int col, List<Enemy> enemies) {
 
-        // Check if the Position is Occupied by an Enemy
+        // Position must be inside the game board
+        if (!gameBoard.isValidPosition(row, col)) {
+            return false;
+        }
+
+        // Position must not contain a game object
         if (gameBoard.getGameObjectAt(row, col) != null) {
             return false;
         }
 
-        // Check if the Position is Occupied by a Wall
+        // Position must not contain another enemy
         for (Enemy enemy : enemies) {
-
-            // Check if the Enemy is at the Specified Position
             if (enemy.getRow() == row && enemy.getCol() == col) {
                 return false;
             }
         }
+
         return true;
     }
 
