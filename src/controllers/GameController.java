@@ -2,6 +2,7 @@ package controllers;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 
 import models.levels.Level;
@@ -39,70 +40,79 @@ public class GameController {
         levelRenderer.drawLevel();
 
         // Enable Keyboard Input
-        // gamePane.setFocusTraversable(true);
-        // gamePane.requestFocus();
+        gamePane.setFocusTraversable(true);
+        gamePane.requestFocus();
 
         // Handle Keyboard Input
-        // gamePane.setOnKeyPressed(event -> handleKeyPress(event.getCode()));
+        gamePane.setOnKeyPressed(event -> handleKeyPress(event.getCode()));
+    }
+
+    // Convert JavaFX KeyCode into Player Input
+    private String convertKeyToInput(KeyCode keyCode) {
+
+        switch (keyCode) {
+
+            // Move the Player Up
+            case W:
+            case UP:
+                return "w";
+
+            // Move the Player Left
+            case A:
+            case LEFT:
+                return "a";
+
+            // Move the Player Down
+            case S:
+            case DOWN:
+                return "s";
+
+            // Move the Player Right
+            case D:
+            case RIGHT:
+                return "d";
+
+            // Invalid Input
+            default:
+                return null;
+        }
     }
 
     // Handle Keyboard Input
-    // private void handleKeyPress(KeyCode keyCode) {
+    private void handleKeyPress(KeyCode keyCode) {
 
-    // boolean moved = false;
+        // Convert JavaFX KeyCode into Player Input
+        String playerInput = convertKeyToInput(keyCode);
 
-    // switch (keyCode) {
+        // Ignore Invalid Input
+        if (playerInput == null) {
+            return;
+        }
 
-    // // Move Player Up
-    // case W:
-    // case UP:
-    // moved = level.movePlayer(
-    // Level.UP,
-    // Level.NO_MOVEMENT);
-    // break;
+        // Move the Player
+        boolean moved = handleMovement(playerInput);
 
-    // // Move Player Left
-    // case A:
-    // case LEFT:
-    // moved = level.movePlayer(
-    // Level.NO_MOVEMENT,
-    // Level.LEFT);
-    // break;
+        // Stop if Player Did Not Move
+        if (!moved) {
+            return;
+        }
 
-    // // Move Player Down
-    // case S:
-    // case DOWN:
-    // moved = level.movePlayer(
-    // Level.DOWN,
-    // Level.NO_MOVEMENT);
-    // break;
+        // Redraw Level
+        levelRenderer.drawLevel();
+    }
 
-    // // Move Player Right
-    // case D:
-    // case RIGHT:
-    // moved = level.movePlayer(
-    // Level.NO_MOVEMENT,
-    // Level.RIGHT);
-    // break;
-
-    // default:
-    // return;
-    // }
-
-    // // Stop if Player Did Not Move
-    // if (!moved) {
-    // return;
-    // }
-
-    // // Check if Level is Complete
-    // if (level.isLevelComplete()) {
-    // return;
-    // }
-
-    // // Move Enemies
-    // level.moveEnemies();
-
-    // // Redraw Level
-    // levelRenderer.drawLevel();
-    // }
+    private boolean handleMovement(String playerInput) {
+        switch (playerInput) {
+            case "w":
+                return level.movePlayer(Level.UP, Level.NO_MOVEMENT);
+            case "a":
+                return level.movePlayer(Level.NO_MOVEMENT, Level.LEFT);
+            case "s":
+                return level.movePlayer(Level.DOWN, Level.NO_MOVEMENT);
+            case "d":
+                return level.movePlayer(Level.NO_MOVEMENT, Level.RIGHT);
+            default:
+                return false;
+        }
+    }
 }
