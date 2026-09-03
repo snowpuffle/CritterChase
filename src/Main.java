@@ -1,22 +1,22 @@
+import controllers.SceneManager;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+// Main Class for the Critter Chase Application
+// Initializes the Application and Sets Up the Initial Scene
 public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
 
-        FXMLLoader loader = new FXMLLoader(
-                getClass().getResource("/views/welcome.fxml")
-        );
+        // Set the Primary Stage in the SceneManager
+        SceneManager.setStage(stage);
 
-        Scene scene = new Scene(loader.load());
+        // Show the Initial Scene (Welcome Screen)
+        SceneManager.show("welcome.fxml");
 
+        // Set the Title of the Application Window
         stage.setTitle("Critter Chase");
-        stage.setScene(scene);
-        stage.show();
     }
 
     public static void main(String[] args) {

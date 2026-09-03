@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" spacing="20.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.HowToController">
+   <children>
+      <Label text="HOW TO PLAY?">
+         <font>
+            <Font name="System Bold" size="36.0" />
+         </font>
+      </Label>
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0">
+         <children>
+            <Label text="🐾 Welcome to Critter Chase! 🐾">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label text="Move your animal around the maze and collect food.">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label text="Avoid the enemy animals chasing you!">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label text="Collect all the food to win the level.">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label text="Use the Arrow Keys or [WASD] to move.">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+      <Button fx:id="backButton" mnemonicParsing="false" onAction="#handleBack" prefHeight="50.0" prefWidth="250.0" text="BACK TO MAIN MENU">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+   </children>
+</VBox>

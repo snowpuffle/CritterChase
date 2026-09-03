@@ -5,10 +5,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-    minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" spacing="20.0"
-    xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" spacing="20.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.MenuController">
     <children>
         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0">
             <children>
@@ -26,19 +23,17 @@
         </VBox>
         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0">
             <children>
-                <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="250.0"
-                    text="START GAME">
+                <Button fx:id="startButton" mnemonicParsing="false" onAction="#handleStartGame" prefHeight="50.0" prefWidth="250.0" text="START GAME">
                     <font>
                         <Font size="18.0" />
                     </font>
                 </Button>
-                <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="250.0"
-                    text="HOW TO PLAY">
+                <Button fx:id="howToButton" mnemonicParsing="false" onAction="#handleHowTo" prefHeight="50.0" prefWidth="250.0" text="HOW TO PLAY">
                     <font>
                         <Font size="18.0" />
                     </font>
                 </Button>
-                <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="250.0" text="EXIT GAME">
+                <Button fx:id="exitButton" mnemonicParsing="false" onAction="#handleExit" prefHeight="50.0" prefWidth="250.0" text="EXIT GAME">
                     <font>
                         <Font size="18.0" />
                     </font>
