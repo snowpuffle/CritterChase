@@ -10,16 +10,17 @@ import javafx.scene.layout.Pane;
 import models.entities.Enemy;
 import models.entities.Player;
 import models.objects.GameObject;
-import models.utils.GameBoard;
 import models.utils.EnemyManager;
+import models.utils.GameBoard;
 
-// LevelRenderer Class Responsible for Rendering the Game Level
+// Level Renderer is Responsible for Rendering the Current Game Level
 public class LevelRenderer {
 
-    // Game Pane to Render the Level
-    private final Pane gamePane;
+    // Tile Size Used to Determine the Size of Each Game Object
+    private static final double TILE_SIZE = 30.0;
 
-    // Game Objects Needed for Rendering
+    // Game State and JavaFX Game Pane
+    private final Pane gamePane;
     private final Player player;
     private final EnemyManager enemyManager;
     private final GameBoard gameBoard;
@@ -33,13 +34,10 @@ public class LevelRenderer {
     // ImageViews for Enemies
     private final Map<Enemy, ImageView> enemyViews;
 
-    // Tile Size
-    private static final double TILE_SIZE = 30;
-
-    // Cache Images so They Are Only Loaded Once
+    // Image Cache Used to Prevent Loading the Same Image Multiple Times
     private final Map<String, Image> imageCache = new HashMap<>();
 
-    // LevelRenderer Constructor
+    // Level Renderer Constructor
     public LevelRenderer(Pane gamePane, Player player, EnemyManager enemyManager, GameBoard gameBoard) {
 
         this.gamePane = gamePane;
@@ -47,56 +45,53 @@ public class LevelRenderer {
         this.enemyManager = enemyManager;
         this.gameBoard = gameBoard;
 
-        // Create ImageView Storage for Static Objects
-        this.objectViews = new ImageView[gameBoard.getHeight()][gameBoard.getWidth()];
+        // Create Storage for Static Game Object Views
+        objectViews = new ImageView[gameBoard.getHeight()][gameBoard.getWidth()];
 
-        // Create ImageView Storage for Enemies
-        this.enemyViews = new HashMap<>();
+        // Create Storage for Enemy Views
+        enemyViews = new HashMap<>();
 
-        // Cache All Images Used by the Level
-        cacheImages();
-
-        // Create ImageView for Player
-        this.playerView = createImageView(player.getImagePath());
+        // Create the Player ImageView
+        playerView = createImageView(player.getImagePath());
     }
 
     // Draw the Level for the First Time
     public void drawLevel() {
 
-        // Clear the Game Pane
+        // Clear Any Existing Views from the Game Pane
         gamePane.getChildren().clear();
 
-        // Calculate the Maze Offset
+        // Calculate the Offsets Needed to Center the Maze
         double offsetX = calculateOffsetX();
         double offsetY = calculateOffsetY();
 
-        // Create Static Game Object Views
+        // Create Views for Static Game Objects
         createObjectViews(offsetX, offsetY);
 
-        // Create Enemy Views
+        // Create Views for Enemies
         createEnemyViews(offsetX, offsetY);
 
-        // Add Player View
+        // Set the Initial Player Position
         updatePlayerView(offsetX, offsetY);
 
-        // Add Static Objects to the Pane
+        // Add Static Game Object Views to the Game Pane
         addObjectViewsToPane();
 
-        // Add Enemy Views to the Pane
+        // Add Enemy Views to the Game Pane
         addEnemyViewsToPane();
 
-        // Add Player View to the Pane
+        // Add the Player View Last so the Player Appears Above Other Objects
         gamePane.getChildren().add(playerView);
     }
 
-    // Update the Existing Level After a Game State Change
+    // Update the Existing Level Views After a Game State Change
     public void updateLevel() {
 
-        // Calculate the Current Maze Offset
+        // Recalculate the Offsets in Case the Game Pane Size Changes
         double offsetX = calculateOffsetX();
         double offsetY = calculateOffsetY();
 
-        // Update Static Game Objects
+        // Update Static Game Object Visibility
         updateObjectViews();
 
         // Update Enemy Positions
@@ -106,47 +101,50 @@ public class LevelRenderer {
         updatePlayerView(offsetX, offsetY);
     }
 
-    // Create ImageViews for Static Game Objects
+    // Create ImageViews for the Static Game Objects on the Board
     private void createObjectViews(double offsetX, double offsetY) {
 
         for (int row = 0; row < gameBoard.getHeight(); row++) {
             for (int col = 0; col < gameBoard.getWidth(); col++) {
 
+                // Get the Game Object at the Current Board Position
                 GameObject object = gameBoard.getGameObjectAt(row, col);
 
+                // Skip Empty Board Positions
                 if (object == null) {
                     continue;
                 }
 
+                // Create the ImageView Using the Object's Image
                 ImageView imageView = createImageView(object.getImagePath());
 
-                setImageViewPosition(
-                        imageView,
-                        row,
-                        col,
-                        offsetX,
-                        offsetY);
+                // Position the ImageView on the Game Board
+                setImageViewPosition(imageView, row, col, offsetX, offsetY);
 
+                // Store the ImageView for Later Updates
                 objectViews[row][col] = imageView;
             }
         }
     }
 
-    // Update Static Game Object Views
+    // Update the Visibility of Existing Static Game Object Views
     private void updateObjectViews() {
 
         for (int row = 0; row < gameBoard.getHeight(); row++) {
             for (int col = 0; col < gameBoard.getWidth(); col++) {
 
+                // Get the Existing ImageView
                 ImageView imageView = objectViews[row][col];
-                GameObject object = gameBoard.getGameObjectAt(row, col);
 
-                // No Existing View
+                // Skip Positions Without an ImageView
                 if (imageView == null) {
                     continue;
                 }
 
-                // Hide the View if the Object Has Been Removed
+                // Check Whether a Game Object Still Exists at This Position
+                GameObject object = gameBoard.getGameObjectAt(row, col);
+
+                // Hide the ImageView When the Game Object Has Been Removed
                 imageView.setVisible(object != null);
             }
         }
@@ -157,30 +155,37 @@ public class LevelRenderer {
 
         for (Enemy enemy : enemyManager.getEnemies()) {
 
+            // Create the Enemy ImageView
             ImageView imageView = createImageView(enemy.getImagePath());
 
-            setImageViewPosition(
-                    imageView,
-                    enemy.getRow(),
-                    enemy.getCol(),
-                    offsetX,
-                    offsetY);
+            // Position the Enemy on the Game Board
+            setImageViewPosition(imageView, enemy.getRow(), enemy.getCol(), offsetX, offsetY);
 
+            // Store the Enemy View for Later Updates
             enemyViews.put(enemy, imageView);
         }
     }
 
-    // Update All Enemy Positions
+    // Update Enemy Positions and Create Views for New Enemies
     private void updateEnemyViews(double offsetX, double offsetY) {
 
         for (Enemy enemy : enemyManager.getEnemies()) {
 
+            // Get the Existing ImageView for the Enemy
             ImageView imageView = enemyViews.get(enemy);
 
+            // Create a View if the Enemy Does Not Have One
             if (imageView == null) {
-                continue;
+
+                imageView = createImageView(enemy.getImagePath());
+
+                enemyViews.put(enemy, imageView);
+
+                // Add the New Enemy View to the Game Pane
+                gamePane.getChildren().add(imageView);
             }
 
+            // Update the Enemy's Position
             setImageViewPosition(
                     imageView,
                     enemy.getRow(),
@@ -190,25 +195,23 @@ public class LevelRenderer {
         }
     }
 
-    // Update Player Position
+    // Update the Player's Position
     private void updatePlayerView(double offsetX, double offsetY) {
 
-        setImageViewPosition(
-                playerView,
-                player.getRow(),
-                player.getCol(),
-                offsetX,
-                offsetY);
+        // Position the Player Based on the Current Board Coordinates
+        setImageViewPosition(playerView, player.getRow(), player.getCol(), offsetX, offsetY);
     }
 
-    // Add Static Object Views to the Game Pane
+    // Add Static Game Object Views to the Game Pane
     private void addObjectViewsToPane() {
 
         for (int row = 0; row < gameBoard.getHeight(); row++) {
             for (int col = 0; col < gameBoard.getWidth(); col++) {
 
+                // Get the ImageView at the Current Board Position
                 ImageView imageView = objectViews[row][col];
 
+                // Add the ImageView if One Exists
                 if (imageView != null) {
                     gamePane.getChildren().add(imageView);
                 }
@@ -220,6 +223,7 @@ public class LevelRenderer {
     private void addEnemyViewsToPane() {
 
         for (ImageView imageView : enemyViews.values()) {
+
             gamePane.getChildren().add(imageView);
         }
     }
@@ -227,17 +231,25 @@ public class LevelRenderer {
     // Create an ImageView Using a Cached Image
     private ImageView createImageView(String imagePath) {
 
-        ImageView imageView = new ImageView(imageCache.get(imagePath));
+        // Retrieve the Image from the Cache or Load it if Needed
+        Image image = imageCache.computeIfAbsent(
+                imagePath,
+                path -> new Image(path));
 
+        // Create an ImageView Using the Cached Image
+        ImageView imageView = new ImageView(image);
+
+        // Set the ImageView Size to Match the Game Tile Size
         imageView.setFitWidth(TILE_SIZE);
         imageView.setFitHeight(TILE_SIZE);
 
         return imageView;
     }
 
-    // Set the Position of an ImageView
+    // Position an ImageView Using the Game Board Coordinates
     private void setImageViewPosition(ImageView imageView, int row, int col, double offsetX, double offsetY) {
 
+        // Calculate the X and Y Position Based on the Row and Column
         imageView.setX(offsetX + col * TILE_SIZE);
         imageView.setY(offsetY + row * TILE_SIZE);
     }
@@ -245,48 +257,20 @@ public class LevelRenderer {
     // Calculate the Horizontal Offset Needed to Center the Maze
     private double calculateOffsetX() {
 
+        // Calculate the Total Width of the Maze
         double mazeWidth = gameBoard.getWidth() * TILE_SIZE;
 
+        // Center the Maze Horizontally Within the Game Pane
         return (gamePane.getWidth() - mazeWidth) / 2;
     }
 
     // Calculate the Vertical Offset Needed to Center the Maze
     private double calculateOffsetY() {
 
+        // Calculate the Total Height of the Maze
         double mazeHeight = gameBoard.getHeight() * TILE_SIZE;
 
+        // Center the Maze Vertically Within the Game Pane
         return (gamePane.getHeight() - mazeHeight) / 2;
-    }
-
-    // Cache All Images Used by the Level
-    private void cacheImages() {
-
-        // Cache Player Image
-        cacheImage(player.getImagePath());
-
-        // Cache Enemy Images
-        for (Enemy enemy : enemyManager.getEnemies()) {
-            cacheImage(enemy.getImagePath());
-        }
-
-        // Cache Game Object Images
-        for (int row = 0; row < gameBoard.getHeight(); row++) {
-            for (int col = 0; col < gameBoard.getWidth(); col++) {
-
-                GameObject object = gameBoard.getGameObjectAt(row, col);
-
-                if (object != null) {
-                    cacheImage(object.getImagePath());
-                }
-            }
-        }
-    }
-
-    // Cache a Single Image
-    private void cacheImage(String imagePath) {
-
-        if (!imageCache.containsKey(imagePath)) {
-            imageCache.put(imagePath, new Image(imagePath));
-        }
     }
 }
