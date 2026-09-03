@@ -39,6 +39,7 @@ public class GameController {
                 level.getEnemyManager(),
                 level.getGameBoard());
 
+        // Draw Level First Time
         levelRenderer.drawLevel();
 
         gamePane.setFocusTraversable(true);
@@ -67,7 +68,7 @@ public class GameController {
         }
 
         // Redraw Level
-        levelRenderer.drawLevel();
+        levelRenderer.updateLevel();
     }
 
     // Convert JavaFX KeyCode into Game Direction
