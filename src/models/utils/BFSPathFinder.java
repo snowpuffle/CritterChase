@@ -1,12 +1,10 @@
 package models.utils;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Queue;
 
-// BFSPathFinder Finds the Shortest Path through the Maze.
+// BFSPathFinder Finds the Shortest Distance from the Player to Every Reachable Position.
 public class BFSPathFinder {
 
     // Game Board
@@ -17,84 +15,73 @@ public class BFSPathFinder {
         this.gameBoard = gameBoard;
     }
 
-    // Find the Shortest Path to the Target
-    public List<int[]> findPath(int startRow, int startCol, int targetRow, int targetCol,
-            EnemyManager enemyManager) {
+    // Create a Distance Map Starting from the Player
+    public int[][] createDistanceMap(int playerRow, int playerCol, EnemyManager enemyManager) {
 
         int height = gameBoard.getHeight();
         int width = gameBoard.getWidth();
 
-        // Track Visited Positions
-        boolean[][] visited = new boolean[height][width];
+        // Distance to Each Position
+        int[][] distances = new int[height][width];
 
-        // Track the Previous Position for Each Cell to Reconstruct the Path
-        int[][] previousRow = new int[height][width];
-        int[][] previousCol = new int[height][width];
-
-        // Initialize Previous Positions to -1 (indicating no previous position)
+        // Initialize All Distances as -1
         for (int row = 0; row < height; row++) {
-            for (int col = 0; col < width; col++) {
-                previousRow[row][col] = -1;
-                previousCol[row][col] = -1;
-            }
+            Arrays.fill(distances[row], -1);
         }
 
-        // Create BFS Queue
+        // BFS Queue
         Queue<int[]> queue = new ArrayDeque<>();
-        queue.add(new int[] { startRow, startCol });
-        visited[startRow][startCol] = true;
+
+        // Start BFS at the Player's Position
+        distances[playerRow][playerCol] = 0;
+        queue.add(new int[] { playerRow, playerCol });
 
         // Perform BFS
         while (!queue.isEmpty()) {
 
-            // Get Current Position
             int[] current = queue.remove();
+
             int row = current[0];
             int col = current[1];
 
-            // Check if Target is Reached
-            if (row == targetRow && col == targetCol) {
-                return buildPath(startRow, startCol, targetRow, targetCol, previousRow, previousCol);
-            }
-
-            // Explore Neighbors
+            // Explore Neighboring Positions
             for (Direction direction : Direction.values()) {
 
                 int newRow = row + direction.getRowChange();
                 int newCol = col + direction.getColChange();
 
-                // Check if Enemy Can Move to the New Position
-                if (!canEnemyMoveTo(newRow, newCol, enemyManager)) {
+                // Skip Positions the Enemy Cannot Enter
+                if (!canEnemyMoveTo(newRow, newCol, enemyManager, playerRow, playerCol)) {
                     continue;
                 }
 
-                // Check if Already Visited
-                if (visited[newRow][newCol]) {
+                // Skip Positions Already Visited
+                if (distances[newRow][newCol] != -1) {
                     continue;
                 }
 
-                // Mark as Visited and Store Previous Position
-                visited[newRow][newCol] = true;
+                // Set Distance from Player
+                distances[newRow][newCol] = distances[row][col] + 1;
 
-                // Store the Previous Position for Path Reconstruction
-                previousRow[newRow][newCol] = row;
-                previousCol[newRow][newCol] = col;
-
-                // Add to Queue
+                // Add Position to Queue
                 queue.add(new int[] { newRow, newCol });
             }
         }
 
-        // No Path Found
-        return Collections.emptyList();
+        return distances;
     }
 
-    // Check if Enemy Can Move to a Position
-    private boolean canEnemyMoveTo(int row, int col, EnemyManager enemyManager) {
+    // Check if an Enemy Can Move Through a Position
+    private boolean canEnemyMoveTo(int row, int col, EnemyManager enemyManager, int playerRow, int playerCol) {
 
         // Check if Position is Valid
         if (!gameBoard.isValidPosition(row, col)) {
             return false;
+        }
+
+        // Always Allow the Player's Position
+        if (row == playerRow && col == playerCol) {
+            return true;
         }
 
         // Check if Position is Occupied by a Game Object
@@ -102,49 +89,8 @@ public class BFSPathFinder {
             return false;
         }
 
-        // Check if Position is Occupied by Another Enemy
-        if (enemyManager.getEnemyAt(row, col) != null) {
-            return false;
-        }
-
+        // Enemy positions are intentionally allowed during BFS.
+        // Enemy occupancy is checked later when choosing the actual movement position.
         return true;
-    }
-
-    // Build the Path from Start to Target
-    private List<int[]> buildPath(int startRow, int startCol, int targetRow, int targetCol, int[][] previousRow,
-            int[][] previousCol) {
-
-        // List to Store the Path
-        List<int[]> path = new ArrayList<>();
-
-        // Start from the Target Position
-        int currentRow = targetRow;
-        int currentCol = targetCol;
-
-        // Backtrack from Target to Start Using Previous Positions
-        while (currentRow != startRow || currentCol != startCol) {
-
-            // Add Current Position to Path
-            path.add(new int[] { currentRow, currentCol });
-
-            // Get Previous Position
-            int nextRow = previousRow[currentRow][currentCol];
-            int nextCol = previousCol[currentRow][currentCol];
-
-            // No Path Found (Should Not Happen if BFS is Correct)
-            if (nextRow == -1 || nextCol == -1) {
-                return Collections.emptyList();
-            }
-
-            // Move to Previous Position
-            currentRow = nextRow;
-            currentCol = nextCol;
-        }
-
-        // Reverse to get Start -> Target
-        Collections.reverse(path);
-
-        // Return the Path
-        return path;
     }
 }

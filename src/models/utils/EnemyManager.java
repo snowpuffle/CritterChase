@@ -70,14 +70,20 @@ public class EnemyManager {
     // Move All Enemies
     public void moveEnemies() {
 
-        // Move Each Enemy Toward the Player
+        // Create One BFS Distance Map from the Player
+        int[][] distanceMap = pathFinder.createDistanceMap(
+                player.getRow(),
+                player.getCol(),
+                this);
+
+        // Move Each Enemy Using the Same Distance Map
         for (Enemy enemy : enemies) {
-            moveEnemy(enemy);
+            moveEnemy(enemy, distanceMap);
         }
     }
 
-    // Move One Enemy Toward the Player
-    private void moveEnemy(Enemy enemy) {
+    // Move One Enemy Toward the Player Using the Shared Distance Map
+    private void moveEnemy(Enemy enemy, int[][] distanceMap) {
 
         // Attack the Player if Adjacent
         if (isAdjacentToPlayer(enemy)) {
@@ -85,34 +91,88 @@ public class EnemyManager {
             return;
         }
 
-        // Find the Shortest Path to the Player
-        List<int[]> path = pathFinder.findPath(enemy.getRow(), enemy.getCol(), player.getRow(), player.getCol(),
-                this);
+        // Find the Best Neighboring Position
+        int[] nextPosition = findNextPosition(enemy, distanceMap);
 
-        // No Path Found
-        if (path.isEmpty()) {
+        // No Valid Position Found
+        if (nextPosition == null) {
             return;
         }
 
-        // Get the Next Position
-        int[] nextPosition = path.get(0);
-
-        // Move the Enemy to the Next Position
+        // Get Current Position
         int oldRow = enemy.getRow();
         int oldCol = enemy.getCol();
 
-        // Get the New Position
+        // Get New Position
         int newRow = nextPosition[0];
         int newCol = nextPosition[1];
 
         // Remove Enemy from Its Old Position
         enemyPositions[oldRow][oldCol] = null;
 
-        // Move the Enemy
+        // Move Enemy
         enemy.setPosition(newRow, newCol);
 
         // Store Enemy at Its New Position
         enemyPositions[newRow][newCol] = enemy;
+    }
+
+    // Find the Best Next Position for an Enemy
+    private int[] findNextPosition(Enemy enemy, int[][] distanceMap) {
+
+        int currentRow = enemy.getRow();
+        int currentCol = enemy.getCol();
+
+        int currentDistance = distanceMap[currentRow][currentCol];
+
+        // If the Enemy Cannot Reach the Player
+        if (currentDistance == -1) {
+            return null;
+        }
+
+        int bestRow = currentRow;
+        int bestCol = currentCol;
+        int bestDistance = currentDistance;
+
+        // Check Each Possible Direction
+        for (Direction direction : Direction.values()) {
+
+            int newRow = currentRow + direction.getRowChange();
+            int newCol = currentCol + direction.getColChange();
+
+            // Skip Invalid Positions
+            if (!gameBoard.isValidPosition(newRow, newCol)) {
+                continue;
+            }
+
+            int newDistance = distanceMap[newRow][newCol];
+
+            // Skip Unreachable Positions
+            if (newDistance == -1) {
+                continue;
+            }
+
+            // Skip Positions Occupied by Another Enemy
+            Enemy otherEnemy = getEnemyAt(newRow, newCol);
+
+            if (otherEnemy != null && otherEnemy != enemy) {
+                continue;
+            }
+
+            // Move Toward the Player
+            if (newDistance < bestDistance) {
+                bestDistance = newDistance;
+                bestRow = newRow;
+                bestCol = newCol;
+            }
+        }
+
+        // No Better Position Found
+        if (bestRow == currentRow && bestCol == currentCol) {
+            return null;
+        }
+
+        return new int[] { bestRow, bestCol };
     }
 
     // Damage the Player
