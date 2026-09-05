@@ -68,14 +68,21 @@ public class GameController {
         // Move the Player
         boolean moved = level.movePlayer(direction);
 
+        // Check if the Player Died from Enemy Collision
+        if (!level.getHealth().isAlive()) {
+            handleGameOver();
+            return;
+        }
+
         // Stop if Player Did Not Move
         if (!moved) {
             return;
         }
 
+        // Move Enemies
         level.moveEnemies();
 
-        // Check if the Player Died
+        // Check if the Player Died from Enemy Attack
         if (!level.getHealth().isAlive()) {
             handleGameOver();
             return;
@@ -112,17 +119,21 @@ public class GameController {
 
     // Handle Game Over
     private void handleGameOver() {
-        try {
-            Parent root = FXMLLoader.load(
-                    getClass().getResource("/views/gameOver.fxml"));
 
-            Stage stage = (Stage) gamePane.getScene().getWindow();
+        System.out.println("Game Over!");
 
-            stage.setScene(new Scene(root));
-            stage.show();
+        // Switch to Game Over Scene
+        Platform.runLater(() -> {
+            try {
+                // Load the Game Over FXML and Set the Scene
+                Parent root = FXMLLoader.load(getClass().getResource("/views/gameOver.fxml"));
+                Stage stage = (Stage) gamePane.getScene().getWindow();
+                stage.setScene(new Scene(root));
+                stage.show();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }
