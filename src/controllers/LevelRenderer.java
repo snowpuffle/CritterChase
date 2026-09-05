@@ -94,7 +94,7 @@ public class LevelRenderer {
         // Update Static Game Object Visibility
         updateObjectViews();
 
-        // Update Enemy Positions
+        // Update Enemy Positions and Remove Deleted Enemy Views
         updateEnemyViews(offsetX, offsetY);
 
         // Update Player Position
@@ -159,16 +159,36 @@ public class LevelRenderer {
             ImageView imageView = createImageView(enemy.getImagePath());
 
             // Position the Enemy on the Game Board
-            setImageViewPosition(imageView, enemy.getRow(), enemy.getCol(), offsetX, offsetY);
+            setImageViewPosition(imageView, enemy.getRow(), enemy.getCol(), offsetX,
+                    offsetY);
 
             // Store the Enemy View for Later Updates
             enemyViews.put(enemy, imageView);
         }
     }
 
-    // Update Enemy Positions and Create Views for New Enemies
+    // Update Enemy Positions and Remove Views for Deleted Enemies
     private void updateEnemyViews(double offsetX, double offsetY) {
 
+        // Remove ImageViews for Enemies That No Longer Exist
+        enemyViews.entrySet().removeIf(entry -> {
+
+            Enemy enemy = entry.getKey();
+            ImageView imageView = entry.getValue();
+
+            // Keep the View if the Enemy Still Exists
+            if (enemyManager.getEnemies().contains(enemy)) {
+                return false;
+            }
+
+            // Remove the View from the Game Pane
+            gamePane.getChildren().remove(imageView);
+
+            // Remove the Enemy/View Entry from the Map
+            return true;
+        });
+
+        // Update Existing Enemies and Create Views for New Enemies
         for (Enemy enemy : enemyManager.getEnemies()) {
 
             // Get the Existing ImageView for the Enemy
@@ -199,7 +219,12 @@ public class LevelRenderer {
     private void updatePlayerView(double offsetX, double offsetY) {
 
         // Position the Player Based on the Current Board Coordinates
-        setImageViewPosition(playerView, player.getRow(), player.getCol(), offsetX, offsetY);
+        setImageViewPosition(
+                playerView,
+                player.getRow(),
+                player.getCol(),
+                offsetX,
+                offsetY);
     }
 
     // Add Static Game Object Views to the Game Pane
@@ -223,7 +248,6 @@ public class LevelRenderer {
     private void addEnemyViewsToPane() {
 
         for (ImageView imageView : enemyViews.values()) {
-
             gamePane.getChildren().add(imageView);
         }
     }

@@ -39,7 +39,7 @@ public class Level_1 extends Level {
     public Level_1() {
 
         // Create the Level Player and Pass It to the Parent Level
-        super(new Player(1, 1, playerImage), LEVEL_NAME);
+        super(new Player(1, 1, playerImage), 1);
 
         // Create the Level Objects and Place Them on the Game Board
         createLevelObjects(MAZE, foodImage, enemyImage, wallImage1, wallImage2, exitImage);

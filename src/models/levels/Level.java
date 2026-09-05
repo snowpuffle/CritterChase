@@ -22,19 +22,19 @@ public abstract class Level {
     protected final GameBoard gameBoard;
     protected final Score score;
     protected final Health health;
-    protected final String levelName;
+    protected final int levelNumber;
     protected final EnemyManager enemyManager;
 
     // Level Renderer
     private final LevelBuilder levelBuilder;
 
     // Level Constructor
-    protected Level(Player player, String levelName) {
+    protected Level(Player player, int levelNumber) {
         this.gameBoard = new GameBoard(WIDTH, HEIGHT);
         this.player = player;
         this.score = new Score();
         this.health = new Health(100);
-        this.levelName = levelName;
+        this.levelNumber = levelNumber;
         this.enemyManager = new EnemyManager(player, gameBoard, health);
         this.levelBuilder = new LevelBuilder(gameBoard, enemyManager);
     }
@@ -137,8 +137,8 @@ public abstract class Level {
         return health;
     }
 
-    public String getLevelName() {
-        return levelName;
+    public int getLevelNumber() {
+        return levelNumber;
     }
 
     public EnemyManager getEnemyManager() {

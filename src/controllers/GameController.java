@@ -1,15 +1,10 @@
 package controllers;
 
-import java.io.IOException;
-
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 import models.levels.Level;
 import models.levels.Level_1;
 import models.utils.Direction;
@@ -20,6 +15,16 @@ public class GameController {
     // Game Pane
     @FXML
     private Pane gamePane;
+
+    // HUD Labels
+    @FXML
+    private Label scoreLabel;
+
+    @FXML
+    private Label healthLabel;
+
+    @FXML
+    private Label levelLabel;
 
     // Current Level
     private Level level;
@@ -68,6 +73,9 @@ public class GameController {
         // Move the Player
         boolean moved = level.movePlayer(direction);
 
+        // Update the Health and Score Immediately
+        updateHUD();
+
         // Check if the Player Died from Enemy Collision
         if (!level.getHealth().isAlive()) {
             handleGameOver();
@@ -84,12 +92,16 @@ public class GameController {
 
         // Check if the Player Died from Enemy Attack
         if (!level.getHealth().isAlive()) {
+            updateHUD();
             handleGameOver();
             return;
         }
 
         // Redraw Level
         levelRenderer.updateLevel();
+
+        // Update the Health and Score
+        updateHUD();
     }
 
     // Convert JavaFX KeyCode into Game Direction
@@ -120,20 +132,17 @@ public class GameController {
     // Handle Game Over
     private void handleGameOver() {
 
-        System.out.println("Game Over!");
+        // Show Game Over Scene
+        try {
+            SceneManager.show("gameOver.fxml");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-        // Switch to Game Over Scene
-        Platform.runLater(() -> {
-            try {
-                // Load the Game Over FXML and Set the Scene
-                Parent root = FXMLLoader.load(getClass().getResource("/views/gameOver.fxml"));
-                Stage stage = (Stage) gamePane.getScene().getWindow();
-                stage.setScene(new Scene(root));
-                stage.show();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+    private void updateHUD() {
+        scoreLabel.setText("SCORE: " + level.getScore().getPoints());
+        levelLabel.setText("LEVEL: " + level.getLevelNumber());
+        healthLabel.setText("HEALTH: " + level.getHealth().getCurrentHealth());
     }
 }
