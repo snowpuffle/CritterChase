@@ -6,8 +6,8 @@ import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import models.levels.Level;
-import models.levels.Level_1;
 import models.utils.Direction;
+import models.utils.LevelFactory;
 
 // GameController Controls Gameplay and User Input
 public class GameController {
@@ -41,22 +41,17 @@ public class GameController {
     // Start Level 1
     private void startLevel() {
 
-        level = new Level_1();
-
-        levelRenderer = new LevelRenderer(
-                gamePane,
-                level.getPlayer(),
-                level.getEnemyManager(),
-                level.getGameBoard());
+        // Create Level 1
+        level = LevelFactory.createLevel(1);
+        levelRenderer = new LevelRenderer(gamePane, level.getPlayer(), level.getEnemyManager(), level.getGameBoard());
 
         // Draw Level First Time
         levelRenderer.drawLevel();
-
         gamePane.setFocusTraversable(true);
         gamePane.requestFocus();
 
-        gamePane.setOnKeyPressed(
-                event -> handleKeyPress(event.getCode()));
+        // Set Key Press Event Handler
+        gamePane.setOnKeyPressed(event -> handleKeyPress(event.getCode()));
     }
 
     // Handle Keyboard Input
@@ -70,38 +65,31 @@ public class GameController {
             return;
         }
 
-        // Move the Player
-        boolean moved = level.movePlayer(direction);
+        // Process the Turn
+        boolean moved = level.takeTurn(direction);
 
-        // Update the Health and Score Immediately
-        updateHUD();
-
-        // Check if the Player Died from Enemy Collision
-        if (!level.getHealth().isAlive()) {
-            handleGameOver();
-            return;
-        }
-
-        // Stop if Player Did Not Move
+        // Stop if the Player Did Not Move
         if (!moved) {
             return;
         }
 
-        // Move Enemies
-        level.moveEnemies();
-
-        // Check if the Player Died from Enemy Attack
+        // Check if the Player Died During the Turn
         if (!level.getHealth().isAlive()) {
             updateHUD();
             handleGameOver();
             return;
         }
 
-        // Redraw Level
+        // Update the Level Renderer
         levelRenderer.updateLevel();
 
-        // Update the Health and Score
+        // Update the HUD
         updateHUD();
+
+        // Check if the Level is Complete
+        if (level.isLevelComplete()) {
+            // Level completion logic will go here later
+        }
     }
 
     // Convert JavaFX KeyCode into Game Direction

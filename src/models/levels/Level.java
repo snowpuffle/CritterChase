@@ -46,6 +46,23 @@ public abstract class Level {
         levelBuilder.build(maze, foodImage, enemyImage, wallImage1, wallImage2, exitImage);
     }
 
+    // Process One Complete Player Turn
+    public boolean takeTurn(Direction direction) {
+
+        // Move the Player
+        boolean moved = movePlayer(direction);
+
+        // Stop if the Player Could Not Move
+        if (!moved) {
+            return false;
+        }
+        // Move Enemies After the Player Moves
+        moveEnemies();
+
+        // Return True if the Turn Was Processed
+        return true;
+    }
+
     // Move Player
     public boolean movePlayer(Direction direction) {
 
