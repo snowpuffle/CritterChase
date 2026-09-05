@@ -87,7 +87,7 @@ public class EnemyManager {
 
         // Find the Shortest Path to the Player
         List<int[]> path = pathFinder.findPath(enemy.getRow(), enemy.getCol(), player.getRow(), player.getCol(),
-                enemies);
+                this);
 
         // No Path Found
         if (path.isEmpty()) {

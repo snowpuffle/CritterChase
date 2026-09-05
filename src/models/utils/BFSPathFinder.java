@@ -3,178 +3,148 @@ package models.utils;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
-import java.util.Set;
 
-import models.entities.Enemy;
-
-// BFSPathFinder Finds the Shortest Path Through the Maze.
+// BFSPathFinder Finds the Shortest Path through the Maze.
 public class BFSPathFinder {
 
+    // Game Board
     private final GameBoard gameBoard;
 
+    // BFSPathFinder Constructor
     public BFSPathFinder(GameBoard gameBoard) {
         this.gameBoard = gameBoard;
     }
 
     // Find the Shortest Path to the Target
-    public List<int[]> findPath(int startRow, int startCol, int targetRow, int targetCol, List<Enemy> enemies) {
+    public List<int[]> findPath(int startRow, int startCol, int targetRow, int targetCol,
+            EnemyManager enemyManager) {
 
-        // Create a Queue for BFS and a Set to Track Visited Positions
-        Queue<int[]> queue = createQueue(startRow, startCol);
-        Set<String> visited = new HashSet<>();
-        Map<String, String> previous = new HashMap<>();
+        int height = gameBoard.getHeight();
+        int width = gameBoard.getWidth();
 
-        // Mark the Starting Position as Visited
-        visited.add(key(startRow, startCol));
+        // Track Visited Positions
+        boolean[][] visited = new boolean[height][width];
 
-        // Perform BFS to Find the Shortest Path
-        while (!queue.isEmpty()) {
+        // Track the Previous Position for Each Cell to Reconstruct the Path
+        int[][] previousRow = new int[height][width];
+        int[][] previousCol = new int[height][width];
 
-            // Get the Current Position from the Queue
-            int[] current = queue.remove();
-
-            // Check if the Current Position is the Target Position
-            if (isTarget(current, targetRow, targetCol)) {
-                return buildPath(previous, key(startRow, startCol), key(targetRow, targetCol));
+        // Initialize Previous Positions to -1 (indicating no previous position)
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                previousRow[row][col] = -1;
+                previousCol[row][col] = -1;
             }
-
-            // Explore the Neighbors of the Current Position
-            exploreNeighbors(current, queue, visited, previous, enemies);
         }
 
-        // Return an Empty List if No Path is Found
+        // Create BFS Queue
+        Queue<int[]> queue = new ArrayDeque<>();
+        queue.add(new int[] { startRow, startCol });
+        visited[startRow][startCol] = true;
+
+        // Perform BFS
+        while (!queue.isEmpty()) {
+
+            // Get Current Position
+            int[] current = queue.remove();
+            int row = current[0];
+            int col = current[1];
+
+            // Check if Target is Reached
+            if (row == targetRow && col == targetCol) {
+                return buildPath(startRow, startCol, targetRow, targetCol, previousRow, previousCol);
+            }
+
+            // Explore Neighbors
+            for (Direction direction : Direction.values()) {
+
+                int newRow = row + direction.getRowChange();
+                int newCol = col + direction.getColChange();
+
+                // Check if Enemy Can Move to the New Position
+                if (!canEnemyMoveTo(newRow, newCol, enemyManager)) {
+                    continue;
+                }
+
+                // Check if Already Visited
+                if (visited[newRow][newCol]) {
+                    continue;
+                }
+
+                // Mark as Visited and Store Previous Position
+                visited[newRow][newCol] = true;
+
+                // Store the Previous Position for Path Reconstruction
+                previousRow[newRow][newCol] = row;
+                previousCol[newRow][newCol] = col;
+
+                // Add to Queue
+                queue.add(new int[] { newRow, newCol });
+            }
+        }
+
+        // No Path Found
         return Collections.emptyList();
     }
 
     // Check if Enemy Can Move to a Position
-    private boolean canEnemyMoveTo(int row, int col, List<Enemy> enemies) {
+    private boolean canEnemyMoveTo(int row, int col, EnemyManager enemyManager) {
 
-        // Check if the Position is Valid and Not Occupied by a Wall or Another Enemy
+        // Check if Position is Valid
         if (!gameBoard.isValidPosition(row, col)) {
             return false;
         }
 
-        // Check if the Position is Occupied by a Wall
+        // Check if Position is Occupied by a Game Object
         if (gameBoard.getGameObjectAt(row, col) != null) {
             return false;
         }
 
-        // Prevent Enemies from Walking Through Each Other
-        for (Enemy enemy : enemies) {
-
-            // Check if the Position is Occupied by Another Enemy
-            if (enemy.getRow() == row && enemy.getCol() == col) {
-                return false;
-            }
+        // Check if Position is Occupied by Another Enemy
+        if (enemyManager.getEnemyAt(row, col) != null) {
+            return false;
         }
 
         return true;
     }
 
-    // Build the Path from the Start Position to the Target
-    private List<int[]> buildPath(Map<String, String> previous, String startKey, String targetKey) {
+    // Build the Path from Start to Target
+    private List<int[]> buildPath(int startRow, int startCol, int targetRow, int targetCol, int[][] previousRow,
+            int[][] previousCol) {
 
-        // Create a List to Store the Path
+        // List to Store the Path
         List<int[]> path = new ArrayList<>();
 
-        // Start Backtracking from the Target Position
-        String currentKey = targetKey;
+        // Start from the Target Position
+        int currentRow = targetRow;
+        int currentCol = targetCol;
 
-        // Backtrack from the Target to the Start
-        while (!currentKey.equals(startKey)) {
+        // Backtrack from Target to Start Using Previous Positions
+        while (currentRow != startRow || currentCol != startCol) {
 
-            // Split the Current Key into Row and Column
-            String[] position = currentKey.split(",");
+            // Add Current Position to Path
+            path.add(new int[] { currentRow, currentCol });
 
-            // Convert Row and Column to Integers
-            int row = Integer.parseInt(position[0]);
-            int col = Integer.parseInt(position[1]);
+            // Get Previous Position
+            int nextRow = previousRow[currentRow][currentCol];
+            int nextCol = previousCol[currentRow][currentCol];
 
-            // Add the Current Position to the Path
-            path.add(new int[] { row, col });
-
-            // Move to the Previous Position
-            currentKey = previous.get(currentKey);
-
-            // No Path Found
-            if (currentKey == null) {
+            // No Path Found (Should Not Happen if BFS is Correct)
+            if (nextRow == -1 || nextCol == -1) {
                 return Collections.emptyList();
             }
+
+            // Move to Previous Position
+            currentRow = nextRow;
+            currentCol = nextCol;
         }
 
-        // Reverse the Path to Get the Correct Order from Start to Target
+        // Reverse to get Start -> Target
         Collections.reverse(path);
 
+        // Return the Path
         return path;
-    }
-
-    // Create a Queue for BFS Starting from the Given Position
-    private Queue<int[]> createQueue(int row, int col) {
-
-        // Create a Queue for BFS
-        Queue<int[]> queue = new ArrayDeque<>();
-
-        // Add the Starting Position to the Queue
-        queue.add(new int[] { row, col });
-
-        // Return the Queue
-        return queue;
-    }
-
-    // Check if the Given Position is the Target Position
-    private boolean isTarget(int[] position, int targetRow, int targetCol) {
-        return position[0] == targetRow && position[1] == targetCol;
-    }
-
-    // Explore the Neighbors of the Current Position
-    private void exploreNeighbors(int[] current, Queue<int[]> queue, Set<String> visited, Map<String, String> previous,
-            List<Enemy> enemies) {
-
-        // Get the Current Row and Column
-        int row = current[0];
-        int col = current[1];
-
-        // Generate a Unique Key for the Current Position
-        String currentKey = key(row, col);
-
-        // Explore Each Direction (Up, Down, Left, Right)
-        for (Direction direction : Direction.values()) {
-
-            // Calculate the New Position Based on the Direction
-            int newRow = row + direction.getRowChange();
-            int newCol = col + direction.getColChange();
-
-            // Check if the New Position is Valid and Not Visited
-            if (!canEnemyMoveTo(newRow, newCol, enemies)) {
-                continue;
-            }
-
-            // Generate a Unique Key for the New Position
-            String newKey = key(newRow, newCol);
-
-            // Skip if the New Position has Already Been Visited
-            if (visited.contains(newKey)) {
-                continue;
-            }
-
-            // Mark the New Position as Visited and Record the Previous Position
-            visited.add(newKey);
-
-            // Record the Previous Position for Backtracking
-            previous.put(newKey, currentKey);
-
-            // Add the New Position to the Queue for Further Exploration
-            queue.add(new int[] { newRow, newCol });
-        }
-    }
-
-    // Generate a Unique Key for a Position
-    private String key(int row, int col) {
-        return row + "," + col;
     }
 }
