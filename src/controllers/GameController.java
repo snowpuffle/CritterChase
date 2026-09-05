@@ -67,6 +67,8 @@ public class GameController {
             return;
         }
 
+        level.moveEnemies();
+
         // Redraw Level
         levelRenderer.updateLevel();
     }

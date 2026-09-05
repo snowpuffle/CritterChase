@@ -1,6 +1,7 @@
 package models.utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import models.entities.Enemy;
@@ -30,7 +31,14 @@ public class EnemyManager {
 
     // Add an Enemy
     public void addEnemy(Enemy enemy) {
-        enemies.add(enemy);
+        if (enemy != null) {
+            enemies.add(enemy);
+        }
+    }
+
+    // Remove an Enemy
+    public void removeEnemy(Enemy enemy) {
+        enemies.remove(enemy);
     }
 
     // Move All Enemies
@@ -66,13 +74,10 @@ public class EnemyManager {
         // Get the Next Position
         int[] nextPosition = path.get(0);
 
-        int newRow = nextPosition[0];
-        int newCol = nextPosition[1];
-
         // Move the Enemy One Space
-        enemy.move(
-                newRow - enemy.getRow(),
-                newCol - enemy.getCol());
+        enemy.setPosition(
+                nextPosition[0],
+                nextPosition[1]);
     }
 
     // Damage the Player
@@ -110,7 +115,6 @@ public class EnemyManager {
 
             if (enemy.getRow() == row
                     && enemy.getCol() == col) {
-
                 return enemy;
             }
         }
@@ -120,6 +124,6 @@ public class EnemyManager {
 
     // Get All Enemies
     public List<Enemy> getEnemies() {
-        return enemies;
+        return Collections.unmodifiableList(enemies);
     }
 }
