@@ -9,12 +9,23 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
+// GameOverController Controls the Game Over / Game Won Screen
 public class GameOverController {
 
     @FXML
     private Button backButton;
+
+    @FXML
+    private Label resultLabel;
+
+    // Set the Result Message (Game Over or Game Won)
+    @FXML
+    public void setResult(String result) {
+        resultLabel.setText(result);
+    }
 
     @FXML
     private void handleMainMenu(ActionEvent event) throws IOException {

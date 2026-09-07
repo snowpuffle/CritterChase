@@ -13,9 +13,6 @@ public class Level_1 extends Level {
     private static final String wallImage2 = "file:lib/assets/walls/clay_wall.png";
     private static final String exitImage = "file:lib/assets/others/exit.png";
 
-    // Level Information
-    private static final String LEVEL_NAME = "CHEESE CHASE";
-
     // Level 1 Maze Layout - 1 Enemy
     private static final char[][] MAZE = {
             { '#', '#', '#', '%', '#', '#', '#', '#', '%', '#', '#', '#', '#', '#', '#' },

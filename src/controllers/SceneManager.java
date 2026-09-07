@@ -1,4 +1,5 @@
 package controllers;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -15,18 +16,21 @@ public class SceneManager {
         stage = primaryStage;
     }
 
-    // Shows a New Scene based on the Provided FXML File
-    public static void show(String fxmlFile) throws Exception {
+    // Shows a New Scene and Returns Its Controller
+    public static Object show(String fxmlFile) throws Exception {
 
-        // Load the FXML File and Create a New Scene.
+        // Load the FXML File
         FXMLLoader loader = new FXMLLoader(
                 SceneManager.class.getResource("/views/" + fxmlFile));
 
-        // Create a New Scene from the Loaded FXML
+        // Create a New Scene
         Scene scene = new Scene(loader.load());
 
-        // Set the New Scene on the Primary Stage and Show it
+        // Set the New Scene on the Primary Stage
         stage.setScene(scene);
         stage.show();
+
+        // Return the Controller Created by FXMLLoader
+        return loader.getController();
     }
 }

@@ -12,11 +12,10 @@ import models.utils.LevelFactory;
 // GameController Controls Gameplay and User Input
 public class GameController {
 
-    // Game Pane
+    // JavaFX UI Elements
     @FXML
     private Pane gamePane;
 
-    // HUD Labels
     @FXML
     private Label scoreLabel;
 
@@ -26,11 +25,11 @@ public class GameController {
     @FXML
     private Label levelLabel;
 
-    // Current Level
+    // Game Controller Attributes
     private Level level;
-
-    // Level Renderer
     private LevelRenderer levelRenderer;
+    private int currentLevelNumber = 1;
+    private static final int MAX_LEVEL = 2;
 
     // Initialize the Game
     @FXML
@@ -38,15 +37,22 @@ public class GameController {
         Platform.runLater(this::startLevel);
     }
 
-    // Start Level 1
+    // Start the Level
     private void startLevel() {
 
-        // Create Level 1
-        level = LevelFactory.createLevel(1);
+        // Create the Current Level
+        level = LevelFactory.createLevel(currentLevelNumber);
+
+        // Create the Level Renderer
         levelRenderer = new LevelRenderer(gamePane, level.getPlayer(), level.getEnemyManager(), level.getGameBoard());
 
         // Draw Level First Time
         levelRenderer.drawLevel();
+
+        // Update the HUD
+        updateHUD();
+
+        // Set Focus to the Game Pane for Keyboard Input
         gamePane.setFocusTraversable(true);
         gamePane.requestFocus();
 
@@ -88,7 +94,7 @@ public class GameController {
 
         // Check if the Level is Complete
         if (level.isLevelComplete()) {
-            // Level completion logic will go here later
+            startNextLevel();
         }
     }
 
@@ -117,20 +123,50 @@ public class GameController {
         }
     }
 
+    // Start the Next Level or Complete the Game
+    private void startNextLevel() {
+
+        // Check if the Player Completed the Final Level
+        if (currentLevelNumber >= MAX_LEVEL) {
+            handleGameWon();
+            return;
+        }
+
+        // Move to the Next Level
+        currentLevelNumber++;
+
+        // Start the Next Level
+        startLevel();
+    }
+
+    // Update the HUD Labels
+    private void updateHUD() {
+        scoreLabel.setText("SCORE: " + level.getScore().getPoints());
+        levelLabel.setText("LEVEL: " + level.getLevelNumber());
+        healthLabel.setText("HEALTH: " + level.getHealth().getCurrentHealth());
+    }
+
     // Handle Game Over
     private void handleGameOver() {
-
-        // Show Game Over Scene
         try {
-            SceneManager.show("gameOver.fxml");
+            GameOverController controller = (GameOverController) SceneManager.show("gameover.fxml");
+
+            controller.setResult("GAME OVER");
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void updateHUD() {
-        scoreLabel.setText("SCORE: " + level.getScore().getPoints());
-        levelLabel.setText("LEVEL: " + level.getLevelNumber());
-        healthLabel.setText("HEALTH: " + level.getHealth().getCurrentHealth());
+    // Handle Game Won
+    private void handleGameWon() {
+        try {
+            GameOverController controller = (GameOverController) SceneManager.show("gameover.fxml");
+
+            controller.setResult("GAME WON!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
