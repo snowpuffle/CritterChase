@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import models.entities.Player;
 import models.objects.Score;
 import models.utils.Direction;
 
@@ -17,29 +16,34 @@ class LevelTest {
     private static class TestLevel extends Level {
 
         // Test Level Constructor
-        TestLevel(Player player, Score score) {
-            super(player, 1, score);
+        TestLevel(Score score) {
+            super(createTestDefinition(), score);
+        }
+
+        // Create Test Level Definition
+        private static LevelDefinition createTestDefinition() {
 
             // Create Test Level Maze
             char[][] maze = {
-                    {'P', ' ', 'F', ' ', 'X'},
-                    {'#', '#', 'F', '#', '#'},
-                    {' ', ' ', ' ', ' ', ' '},
-                    {' ', ' ', ' ', ' ', ' '},
-                    {' ', ' ', ' ', ' ', ' '}
+                    { ' ', ' ', 'F', ' ', 'X' },
+                    { '#', '#', 'F', '#', '#' },
+                    { ' ', ' ', ' ', ' ', ' ' },
+                    { ' ', ' ', ' ', ' ', ' ' },
+                    { ' ', ' ', ' ', ' ', ' ' }
             };
 
-            // Build Test Level Objects
-            createLevelObjects(
-                    maze,
+            // Return Test Level Definition
+            return new LevelDefinition(
+                    1,
+                    0,
+                    0,
+                    "player.png",
                     "food.png",
                     "enemy.png",
                     "wall1.png",
                     "wall2.png",
-                    "exit.png");
-
-            // Calculate Maximum Level Score
-            calculateAndStoreMaxScore();
+                    "exit.png",
+                    maze);
         }
     }
 
@@ -47,11 +51,11 @@ class LevelTest {
     @Test
     void validMovementMovesPlayer() {
 
-        // Create Player
-        Player player = new Player(0, 0, "player.png");
-
         // Create Test Level
-        TestLevel level = new TestLevel(player, new Score());
+        TestLevel level = new TestLevel(new Score());
+
+        // Get Player
+        var player = level.getPlayer();
 
         // Move Player Right
         boolean moved = level.movePlayer(Direction.RIGHT);
@@ -70,11 +74,11 @@ class LevelTest {
     @Test
     void invalidMovementDoesNotMovePlayer() {
 
-        // Create Player
-        Player player = new Player(0, 0, "player.png");
-
         // Create Test Level
-        TestLevel level = new TestLevel(player, new Score());
+        TestLevel level = new TestLevel(new Score());
+
+        // Get Player
+        var player = level.getPlayer();
 
         // Attempt to Move Player Through Wall
         boolean moved = level.movePlayer(Direction.DOWN);
@@ -93,15 +97,14 @@ class LevelTest {
     @Test
     void turnProcessesPlayerMovement() {
 
-        // Create Player
-        Player player = new Player(0, 0, "player.png");
-
         // Create Test Level
-        TestLevel level = new TestLevel(player, new Score());
+        TestLevel level = new TestLevel(new Score());
+
+        // Get Player
+        var player = level.getPlayer();
 
         // Process Player Turn
-        boolean turnProcessed =
-                level.takeTurn(Direction.RIGHT);
+        boolean turnProcessed = level.takeTurn(Direction.RIGHT);
 
         // Verify Turn Was Processed
         assertTrue(turnProcessed);
@@ -117,11 +120,11 @@ class LevelTest {
     @Test
     void levelIsCompleteWhenPlayerReachesExit() {
 
-        // Create Player
-        Player player = new Player(0, 0, "player.png");
-
         // Create Test Level
-        TestLevel level = new TestLevel(player, new Score());
+        TestLevel level = new TestLevel(new Score());
+
+        // Get Player
+        var player = level.getPlayer();
 
         // Move Player Onto Exit
         player.setPosition(0, 4);
@@ -134,11 +137,8 @@ class LevelTest {
     @Test
     void levelIsNotCompleteBeforeReachingExit() {
 
-        // Create Player
-        Player player = new Player(0, 0, "player.png");
-
         // Create Test Level
-        TestLevel level = new TestLevel(player, new Score());
+        TestLevel level = new TestLevel(new Score());
 
         // Verify Level is Not Complete
         assertFalse(level.isLevelComplete());
@@ -148,11 +148,8 @@ class LevelTest {
     @Test
     void maxScoreIncludesAllFood() {
 
-        // Create Player
-        Player player = new Player(0, 0, "player.png");
-
         // Create Test Level
-        TestLevel level = new TestLevel(player, new Score());
+        TestLevel level = new TestLevel(new Score());
 
         // Verify Maximum Score Includes Both Food Objects
         assertEquals(20, level.getMaxScore());
@@ -162,15 +159,14 @@ class LevelTest {
     @Test
     void enemiesDoNotMoveWhenPlayerCannotMove() {
 
-        // Create Player
-        Player player = new Player(0, 0, "player.png");
-
         // Create Test Level
-        TestLevel level = new TestLevel(player, new Score());
+        TestLevel level = new TestLevel(new Score());
+
+        // Get Player
+        var player = level.getPlayer();
 
         // Attempt to Move Player Through Wall
-        boolean turnProcessed =
-                level.takeTurn(Direction.DOWN);
+        boolean turnProcessed = level.takeTurn(Direction.DOWN);
 
         // Verify Turn Was Not Processed
         assertFalse(turnProcessed);

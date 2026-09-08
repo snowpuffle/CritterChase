@@ -1,7 +1,7 @@
 models\game\GameBoard.class
 models\levels\LevelFactory.class
+models\game\GameTurnResult.class
 controllers\GameController.class
-models\levels\Level_2.class
 models\entities\Entity.class
 models\levels\Level.class
 controllers\SceneManager.class
@@ -17,7 +17,6 @@ models\levels\LevelConfig.class
 controllers\GameOverController.class
 controllers\HowToController.class
 controllers\GameController$1.class
-models\levels\Level_1.class
 models\utils\EnemyManager.class
 models\utils\CollisionManager.class
 models\utils\Direction.class
@@ -29,6 +28,6 @@ models\utils\CollisionManager$1.class
 models\objects\Wall.class
 controllers\MenuController.class
 controllers\WelcomeController.class
-models\levels\Level_3.class
+models\levels\LevelDefinition.class
 models\game\GameManager.class
 controllers\LevelRenderer.class

@@ -1,9 +1,0 @@
-models\game\GameManagerTest.class
-models\utils\CollisionManagerTest.class
-models\levels\LevelTest.class
-models\objects\ScoreTest.class
-models\game\GameSessionTest.class
-models\objects\HealthTest.class
-models\utils\BFSPathFinderTest.class
-models\levels\LevelTest$TestLevel.class
-models\utils\EnemyManagerTest.class

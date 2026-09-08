@@ -12,7 +12,7 @@ import models.utils.Direction;
 import models.utils.EnemyManager;
 
 // Level Owns the Player, Board, Health, and Level Mechanics.
-public abstract class Level {
+public class Level {
 
     // Board Dimensions
     protected static final int WIDTH = 15;
@@ -32,15 +32,25 @@ public abstract class Level {
     private final LevelBuilder levelBuilder;
 
     // Level Constructor
-    protected Level(Player player, int levelNumber, Score score) {
+    public Level(LevelDefinition definition, Score score) {
+        this.levelNumber = definition.getLevelNumber();
         this.gameBoard = new GameBoard(WIDTH, HEIGHT);
-        this.player = player;
+        this.player = new Player(definition.getPlayerRow(), definition.getPlayerCol(), definition.getPlayerImage());
         this.score = score;
         this.health = new Health(100);
-        this.levelNumber = levelNumber;
         this.enemyManager = new EnemyManager(player, gameBoard, health);
         this.collisionManager = new CollisionManager(gameBoard, score);
         this.levelBuilder = new LevelBuilder(gameBoard, enemyManager);
+
+        createLevelObjects(
+                definition.getMaze(),
+                definition.getFoodImage(),
+                definition.getEnemyImage(),
+                definition.getWallImage1(),
+                definition.getWallImage2(),
+                definition.getExitImage());
+
+        calculateAndStoreMaxScore();
     }
 
     // Create the Level Objects from the Maze

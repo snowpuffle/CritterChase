@@ -13,12 +13,11 @@ C:\Users\katie\Downloads\Katie\Projects\CritterChase\src\main\java\models\game\G
 C:\Users\katie\Downloads\Katie\Projects\CritterChase\src\main\java\models\game\GameManager.java
 C:\Users\katie\Downloads\Katie\Projects\CritterChase\src\main\java\models\game\GameObjectType.java
 C:\Users\katie\Downloads\Katie\Projects\CritterChase\src\main\java\models\game\GameSession.java
+C:\Users\katie\Downloads\Katie\Projects\CritterChase\src\main\java\models\game\GameTurnResult.java
 C:\Users\katie\Downloads\Katie\Projects\CritterChase\src\main\java\models\levels\Level.java
-C:\Users\katie\Downloads\Katie\Projects\CritterChase\src\main\java\models\levels\Level_1.java
-C:\Users\katie\Downloads\Katie\Projects\CritterChase\src\main\java\models\levels\Level_2.java
-C:\Users\katie\Downloads\Katie\Projects\CritterChase\src\main\java\models\levels\Level_3.java
 C:\Users\katie\Downloads\Katie\Projects\CritterChase\src\main\java\models\levels\LevelBuilder.java
 C:\Users\katie\Downloads\Katie\Projects\CritterChase\src\main\java\models\levels\LevelConfig.java
+C:\Users\katie\Downloads\Katie\Projects\CritterChase\src\main\java\models\levels\LevelDefinition.java
 C:\Users\katie\Downloads\Katie\Projects\CritterChase\src\main\java\models\levels\LevelFactory.java
 C:\Users\katie\Downloads\Katie\Projects\CritterChase\src\main\java\models\objects\Exit.java
 C:\Users\katie\Downloads\Katie\Projects\CritterChase\src\main\java\models\objects\Food.java

@@ -119,13 +119,16 @@ public class GameManager {
                 && level.isLevelComplete();
     }
 
-    // Get Total Max Score
+    // Gets the Total Max Score Across All Levels
     public int getTotalMaxScore() {
+        
         int totalMaxScore = 0;
-
         for (int levelNumber = 1; levelNumber <= LevelConfig.getMaxLevel(); levelNumber++) {
 
-            Level level = LevelConfig.createLevel(levelNumber, new Score());
+            // Creates Each Level Using the Level Factory
+            Level level = LevelFactory.createLevel(levelNumber, new Score());
+
+            // Adds the Level's Max Score to the Total
             totalMaxScore += level.getMaxScore();
         }
 

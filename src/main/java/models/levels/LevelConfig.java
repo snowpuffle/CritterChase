@@ -1,9 +1,6 @@
 package models.levels;
 
 import java.util.List;
-import java.util.function.Function;
-
-import models.objects.Score;
 
 // LevelConfig Stores the Available Levels and Their Order
 public final class LevelConfig {
@@ -13,10 +10,101 @@ public final class LevelConfig {
         // Utility class
     }
 
-    // List of Available Levels in Sequential Order
-    private static final List<Function<Score, Level>> LEVELS = List.of(
-            Level_1::new,
-            Level_2::new);
+    private static final List<LevelDefinition> LEVELS = List.of(
+
+            new LevelDefinition(
+                    1,
+                    1,
+                    1,
+                    "file:lib/assets/animals/mouse.png",
+                    "file:lib/assets/food/cheese.png",
+                    "file:lib/assets/animals/cat.png",
+                    "file:lib/assets/walls/wood_wall.png",
+                    "file:lib/assets/walls/clay_wall.png",
+                    "file:lib/assets/others/exit.png",
+
+                    new char[][] {
+                            { '#', '#', '#', '%', '#', '#', '#', '#', '%', '#', '#', '#', '#', '#', '#' },
+                            { '#', ' ', ' ', ' ', 'F', ' ', '#', ' ', ' ', 'F', ' ', ' ', ' ', ' ', '#' },
+                            { '#', ' ', '#', '%', '#', ' ', '#', ' ', '#', '#', '#', ' ', '#', ' ', '#' },
+                            { '#', 'F', '#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#', ' ', '%', ' ', '#' },
+                            { '#', ' ', '%', ' ', '#', '#', '#', '#', '#', ' ', '#', ' ', '#', ' ', '#' },
+                            { '#', ' ', ' ', ' ', 'F', ' ', ' ', ' ', '#', ' ', ' ', '%', ' ', 'F', '#' },
+                            { '#', '#', '#', '#', '#', '#', '#', ' ', '#', '#', '#', '#', '%', ' ', '#' },
+                            { '#', ' ', ' ', ' ', ' ', ' ', '#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#' },
+                            { '#', ' ', '#', '#', '%', ' ', '#', '#', '#', '#', '#', ' ', '#', ' ', '#' },
+                            { '#', ' ', ' ', ' ', 'F', ' ', ' ', '%', ' ', ' ', 'F', ' ', ' ', ' ', '#' },
+                            { '#', ' ', '#', '#', '#', '#', '#', ' ', '#', '#', '#', ' ', '#', ' ', '#' },
+                            { '#', 'F', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'F', ' ', ' ', ' ', '#' },
+                            { '#', '%', '#', '#', '#', ' ', '#', '#', '#', ' ', '#', '#', '#', ' ', '#' },
+                            { '#', ' ', ' ', ' ', 'F', ' ', ' ', ' ', 'F', ' ', ' ', ' ', ' ', 'E', 'X' },
+                            { '#', '#', '#', '#', '#', '%', '#', '#', '#', '#', '#', '#', '%', '#', '#' }
+                    }),
+            new LevelDefinition(
+                    2,
+                    1,
+                    1,
+                    "file:lib/assets/animals/bunny.png",
+                    "file:lib/assets/food/carrot.png",
+                    "file:lib/assets/animals/fox.png",
+                    "file:lib/assets/walls/bush_wall.png",
+                    "file:lib/assets/walls/wood_wall.png",
+                    "file:lib/assets/others/exit.png",
+
+                    new char[][] {
+                            { '#', '#', '#', '%', '#', '#', '#', '#', '%', '#', '#', '#', '#', '#', '#' },
+                            { '#', 'P', ' ', ' ', 'F', ' ', '#', ' ', ' ', ' ', 'F', ' ', ' ', ' ', '#' },
+                            { '#', ' ', '#', '#', '#', ' ', '#', ' ', '#', '#', '#', ' ', '#', ' ', '#' },
+                            { '#', ' ', ' ', 'F', '#', ' ', ' ', ' ', '#', ' ', ' ', ' ', '#', ' ', '#' },
+                            { '#', '#', '#', ' ', '#', '#', '#', ' ', '#', ' ', '#', ' ', '#', 'F', '#' },
+                            { '#', ' ', ' ', ' ', ' ', ' ', '#', ' ', ' ', ' ', '#', ' ', ' ', ' ', '#' },
+                            { '#', ' ', '#', '%', '#', ' ', '#', '#', '#', ' ', '#', '#', '#', ' ', '#' },
+                            { '#', ' ', ' ', ' ', 'F', ' ', ' ', ' ', '#', ' ', ' ', ' ', ' ', 'E', '#' },
+                            { '#', '#', '#', ' ', '#', '#', '#', ' ', '#', '#', '#', ' ', '#', ' ', '#' },
+                            { '#', ' ', ' ', ' ', ' ', ' ', 'F', ' ', ' ', ' ', '#', ' ', 'F', ' ', '#' },
+                            { '#', ' ', '#', '#', '#', ' ', '#', '#', '#', ' ', '#', ' ', '#', ' ', '#' },
+                            { '#', ' ', 'F', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#', ' ', '#' },
+                            { '#', '#', '#', ' ', '#', '#', '#', ' ', '#', '%', '#', ' ', '#', ' ', '#' },
+                            { '#', ' ', ' ', ' ', 'F', ' ', ' ', ' ', 'F', ' ', ' ', ' ', ' ', 'E', 'X' },
+                            { '#', '#', '#', '#', '#', '%', '#', '#', '#', '#', '#', '#', '%', '#', '#' }
+                    }),
+            new LevelDefinition(
+                    3,
+                    1,
+                    1,
+                    "file:lib/assets/animals/frog.png",
+                    "file:lib/assets/food/butterfly.png",
+                    "file:lib/assets/animals/raccoon.png",
+                    "file:lib/assets/walls/bush_wall.png",
+                    "file:lib/assets/walls/tree_wall.png",
+                    "file:lib/assets/others/exit.png",
+
+                    new char[][] {
+                            { '#', '#', '#', '%', '#', '#', '#', '#', '%', '#', '#', '#', '#', '#', '#' },
+                            { '#', 'P', ' ', 'F', ' ', ' ', '#', ' ', ' ', 'F', ' ', ' ', 'F', ' ', '#' },
+                            { '#', ' ', '#', '#', '#', ' ', '#', ' ', '#', '#', '#', ' ', '#', ' ', '#' },
+                            { '#', 'F', ' ', ' ', '#', ' ', ' ', ' ', '#', ' ', ' ', ' ', '#', 'F', '#' },
+                            { '#', '#', '#', ' ', '#', '#', '#', ' ', '#', ' ', '#', ' ', '#', ' ', '#' },
+                            { '#', ' ', 'F', ' ', ' ', ' ', '#', ' ', ' ', ' ', '#', ' ', ' ', ' ', '#' },
+                            { '#', ' ', '#', '%', '#', ' ', '#', '#', '#', ' ', '#', '#', '#', ' ', '#' },
+                            { '#', ' ', ' ', ' ', 'F', ' ', ' ', ' ', '#', ' ', 'F', ' ', ' ', 'E', '#' },
+                            { '#', '#', '#', ' ', '#', '#', '#', ' ', '#', '#', '#', ' ', '#', ' ', '#' },
+                            { '#', ' ', 'F', ' ', ' ', ' ', 'F', ' ', ' ', ' ', '#', ' ', 'F', ' ', '#' },
+                            { '#', ' ', '#', '#', '#', ' ', '#', '#', '#', ' ', '#', ' ', '#', ' ', '#' },
+                            { '#', ' ', 'F', ' ', ' ', ' ', ' ', 'F', ' ', ' ', ' ', ' ', '#', 'E', '#' },
+                            { '#', '#', '#', ' ', '#', '#', '#', ' ', '#', '%', '#', ' ', '#', ' ', '#' },
+                            { '#', ' ', ' ', 'F', ' ', ' ', ' ', ' ', 'F', ' ', ' ', 'F', ' ', 'E', 'X' },
+                            { '#', '#', '#', '#', '#', '%', '#', '#', '#', '#', '#', '#', '%', '#', '#' }
+                    }));
+
+    public static LevelDefinition getLevel(int levelNumber) {
+        if (levelNumber < 1 || levelNumber > LEVELS.size()) {
+            throw new IllegalArgumentException(
+                    "Invalid Level Number: " + levelNumber);
+        }
+
+        return LEVELS.get(levelNumber - 1);
+    }
 
     // Get the Starting Level Number
     public static int getStartingLevel() {
@@ -31,17 +119,5 @@ public final class LevelConfig {
     // Check if a Level Number Exists
     public static boolean exists(int levelNumber) {
         return levelNumber >= 1 && levelNumber <= LEVELS.size();
-    }
-
-    // Create a Level Based on the Level Number
-    public static Level createLevel(int levelNumber, Score score) {
-
-        // Check if the Level Number is Valid
-        if (!exists(levelNumber)) {
-            throw new IllegalArgumentException("Invalid Level Number: " + levelNumber);
-        }
-
-        // Create the Level Using the Shared Game Score
-        return LEVELS.get(levelNumber - 1).apply(score);
     }
 }
