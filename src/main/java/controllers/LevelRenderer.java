@@ -6,7 +6,6 @@ import java.util.Map;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-
 import models.entities.Enemy;
 import models.entities.Player;
 import models.game.GameBoard;

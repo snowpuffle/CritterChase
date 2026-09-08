@@ -1,6 +1,6 @@
-import controllers.SceneManager;
 import javafx.application.Application;
 import javafx.stage.Stage;
+import controllers.SceneManager;
 
 // Main Class for the Critter Chase Application
 // Initializes the Application and Sets Up the Initial Scene

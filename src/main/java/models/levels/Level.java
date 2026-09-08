@@ -1,15 +1,15 @@
 package models.levels;
 
+import models.entities.Player;
+import models.game.GameBoard;
+import models.game.GameObjectType;
 import models.objects.Food;
 import models.objects.GameObject;
 import models.objects.Health;
 import models.objects.Score;
-import models.utils.EnemyManager;
 import models.utils.CollisionManager;
 import models.utils.Direction;
-import models.entities.Player;
-import models.game.GameBoard;
-import models.game.GameObjectType;
+import models.utils.EnemyManager;
 
 // Level Owns the Player, Board, Health, and Level Mechanics.
 public abstract class Level {
