@@ -10,7 +10,8 @@ import models.utils.EnemyManager;
 import models.utils.Direction;
 import models.entities.Player;
 
-// Level Owns the Player, Board, Score, Health, and Level Mechanics.
+// Level Owns the Player, Board, Health, and Level Mechanics.
+// Score is owned by GameSession and shared across levels.
 public abstract class Level {
 
     // Board Dimensions
@@ -29,10 +30,10 @@ public abstract class Level {
     private final LevelBuilder levelBuilder;
 
     // Level Constructor
-    protected Level(Player player, int levelNumber) {
+    protected Level(Player player, int levelNumber, Score score) {
         this.gameBoard = new GameBoard(WIDTH, HEIGHT);
         this.player = player;
-        this.score = new Score();
+        this.score = score;
         this.health = new Health(100);
         this.levelNumber = levelNumber;
         this.enemyManager = new EnemyManager(player, gameBoard, health);
@@ -56,6 +57,7 @@ public abstract class Level {
         if (!moved) {
             return false;
         }
+
         // Move Enemies After the Player Moves
         moveEnemies();
 
@@ -107,10 +109,13 @@ public abstract class Level {
             case FOOD:
                 collectFood((Food) object);
                 return true;
+
             case WALL:
                 return false;
+
             case EXIT:
                 return true;
+
             default:
                 return true;
         }
@@ -118,7 +123,11 @@ public abstract class Level {
 
     // Collect Food
     private void collectFood(Food food) {
+
+        // Add Points to the Shared Game Score
         score.addPoints(food.getPoints());
+
+        // Remove Food from the Board
         gameBoard.removeGameObjectAt(food.getRow(), food.getCol());
     }
 
@@ -133,7 +142,6 @@ public abstract class Level {
         // Check if the Player is on the Exit Object
         var object = gameBoard.getGameObjectAt(player.getRow(), player.getCol());
 
-        // Return True if the Player is on the Exit Object, Otherwise Return False
         return object != null && object.getType() == GameObjectType.EXIT;
     }
 

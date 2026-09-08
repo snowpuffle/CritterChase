@@ -1,6 +1,7 @@
 package models.levels;
 
 import models.entities.Player;
+import models.objects.Score;
 
 // Level 1 Contains the Maze Layout and Objects for Level 1 of the Game.
 public class Level_1 extends Level {
@@ -33,10 +34,10 @@ public class Level_1 extends Level {
     };
 
     // Level Constructor
-    public Level_1() {
+    public Level_1(Score score) {
 
         // Create the Level Player and Pass It to the Parent Level
-        super(new Player(1, 1, playerImage), 1);
+        super(new Player(1, 1, playerImage), 1, score);
 
         // Create the Level Objects and Place Them on the Game Board
         createLevelObjects(MAZE, foodImage, enemyImage, wallImage1, wallImage2, exitImage);

@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
+import models.GameManager;
 import models.levels.Level;
 import models.utils.Direction;
 import models.utils.LevelFactory;
@@ -25,32 +26,26 @@ public class GameController {
     @FXML
     private Label levelLabel;
 
-    // Game Controller Attributes
-    private Level level;
+    // Game Manager
+    private final GameManager gameManager = new GameManager();
+
+    // Level Renderer
     private LevelRenderer levelRenderer;
-    private int currentLevelNumber = 1;
-    private static final int MAX_LEVEL = 2;
 
     // Initialize the Game
     @FXML
     public void initialize() {
-        Platform.runLater(this::startLevel);
+        Platform.runLater(this::startGame);
     }
 
     // Start the Level
-    private void startLevel() {
+    private void startGame() {
 
-        // Create the Current Level
-        level = LevelFactory.createLevel(currentLevelNumber);
+        // Start a New Game
+        gameManager.startGame();
 
-        // Create the Level Renderer
-        levelRenderer = new LevelRenderer(gamePane, level.getPlayer(), level.getEnemyManager(), level.getGameBoard());
-
-        // Draw Level First Time
-        levelRenderer.drawLevel();
-
-        // Update the HUD
-        updateHUD();
+        // Display the Current Level
+        displayCurrentLevel();
 
         // Set Focus to the Game Pane for Keyboard Input
         gamePane.setFocusTraversable(true);
@@ -58,6 +53,21 @@ public class GameController {
 
         // Set Key Press Event Handler
         gamePane.setOnKeyPressed(event -> handleKeyPress(event.getCode()));
+    }
+
+    // Display the Current Level
+    private void displayCurrentLevel() {
+        // Get the Current Level from the Game Manager
+        Level level = gameManager.getCurrentLevel();
+
+        // Create the Level Renderer
+        levelRenderer = new LevelRenderer(gamePane, level.getPlayer(), level.getEnemyManager(),
+                level.getGameBoard());
+
+        // Draw the Level
+        levelRenderer.drawLevel();
+        // Update the HUD
+        updateHUD();
     }
 
     // Handle Keyboard Input
@@ -71,6 +81,9 @@ public class GameController {
             return;
         }
 
+        // Get the Current Level
+        Level level = gameManager.getCurrentLevel();
+
         // Process the Turn
         boolean moved = level.takeTurn(direction);
 
@@ -80,7 +93,7 @@ public class GameController {
         }
 
         // Check if the Player Died During the Turn
-        if (!level.getHealth().isAlive()) {
+        if (gameManager.isGameOver()) {
             updateHUD();
             handleGameOver();
             return;
@@ -94,8 +107,27 @@ public class GameController {
 
         // Check if the Level is Complete
         if (level.isLevelComplete()) {
-            startNextLevel();
+            handleLevelComplete();
         }
+    }
+
+    // Handle Level Completion
+    private void handleLevelComplete() {
+
+        // Try to Move to the Next Level
+        boolean hasNextLevel = gameManager.nextLevel();
+
+        // If Therem Is No Next Level, the Game Is Won
+        if (!hasNextLevel) {
+            handleGameWon();
+            return;
+        }
+
+        // Display the Next Level
+        displayCurrentLevel();
+
+        // Keep Keyboard Focus on the Game Pane
+        gamePane.requestFocus();
     }
 
     // Convert JavaFX KeyCode into Game Direction
@@ -123,26 +155,11 @@ public class GameController {
         }
     }
 
-    // Start the Next Level or Complete the Game
-    private void startNextLevel() {
-
-        // Check if the Player Completed the Final Level
-        if (currentLevelNumber >= MAX_LEVEL) {
-            handleGameWon();
-            return;
-        }
-
-        // Move to the Next Level
-        currentLevelNumber++;
-
-        // Start the Next Level
-        startLevel();
-    }
-
     // Update the HUD Labels
     private void updateHUD() {
-        scoreLabel.setText("SCORE: " + level.getScore().getPoints());
-        levelLabel.setText("LEVEL: " + level.getLevelNumber());
+        Level level = gameManager.getCurrentLevel();
+        scoreLabel.setText("SCORE: " + gameManager.getScore());
+        levelLabel.setText("LEVEL: " + gameManager.getCurrentLevelNumber());
         healthLabel.setText("HEALTH: " + level.getHealth().getCurrentHealth());
     }
 

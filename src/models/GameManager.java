@@ -3,41 +3,51 @@ package models;
 import models.levels.Level;
 import models.utils.LevelFactory;
 
-// GameManager Manages the Game State, Levels, and Progression
+// GameManager Controls Game Flow and Level Progression
 public class GameManager {
 
     // Game Settings
     private static final int STARTING_LEVEL = 1;
     private static final int MAX_LEVEL = 2;
 
-    // Current Game State
-    private int currentLevelNumber;
-    private Level currentLevel;
+    // Current Game Session
+    private final GameSession gameSession;
 
-    // Start the Game
-    public void startGame() {
-        currentLevelNumber = STARTING_LEVEL;
-        startLevel();
+    // GameManager Constructor
+    public GameManager() {
+        gameSession = new GameSession();
     }
 
-    // Start the Current Level
-    private void startLevel() {
-        currentLevel = LevelFactory.createLevel(currentLevelNumber);
+    // Start a New Game
+    public void startGame() {
+        gameSession.reset();
+        startLevel(STARTING_LEVEL);
+    }
+
+    // Start a Level
+    private void startLevel(int levelNumber) {
+
+        // Create the Level Using the Existing Session Score
+        Level level = LevelFactory.createLevel(levelNumber, gameSession.getScore());
+
+        // Store the Level in the Current Session
+        gameSession.setCurrentLevel(level);
     }
 
     // Move to the Next Level
     public boolean nextLevel() {
 
-        // Check if the Final Level is Complete
-        if (currentLevelNumber >= MAX_LEVEL) {
+        // Get the Current Level Number
+        int currentLevel = gameSession.getCurrentLevelNumber();
+
+        // Do Not Advance Past the Final Level
+        if (currentLevel >= MAX_LEVEL) {
             return false;
         }
 
-        // Move to the Next Level
-        currentLevelNumber++;
+        // Start the Next Level
+        startLevel(currentLevel + 1);
 
-        // Create the Next Level
-        startLevel();
         return true;
     }
 
@@ -46,28 +56,44 @@ public class GameManager {
         startGame();
     }
 
-    // Check if the Player has Completed the Final Level
-    public boolean isGameWon() {
-        return currentLevelNumber >= MAX_LEVEL && currentLevel != null && currentLevel.isLevelComplete();
-    }
-
     // Check if the Player Has Lost
     public boolean isGameOver() {
-        return currentLevel != null && !currentLevel.getHealth().isAlive();
+        Level level = gameSession.getCurrentLevel();
+
+        return level != null && !level.getHealth().isAlive();
+    }
+
+    // Check if the Player Has Won
+    public boolean isGameWon() {
+        Level level = gameSession.getCurrentLevel();
+
+        return level != null
+                && level.getLevelNumber() == MAX_LEVEL
+                && level.isLevelComplete();
     }
 
     // Get the Current Level
     public Level getCurrentLevel() {
-        return currentLevel;
+        return gameSession.getCurrentLevel();
+    }
+
+    // Get the Current Game Session
+    public GameSession getGameSession() {
+        return gameSession;
+    }
+
+    // Get the Persistent Score
+    public int getScore() {
+        return gameSession.getScore().getPoints();
     }
 
     // Get the Current Level Number
     public int getCurrentLevelNumber() {
-        return currentLevelNumber;
+        return gameSession.getCurrentLevelNumber();
     }
 
     // Check if a Game Has Started
     public boolean isGameStarted() {
-        return currentLevel != null;
+        return gameSession.isStarted();
     }
 }

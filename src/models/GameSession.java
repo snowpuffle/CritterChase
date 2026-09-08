@@ -1,33 +1,26 @@
 package models;
 
 import models.levels.Level;
+import models.objects.Score;
 
 // GameSession Stores the State of the Current Game
 public class GameSession {
 
-    // Game State
+    // Persistent Game State
+    private final Score score;
+
+    // Current Level
     private Level currentLevel;
-    private int currentLevelNumber;
-    private int score;
-    private int health;
 
-    // Create a New Game Session
+    // GameSession Constructor
     public GameSession() {
-        reset();
+        this.score = new Score();
+        this.currentLevel = null;
     }
 
-    // Reset the Entire Game Session
-    public void reset() {
-        currentLevel = null;
-        currentLevelNumber = 1;
-        score = 0;
-        health = 100;
-    }
-
-    // Set the Current Level
-    public void setCurrentLevel(Level level) {
-        this.currentLevel = level;
-        this.currentLevelNumber = level.getLevelNumber();
+    // Get the Persistent Score
+    public Score getScore() {
+        return score;
     }
 
     // Get the Current Level
@@ -35,43 +28,28 @@ public class GameSession {
         return currentLevel;
     }
 
+    // Set the Current Level
+    public void setCurrentLevel(Level level) {
+        this.currentLevel = level;
+    }
+
     // Get the Current Level Number
     public int getCurrentLevelNumber() {
-        return currentLevelNumber;
+        if (currentLevel == null) {
+            return 0;
+        }
+
+        return currentLevel.getLevelNumber();
     }
 
-    // Get the Current Score
-    public int getScore() {
-        return score;
-    }
-
-    // Set the Score
-    public void setScore(int score) {
-        this.score = score;
-    }
-
-    // Add Points to the Score
-    public void addScore(int points) {
-        this.score += points;
-    }
-
-    // Get the Current Health
-    public int getHealth() {
-        return health;
-    }
-
-    // Set the Health
-    public void setHealth(int health) {
-        this.health = health;
-    }
-
-    // Check if the Player is Alive
-    public boolean isAlive() {
-        return health > 0;
-    }
-
-    // Check if the Game Has Started
+    // Check if a Game Has Started
     public boolean isStarted() {
         return currentLevel != null;
+    }
+
+    // Reset the Game Session
+    public void reset() {
+        score.reset();
+        currentLevel = null;
     }
 }
