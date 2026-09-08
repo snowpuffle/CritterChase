@@ -1,5 +1,7 @@
 package controllers;
 
+import java.io.IOException;
+
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -164,24 +166,22 @@ public class GameController {
 
     // Handle Game Over
     private void handleGameOver() {
-        try {
-            GameOverController controller = (GameOverController) SceneManager.show("gameover.fxml");
-
-            controller.setResult("GAME OVER");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        showGameResult("GAME OVER");
     }
 
     // Handle Game Won
     private void handleGameWon() {
+        showGameResult("GAME WON!");
+    }
+
+    // Show Game Over / Won Screen
+    private void showGameResult(String result) {
         try {
-            GameOverController controller = (GameOverController) SceneManager.show("gameover.fxml");
+            GameOverController controller = SceneManager.show("gameover.fxml");
+            controller.setResult(result);
 
-            controller.setResult("GAME WON!");
-
-        } catch (Exception e) {
+        } catch (IOException e) {
+            System.err.println("Failed to Load the Game Result Screen.");
             e.printStackTrace();
         }
     }

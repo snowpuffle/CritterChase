@@ -118,12 +118,12 @@ public class LevelBuilder {
 
         // Check if Maze is Null or Empty
         if (maze == null || maze.length == 0) {
-            throw new IllegalArgumentException("Maze Error!");
+            throw new IllegalArgumentException("Maze Cannot Be Null or Empty!");
         }
 
         // Check if First Row is Null or Empty
         if (maze[0] == null || maze[0].length == 0) {
-            throw new IllegalArgumentException("Maze Error!");
+            throw new IllegalArgumentException("Maze First Row Cannot Be Null or Empty!");
         }
     }
 
@@ -132,12 +132,13 @@ public class LevelBuilder {
 
         // Check if Current Row is Null
         if (maze[row] == null) {
-            throw new IllegalArgumentException("Maze Error!");
+            throw new IllegalArgumentException("Maze Row " + row + " Cannot Be Null!");
         }
 
         // Check if Row Width Matches Expected Width
         if (maze[row].length != expectedWidth) {
-            throw new IllegalArgumentException("Maze Error!");
+            throw new IllegalArgumentException(
+                    "Maze Row " + row + " Has Width " + maze[row].length + ", Expected " + expectedWidth + ".");
         }
     }
 
