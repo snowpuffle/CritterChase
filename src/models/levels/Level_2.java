@@ -7,11 +7,11 @@ import models.objects.Score;
 public class Level_2 extends Level {
 
     // Level Emojis
-    private static final String playerImage = "file:lib/assets/animals/mouse.png";
-    private static final String foodImage = "file:lib/assets/food/cheese.png";
-    private static final String enemyImage = "file:lib/assets/animals/cat.png";
-    private static final String wallImage1 = "file:lib/assets/walls/wood_wall.png";
-    private static final String wallImage2 = "file:lib/assets/walls/clay_wall.png";
+    private static final String playerImage = "file:lib/assets/animals/bunny.png";
+    private static final String foodImage = "file:lib/assets/food/carrot.png";
+    private static final String enemyImage = "file:lib/assets/animals/fox.png";
+    private static final String wallImage1 = "file:lib/assets/walls/bush_wall.png";
+    private static final String wallImage2 = "file:lib/assets/walls/wood_wall.png";
     private static final String exitImage = "file:lib/assets/others/exit.png";
 
     // Level 2 Maze Layout - 2 Enemies
