@@ -28,7 +28,7 @@ public class GameManager {
     // Start a Level
     private void startLevel(int levelNumber) {
 
-        // Create the Level Using the Existing Session Score
+        // Create a New Score for the Current Level
         Level level = LevelFactory.createLevel(levelNumber, new Score());
 
         // Store the Level in the Current Session
@@ -109,5 +109,11 @@ public class GameManager {
     // Check if a Game Has Started
     public boolean isGameStarted() {
         return gameSession.isStarted();
+    }
+
+    // Transfer the Completed Level's Score into the Persistent Total
+    public void addCurrentLevelScore() {
+        gameSession.getScore().addPoints(
+                gameSession.getCurrentLevel().getScore().getPoints());
     }
 }

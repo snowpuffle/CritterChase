@@ -95,6 +95,7 @@ public class GameController {
 
         // Check if the Player Died During the Turn
         if (gameManager.isGameOver()) {
+            gameManager.addCurrentLevelScore();
             updateHUD();
             handleGameOver();
             return;
@@ -115,10 +116,13 @@ public class GameController {
     // Handle Level Completion
     private void handleLevelComplete() {
 
+        // Add the Current Level Score to the Total Game Score
+        gameManager.addCurrentLevelScore();
+
         // Try to Move to the Next Level
         boolean hasNextLevel = gameManager.nextLevel();
 
-        // If Therem Is No Next Level, the Game Is Won
+        // If There is No Next Level, the Game Is Won
         if (!hasNextLevel) {
             handleGameWon();
             return;
