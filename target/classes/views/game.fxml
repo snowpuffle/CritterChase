@@ -6,87 +6,112 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-   prefHeight="750.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/23.0.1"
-   xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.GameController">
+<BorderPane
+   prefHeight="750.0"
+   prefWidth="1000.0"
+   stylesheets="@../css/game.css"
+   xmlns="http://javafx.com/javafx/21"
+   xmlns:fx="http://javafx.com/fxml/1"
+   fx:controller="controllers.GameController">
+
+
    <top>
-      <HBox alignment="CENTER" prefHeight="100.0" spacing="20.0">
+      <!-- TOP HUD -->
+      <HBox alignment="CENTER" prefHeight="70.0" spacing="25.0" styleClass="game-hud"
+         style="-fx-border-width: 0;">
          <children>
 
             <!-- SCORE -->
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="300.0" spacing="5.0">
+            <HBox
+               alignment="CENTER"
+               prefWidth="240.0"
+               spacing="10.0"
+               styleClass="hud-box score-box">
                <children>
-                  <ImageView fitHeight="30.0"
-                     fitWidth="30.0"
-                     pickOnBounds="true"
+                  <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true"
                      preserveRatio="true">
                      <image>
-                        <Image url="@../assets/others/trophy.png" />
+                        <Image url="@../assets/others/star.png" />
                      </image>
                   </ImageView>
-
-                  <Label fx:id="scoreLabel" text="SCORE: 0">
-                     <font>
-                        <Font name="System Bold" size="24.0" />
-                     </font>
-                  </Label>
+                  <Label fx:id="scoreLabel" text="SCORE: 0" styleClass="hud-label" />
                </children>
             </HBox>
 
             <!-- LEVEL -->
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="300.0" spacing="5.0">
+            <HBox alignment="CENTER" prefWidth="240.0" spacing="10.0" styleClass="hud-box level-box">
                <children>
-                  <ImageView fitHeight="30.0"
-                     fitWidth="30.0"
-                     pickOnBounds="true"
+                  <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true"
                      preserveRatio="true">
                      <image>
                         <Image url="@../assets/others/medal.png" />
                      </image>
                   </ImageView>
-
-                  <Label fx:id="levelLabel" text="LEVEL: 1">
-                     <font>
-                        <Font name="System Bold" size="24.0" />
-                     </font>
-                  </Label>
+                  <Label fx:id="levelLabel" text="LEVEL: 1" styleClass="hud-label" />
                </children>
             </HBox>
 
             <!-- HEALTH -->
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="300.0" spacing="5.0">
+            <HBox alignment="CENTER" prefWidth="240.0" spacing="10.0"
+               styleClass="hud-box health-box">
                <children>
-                  <ImageView fitHeight="30.0"
-                     fitWidth="30.0"
-                     pickOnBounds="true"
+                  <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true"
                      preserveRatio="true">
                      <image>
                         <Image url="@../assets/others/heart.png" />
                      </image>
                   </ImageView>
-
-                  <Label fx:id="healthLabel" text="HEALTH: 100">
-                     <font>
-                        <Font name="System Bold" size="24.0" />
-                     </font>
-                  </Label>
+                  <Label fx:id="healthLabel" text="HEALTH: 100" styleClass="hud-label" />
                </children>
             </HBox>
-
          </children>
       </HBox>
    </top>
+
+
+   <!-- GAME + CONTROLS AREA -->
    <center>
-      <Pane fx:id="gamePane" prefHeight="0.0" prefWidth="0.0" BorderPane.alignment="CENTER" />
+      <StackPane>
+
+         <!-- House Background -->
+         <ImageView fx:id="levelBackground" fitWidth="1000.0" fitHeight="680.0"
+            preserveRatio="false" pickOnBounds="false">
+            <image>
+               <Image url="@../assets/backgrounds/house_background.png" />
+            </image>
+         </ImageView>
+
+         <!-- Maze + Controls -->
+         <VBox>
+
+            <!-- Center the Maze -->
+            <StackPane alignment="CENTER" VBox.vgrow="ALWAYS">
+
+               <!-- Brown Border + 1px Gap -->
+               <Pane prefWidth="460.0" prefHeight="460.0" minWidth="460.0" minHeight="460.0"
+                  maxWidth="460.0" maxHeight="460.0"
+                  style=" -fx-background-color: #F5E6C8; -fx-border-color: #8B5A2B; -fx-border-width: 2px;" />
+
+               <!-- Actual Maze -->
+               <Pane fx:id="gamePane" prefWidth="450.0" prefHeight="450.0" minWidth="450.0"
+                  minHeight="450.0" maxWidth="450.0" maxHeight="450.0" pickOnBounds="false"
+                  style="-fx-background-color: transparent; -fx-padding: 0;" />
+
+            </StackPane>
+
+            <!-- Controls -->
+            <HBox alignment="CENTER" prefHeight="60.0" minHeight="60.0" maxHeight="60.0"
+               styleClass="controls-container">
+               <children>
+                  <Label
+                     text="🎮  USE ARROW KEYS OR [WASD] TO MOVE" styleClass="controls-label" />
+               </children>
+            </HBox>
+         </VBox>
+      </StackPane>
    </center>
-   <bottom>
-      <Label prefHeight="100.0" text="Use ARROW KEYS or [WASD] to Move"
-         BorderPane.alignment="CENTER">
-         <font>
-            <Font name="System Bold" size="14.0" />
-         </font>
-      </Label>
-   </bottom>
+
 </BorderPane>

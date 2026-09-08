@@ -13,16 +13,18 @@ public class LevelDefinition {
     private final String wallImage1;
     private final String wallImage2;
     private final String exitImage;
+    private final String backgroundPath;
 
     private final char[][] maze;
 
     // Level Definition Contructor
-    public LevelDefinition(int levelNumber, int maxScore, int playerRow, int playerCol, String playerImage,
-            String foodImage,
-            String enemyImage, String wallImage1, String wallImage2, String exitImage, char[][] maze) {
+    public LevelDefinition(int levelNumber, String backgroundPath, int maxScore, int playerRow, int playerCol,
+            String playerImage, String foodImage, String enemyImage, String wallImage1, String wallImage2,
+            String exitImage, char[][] maze) {
 
         this.levelNumber = levelNumber;
         this.maxScore = maxScore;
+        this.backgroundPath = backgroundPath;
         this.playerRow = playerRow;
         this.playerCol = playerCol;
         this.playerImage = playerImage;
@@ -37,6 +39,10 @@ public class LevelDefinition {
     // Getters
     public int getLevelNumber() {
         return levelNumber;
+    }
+
+    public String getBackgroundPath() {
+        return backgroundPath;
     }
 
     public int getMaxScore() {

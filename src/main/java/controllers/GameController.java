@@ -5,11 +5,14 @@ import java.io.IOException;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import models.game.GameManager;
 import models.game.GameTurnResult;
 import models.levels.Level;
+import models.levels.LevelDefinition;
 import models.utils.Direction;
 
 // GameController Controls Gameplay and User Input
@@ -27,6 +30,9 @@ public class GameController {
 
     @FXML
     private Label levelLabel;
+
+    @FXML
+    private ImageView levelBackground;
 
     // Game Manager
     private final GameManager gameManager = new GameManager();
@@ -63,13 +69,16 @@ public class GameController {
         // Get the Current Level from the Game Manager
         Level level = gameManager.getCurrentLevel();
 
+        // Update the Level Background
+        updateLevelBackground(level.getBackgroundPath());
+
         // Create the Level Renderer
         levelRenderer = new LevelRenderer(gamePane, level.getPlayer(), level.getEnemyManager(),
                 level.getGameBoard());
 
         // Draw the Level
         levelRenderer.drawLevel();
-        
+
         // Update the HUD
         updateHUD();
     }
@@ -175,5 +184,13 @@ public class GameController {
             System.err.println("Failed to Load the Game Result Screen.");
             e.printStackTrace();
         }
+    }
+
+    private void updateLevelBackground(String backgroundPath) {
+
+        Image image = new Image(
+                getClass().getResourceAsStream(backgroundPath));
+
+        levelBackground.setImage(image);
     }
 }

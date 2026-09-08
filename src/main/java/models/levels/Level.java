@@ -19,6 +19,7 @@ public class Level {
     // Level Components
     protected final Player player;
     protected final GameBoard gameBoard;
+    protected final String backgroundPath;
     protected final Score score;
     protected final int maxScore;
     protected final Health health;
@@ -35,6 +36,7 @@ public class Level {
         this.gameBoard = new GameBoard(WIDTH, HEIGHT);
         this.player = new Player(definition.getPlayerRow(), definition.getPlayerCol(), definition.getPlayerImage());
         this.score = score;
+        this.backgroundPath = definition.getBackgroundPath();
         this.maxScore = definition.getMaxScore();
         this.health = new Health(100);
         this.enemyManager = new EnemyManager(player, gameBoard, health);
@@ -132,6 +134,10 @@ public class Level {
 
     public int getMaxScore() {
         return maxScore;
+    }
+
+    public String getBackgroundPath() {
+        return backgroundPath;
     }
 
     public Health getHealth() {

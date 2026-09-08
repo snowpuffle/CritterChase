@@ -14,15 +14,16 @@ public final class LevelConfig {
 
             new LevelDefinition(
                     1,
+                    "/assets/backgrounds/house.png",
                     100,
                     1,
                     1,
-                    "file:lib/assets/animals/mouse.png",
-                    "file:lib/assets/food/cheese.png",
-                    "file:lib/assets/animals/cat.png",
-                    "file:lib/assets/walls/brick_wall.png",
-                    "file:lib/assets/walls/wood.png",
-                    "file:lib/assets/others/exit.png",
+                    "/assets/animals/mouse.png",
+                    "/assets/food/cheese.png",
+                    "/assets/animals/cat.png",
+                    "/assets/walls/brick_wall.png",
+                    "/assets/walls/wood.png",
+                    "/assets/others/exit.png",
 
                     new char[][] {
                             { '#', '#', '#', '%', '#', '#', '#', '#', '%', '#', '#', '#', '#', '#', '#' },
@@ -43,15 +44,16 @@ public final class LevelConfig {
                     }),
             new LevelDefinition(
                     2,
+                    "/assets/backgrounds/woodlands.png",
                     100,
                     1,
                     1,
-                    "file:lib/assets/animals/bunny.png",
-                    "file:lib/assets/food/carrot.png",
-                    "file:lib/assets/animals/fox.png",
-                    "file:lib/assets/walls/tree_2.png",
-                    "file:lib/assets/walls/tree_1.png",
-                    "file:lib/assets/others/exit.png",
+                    "/assets/animals/bunny.png",
+                    "/assets/food/carrot.png",
+                    "/assets/animals/fox.png",
+                    "/assets/walls/tree_2.png",
+                    "/assets/walls/tree_1.png",
+                    "/assets/others/exit.png",
 
                     new char[][] {
                             { '#', '#', '#', '%', '#', '#', '#', '#', '%', '#', '#', '#', '#', '#', '#' },
@@ -72,15 +74,16 @@ public final class LevelConfig {
                     }),
             new LevelDefinition(
                     3,
+                    "/assets/backgrounds/pond.png",
                     100,
                     1,
                     1,
-                    "file:lib/assets/animals/frog.png",
-                    "file:lib/assets/food/butterfly.png",
-                    "file:lib/assets/animals/raccoon.png",
-                    "file:lib/assets/walls/wood.png",
-                    "file:lib/assets/walls/lilypad.png",
-                    "file:lib/assets/others/exit.png",
+                    "/assets/animals/frog.png",
+                    "/assets/food/butterfly.png",
+                    "/assets/animals/raccoon.png",
+                    "/assets/walls/wood.png",
+                    "/assets/walls/lilypad.png",
+                    "/assets/others/exit.png",
 
                     new char[][] {
                             { '#', '#', '#', '%', '#', '#', '#', '#', '%', '#', '#', '#', '#', '#', '#' },
