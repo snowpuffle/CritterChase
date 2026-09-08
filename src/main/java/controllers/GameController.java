@@ -95,7 +95,6 @@ public class GameController {
 
         // Check if the Player Died During the Turn
         if (gameManager.isGameOver()) {
-            gameManager.addCurrentLevelScore();
             updateHUD();
             handleGameOver();
             return;
