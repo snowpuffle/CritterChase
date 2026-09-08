@@ -4,6 +4,7 @@ import models.levels.Level;
 import models.levels.LevelConfig;
 import models.levels.LevelFactory;
 import models.objects.Score;
+import models.utils.Direction;
 
 // GameManager Controls Game Flow and Level Progression
 public class GameManager {
@@ -50,6 +51,51 @@ public class GameManager {
         startLevel(currentLevel + 1);
 
         return true;
+    }
+
+    // Process the Player's Turn
+    public GameTurnResult playTurn(Direction direction) {
+
+        // Get the Current Level
+        Level level = gameSession.getCurrentLevel();
+
+        // No Active Level Means No Valid Move
+        if (level == null) {
+            return GameTurnResult.INVALID_MOVE;
+        }
+
+        // Process the Player's Turn
+        boolean moved = level.takeTurn(direction);
+
+        // Invalid Movement Does Not Consume a Turn
+        if (!moved) {
+            return GameTurnResult.INVALID_MOVE;
+        }
+
+        // Check if the Player Died During the Turn
+        if (isGameOver()) {
+            return GameTurnResult.GAME_OVER;
+        }
+
+        // Check if the Player Reached the Exit
+        if (level.isLevelComplete()) {
+
+            // Add This Level's Score to the Total Score
+            addCurrentLevelScore();
+
+            // Check if the Final Level Was Completed
+            if (level.getLevelNumber() == LevelConfig.getMaxLevel()) {
+                return GameTurnResult.GAME_WON;
+            }
+
+            // Advance to the Next Level
+            nextLevel();
+
+            return GameTurnResult.LEVEL_COMPLETE;
+        }
+
+        // Player Moved Without Completing the Level
+        return GameTurnResult.MOVED;
     }
 
     // Restart the Game

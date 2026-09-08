@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import models.game.GameManager;
+import models.game.GameTurnResult;
 import models.levels.Level;
 import models.utils.Direction;
 
@@ -58,6 +59,7 @@ public class GameController {
 
     // Display the Current Level
     private void displayCurrentLevel() {
+
         // Get the Current Level from the Game Manager
         Level level = gameManager.getCurrentLevel();
 
@@ -67,6 +69,7 @@ public class GameController {
 
         // Draw the Level
         levelRenderer.drawLevel();
+        
         // Update the HUD
         updateHUD();
     }
@@ -82,56 +85,46 @@ public class GameController {
             return;
         }
 
-        // Get the Current Level
-        Level level = gameManager.getCurrentLevel();
+        // Process Turn Through Game Manager
+        GameTurnResult result = gameManager.playTurn(direction);
 
-        // Process the Turn
-        boolean moved = level.takeTurn(direction);
-
-        // Stop if the Player Did Not Move
-        if (!moved) {
-            return;
-        }
-
-        // Check if the Player Died During the Turn
-        if (gameManager.isGameOver()) {
-            updateHUD();
-            handleGameOver();
-            return;
-        }
-
-        // Update the Level Renderer
-        levelRenderer.updateLevel();
-
-        // Update the HUD
-        updateHUD();
-
-        // Check if the Level is Complete
-        if (level.isLevelComplete()) {
-            handleLevelComplete();
-        }
+        // Handle Turn Result
+        handleTurnResult(result);
     }
 
-    // Handle Level Completion
-    private void handleLevelComplete() {
+    // Handle Turn Result
+    private void handleTurnResult(GameTurnResult result) {
 
-        // Add the Current Level Score to the Total Game Score
-        gameManager.addCurrentLevelScore();
+        switch (result) {
 
-        // Try to Move to the Next Level
-        boolean hasNextLevel = gameManager.nextLevel();
+            // Nothing Changed
+            case INVALID_MOVE:
+                return;
 
-        // If There is No Next Level, the Game Is Won
-        if (!hasNextLevel) {
-            handleGameWon();
-            return;
+            // Update Level and HUD After Valid Move
+            case MOVED:
+                levelRenderer.updateLevel();
+                updateHUD();
+                return;
+
+            // Display the Next Level
+            case LEVEL_COMPLETE:
+                displayCurrentLevel();
+                gamePane.requestFocus();
+                return;
+
+            // Update HUD and Display Game Over Screen
+            case GAME_OVER:
+                updateHUD();
+                showGameResult("GAME OVER");
+                return;
+
+            // Update HUD and Display Game Won Screen
+            case GAME_WON:
+                updateHUD();
+                showGameResult("GAME WON!");
+                return;
         }
-
-        // Display the Next Level
-        displayCurrentLevel();
-
-        // Keep Keyboard Focus on the Game Pane
-        gamePane.requestFocus();
     }
 
     // Convert JavaFX KeyCode into Game Direction
@@ -167,23 +160,10 @@ public class GameController {
         healthLabel.setText("HEALTH: " + level.getHealth().getCurrentHealth());
     }
 
-    // Handle Game Over
-    private void handleGameOver() {
-        showGameResult("GAME OVER");
-    }
-
-    // Handle Game Won
-    private void handleGameWon() {
-        showGameResult("GAME WON!");
-    }
-
     // Show Game Over / Won Screen
     private void showGameResult(String result) {
         try {
             GameOverController controller = SceneManager.show("gameover.fxml");
-
-            System.out.println("FINAL SCORE: " + gameManager.getScore());
-            System.out.println("TOTAL MAX: " + gameManager.getTotalMaxScore());
 
             controller.setResult(result);
             controller.setScore(
@@ -191,7 +171,7 @@ public class GameController {
                     gameManager.getTotalMaxScore());
 
         } catch (IOException e) {
-            System.err.println("Failed to load the game result screen.");
+            System.err.println("Failed to Load the Game Result Screen.");
             e.printStackTrace();
         }
     }
