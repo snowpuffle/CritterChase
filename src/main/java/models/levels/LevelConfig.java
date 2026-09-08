@@ -14,13 +14,14 @@ public final class LevelConfig {
 
             new LevelDefinition(
                     1,
+                    110,
                     1,
                     1,
                     "file:lib/assets/animals/mouse.png",
                     "file:lib/assets/food/cheese.png",
                     "file:lib/assets/animals/cat.png",
-                    "file:lib/assets/walls/wood_wall.png",
-                    "file:lib/assets/walls/clay_wall.png",
+                    "file:lib/assets/walls/brick_wall.png",
+                    "file:lib/assets/walls/wood.png",
                     "file:lib/assets/others/exit.png",
 
                     new char[][] {
@@ -42,13 +43,14 @@ public final class LevelConfig {
                     }),
             new LevelDefinition(
                     2,
+                    100,
                     1,
                     1,
                     "file:lib/assets/animals/bunny.png",
                     "file:lib/assets/food/carrot.png",
                     "file:lib/assets/animals/fox.png",
-                    "file:lib/assets/walls/bush_wall.png",
-                    "file:lib/assets/walls/wood_wall.png",
+                    "file:lib/assets/walls/tree_2.png",
+                    "file:lib/assets/walls/tree_1.png",
                     "file:lib/assets/others/exit.png",
 
                     new char[][] {
@@ -70,13 +72,14 @@ public final class LevelConfig {
                     }),
             new LevelDefinition(
                     3,
+                    160,
                     1,
                     1,
                     "file:lib/assets/animals/frog.png",
                     "file:lib/assets/food/butterfly.png",
                     "file:lib/assets/animals/raccoon.png",
-                    "file:lib/assets/walls/bush_wall.png",
-                    "file:lib/assets/walls/tree_wall.png",
+                    "file:lib/assets/walls/wood.png",
+                    "file:lib/assets/walls/lilypad.png",
                     "file:lib/assets/others/exit.png",
 
                     new char[][] {
@@ -91,9 +94,9 @@ public final class LevelConfig {
                             { '#', '#', '#', ' ', '#', '#', '#', ' ', '#', '#', '#', ' ', '#', ' ', '#' },
                             { '#', ' ', 'F', ' ', ' ', ' ', 'F', ' ', ' ', ' ', '#', ' ', 'F', ' ', '#' },
                             { '#', ' ', '#', '#', '#', ' ', '#', '#', '#', ' ', '#', ' ', '#', ' ', '#' },
-                            { '#', ' ', 'F', ' ', ' ', ' ', ' ', 'F', ' ', ' ', ' ', ' ', '#', 'E', '#' },
+                            { '#', ' ', 'F', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#', 'E', '#' },
                             { '#', '#', '#', ' ', '#', '#', '#', ' ', '#', '%', '#', ' ', '#', ' ', '#' },
-                            { '#', ' ', ' ', 'F', ' ', ' ', ' ', ' ', 'F', ' ', ' ', 'F', ' ', 'E', 'X' },
+                            { '#', 'F', ' ', 'F', ' ', ' ', ' ', ' ', 'F', ' ', ' ', 'F', ' ', 'E', 'X' },
                             { '#', '#', '#', '#', '#', '%', '#', '#', '#', '#', '#', '#', '%', '#', '#' }
                     }));
 
@@ -119,5 +122,16 @@ public final class LevelConfig {
     // Check if a Level Number Exists
     public static boolean exists(int levelNumber) {
         return levelNumber >= 1 && levelNumber <= LEVELS.size();
+    }
+
+    // Get the Total Max Score Across All Levels
+    public static int getTotalMaxScore() {
+        int total = 0;
+
+        for (LevelDefinition level : LEVELS) {
+            total += level.getMaxScore();
+        }
+
+        return total;
     }
 }

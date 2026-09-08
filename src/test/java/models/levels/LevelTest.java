@@ -35,6 +35,7 @@ class LevelTest {
             // Return Test Level Definition
             return new LevelDefinition(
                     1,
+                    20,
                     0,
                     0,
                     "player.png",

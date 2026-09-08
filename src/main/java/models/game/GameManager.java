@@ -2,6 +2,7 @@ package models.game;
 
 import models.levels.Level;
 import models.levels.LevelConfig;
+import models.levels.LevelDefinition;
 import models.levels.LevelFactory;
 import models.objects.Score;
 import models.utils.Direction;
@@ -121,19 +122,7 @@ public class GameManager {
 
     // Get the Total Max Score Across All Levels
     public int getTotalMaxScore() {
-
-        int totalMaxScore = 0;
-
-        for (int levelNumber = 1; levelNumber <= LevelConfig.getMaxLevel(); levelNumber++) {
-
-            // Create Each Level Using the Level Factory
-            Level level = LevelFactory.createLevel(levelNumber, new Score());
-
-            // Add the Level's Max Score to the Total
-            totalMaxScore += level.getMaxScore();
-        }
-
-        return totalMaxScore;
+        return LevelConfig.getTotalMaxScore();
     }
 
     // Get the Current Level

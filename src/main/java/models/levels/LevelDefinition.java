@@ -3,6 +3,7 @@ package models.levels;
 public class LevelDefinition {
 
     private final int levelNumber;
+    private final int maxScore;
     private final int playerRow;
     private final int playerCol;
 
@@ -16,10 +17,12 @@ public class LevelDefinition {
     private final char[][] maze;
 
     // Level Definition Contructor
-    public LevelDefinition(int levelNumber, int playerRow, int playerCol, String playerImage, String foodImage,
+    public LevelDefinition(int levelNumber, int maxScore, int playerRow, int playerCol, String playerImage,
+            String foodImage,
             String enemyImage, String wallImage1, String wallImage2, String exitImage, char[][] maze) {
 
         this.levelNumber = levelNumber;
+        this.maxScore = maxScore;
         this.playerRow = playerRow;
         this.playerCol = playerCol;
         this.playerImage = playerImage;
@@ -34,6 +37,10 @@ public class LevelDefinition {
     // Getters
     public int getLevelNumber() {
         return levelNumber;
+    }
+
+    public int getMaxScore() {
+        return maxScore;
     }
 
     public int getPlayerRow() {
