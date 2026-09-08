@@ -1,6 +1,6 @@
 package models.objects;
 
-import models.utils.GameObjectType;
+import models.game.GameObjectType;
 
 // Wall Class Represents a Wall Object in the Game
 public class Wall extends GameObject {

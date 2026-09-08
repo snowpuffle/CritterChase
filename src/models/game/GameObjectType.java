@@ -1,4 +1,4 @@
-package models.utils;
+package models.game;
 
 // GameObjectType Enum Represents Different Types of Game Objects
 public enum GameObjectType {

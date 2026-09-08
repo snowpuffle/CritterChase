@@ -7,7 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
-import models.GameManager;
+import models.game.GameManager;
 import models.levels.Level;
 import models.utils.Direction;
 
@@ -159,7 +159,7 @@ public class GameController {
     // Update the HUD Labels
     private void updateHUD() {
         Level level = gameManager.getCurrentLevel();
-        scoreLabel.setText("SCORE: " + gameManager.getScore());
+        scoreLabel.setText("SCORE: " + gameManager.getScore() + " / " + level.getMaxScore());
         levelLabel.setText("LEVEL: " + gameManager.getCurrentLevelNumber());
         healthLabel.setText("HEALTH: " + level.getHealth().getCurrentHealth());
     }

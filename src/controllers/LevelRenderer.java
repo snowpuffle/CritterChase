@@ -9,9 +9,9 @@ import javafx.scene.layout.Pane;
 
 import models.entities.Enemy;
 import models.entities.Player;
+import models.game.GameBoard;
 import models.objects.GameObject;
 import models.utils.EnemyManager;
-import models.utils.GameBoard;
 
 // Level Renderer is Responsible for Rendering the Current Game Level
 public class LevelRenderer {

@@ -1,6 +1,6 @@
 package models.objects;
 
-import models.utils.GameObjectType;
+import models.game.GameObjectType;
 
 public class Food extends GameObject {
 

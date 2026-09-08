@@ -4,6 +4,8 @@ import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Queue;
 
+import models.game.GameBoard;
+
 // BFSPathFinder Finds the Shortest Distance from the Player to Every Reachable Position.
 public class BFSPathFinder {
 

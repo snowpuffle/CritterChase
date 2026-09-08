@@ -1,13 +1,15 @@
 package models.levels;
 
-import models.utils.GameBoard;
+import models.objects.Food;
+import models.objects.GameObject;
 import models.objects.Health;
 import models.objects.Score;
-import models.utils.GameObjectType;
 import models.utils.EnemyManager;
 import models.utils.CollisionManager;
 import models.utils.Direction;
 import models.entities.Player;
+import models.game.GameBoard;
+import models.game.GameObjectType;
 
 // Level Owns the Player, Board, Health, and Level Mechanics.
 public abstract class Level {
@@ -20,6 +22,7 @@ public abstract class Level {
     protected final Player player;
     protected final GameBoard gameBoard;
     protected final Score score;
+    private int maxScore;
     protected final Health health;
     protected final int levelNumber;
     protected final EnemyManager enemyManager;
@@ -107,6 +110,29 @@ public abstract class Level {
         return object != null && object.getType() == GameObjectType.EXIT;
     }
 
+    // Calculate Max Score for the Level
+    public void calculateAndStoreMaxScore() {
+
+        // Reset the Maximum Score Before Calculating
+        maxScore = 0;
+
+        // Loop Through Each Row of the Game Board
+        for (int row = 0; row < gameBoard.getHeight(); row++) {
+
+            // Loop Through Each Column of the Game Board
+            for (int col = 0; col < gameBoard.getWidth(); col++) {
+
+                // Get the Game Object at the Current Position
+                GameObject object = gameBoard.getGameObjectAt(row, col);
+
+                // Add the Food's Points to the Maximum Score
+                if (object instanceof Food) {
+                    maxScore += ((Food) object).getPoints();
+                }
+            }
+        }
+    }
+
     // Getters
     public Player getPlayer() {
         return player;
@@ -118,6 +144,10 @@ public abstract class Level {
 
     public Score getScore() {
         return score;
+    }
+
+    public int getMaxScore() {
+        return maxScore;
     }
 
     public Health getHealth() {

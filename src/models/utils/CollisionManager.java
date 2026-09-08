@@ -1,5 +1,6 @@
 package models.utils;
 
+import models.game.GameBoard;
 import models.objects.Food;
 import models.objects.GameObject;
 import models.objects.Score;

@@ -41,5 +41,8 @@ public class Level_1 extends Level {
 
         // Create the Level Objects and Place Them on the Game Board
         createLevelObjects(MAZE, foodImage, enemyImage, wallImage1, wallImage2, exitImage);
+
+        // Calculate Max Score
+        calculateAndStoreMaxScore();
     }
 }

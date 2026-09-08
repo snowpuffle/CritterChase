@@ -1,6 +1,6 @@
 package models.objects;
 
-import models.utils.GameObjectType;
+import models.game.GameObjectType;
 
 // Exit Class Represents an Exit Object in the Game
 public class Exit extends GameObject {
