@@ -1,9 +1,11 @@
-package models.utils;
+package models.levels;
 
 import models.entities.Enemy;
 import models.objects.Exit;
 import models.objects.Food;
 import models.objects.Wall;
+import models.utils.EnemyManager;
+import models.utils.GameBoard;
 
 // LevelBuilder Creates the Game Objects from the Level Maze
 public class LevelBuilder {

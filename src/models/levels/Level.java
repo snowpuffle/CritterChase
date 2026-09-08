@@ -5,7 +5,6 @@ import models.objects.Health;
 import models.objects.Score;
 import models.objects.Food;
 import models.utils.GameObjectType;
-import models.utils.LevelBuilder;
 import models.utils.EnemyManager;
 import models.utils.Direction;
 import models.entities.Player;

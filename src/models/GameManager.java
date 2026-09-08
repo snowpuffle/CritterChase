@@ -1,14 +1,14 @@
 package models;
 
 import models.levels.Level;
-import models.utils.LevelFactory;
+import models.levels.LevelConfig;
+import models.levels.LevelFactory;
 
 // GameManager Controls Game Flow and Level Progression
 public class GameManager {
 
     // Game Settings
-    private static final int STARTING_LEVEL = 1;
-    private static final int MAX_LEVEL = 2;
+    private static final int STARTING_LEVEL = LevelConfig.getStartingLevel();
 
     // Current Game Session
     private final GameSession gameSession;
@@ -41,7 +41,7 @@ public class GameManager {
         int currentLevel = gameSession.getCurrentLevelNumber();
 
         // Do Not Advance Past the Final Level
-        if (currentLevel >= MAX_LEVEL) {
+        if (currentLevel >= LevelConfig.getMaxLevel()) {
             return false;
         }
 
@@ -68,7 +68,7 @@ public class GameManager {
         Level level = gameSession.getCurrentLevel();
 
         return level != null
-                && level.getLevelNumber() == MAX_LEVEL
+                && level.getLevelNumber() == LevelConfig.getMaxLevel()
                 && level.isLevelComplete();
     }
 
