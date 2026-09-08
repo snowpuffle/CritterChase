@@ -8,17 +8,25 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.GameController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+   prefHeight="750.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/23.0.1"
+   xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.GameController">
    <top>
-      <HBox alignment="CENTER" prefHeight="100.0" spacing="20.0" BorderPane.alignment="CENTER">
+      <HBox alignment="CENTER" prefHeight="100.0" spacing="20.0">
          <children>
+
+            <!-- SCORE -->
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="300.0" spacing="5.0">
                <children>
-                  <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="30.0"
+                     fitWidth="30.0"
+                     pickOnBounds="true"
+                     preserveRatio="true">
                      <image>
-                        <Image url="@../../lib/assets/others/trophy.png" />
+                        <Image url="@../assets/others/trophy.png" />
                      </image>
                   </ImageView>
+
                   <Label fx:id="scoreLabel" text="SCORE: 0">
                      <font>
                         <Font name="System Bold" size="24.0" />
@@ -26,13 +34,19 @@
                   </Label>
                </children>
             </HBox>
+
+            <!-- LEVEL -->
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="300.0" spacing="5.0">
                <children>
-                  <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="30.0"
+                     fitWidth="30.0"
+                     pickOnBounds="true"
+                     preserveRatio="true">
                      <image>
-                        <Image url="@../../lib/assets/others/medal.png" />
+                        <Image url="@../assets/others/medal.png" />
                      </image>
                   </ImageView>
+
                   <Label fx:id="levelLabel" text="LEVEL: 1">
                      <font>
                         <Font name="System Bold" size="24.0" />
@@ -40,13 +54,19 @@
                   </Label>
                </children>
             </HBox>
+
+            <!-- HEALTH -->
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="300.0" spacing="5.0">
                <children>
-                  <ImageView fitHeight="30.0" fitWidth="30.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="30.0"
+                     fitWidth="30.0"
+                     pickOnBounds="true"
+                     preserveRatio="true">
                      <image>
-                        <Image url="@../../lib/assets/others/heart.png" />
+                        <Image url="@../assets/others/heart.png" />
                      </image>
                   </ImageView>
+
                   <Label fx:id="healthLabel" text="HEALTH: 100">
                      <font>
                         <Font name="System Bold" size="24.0" />
@@ -54,6 +74,7 @@
                   </Label>
                </children>
             </HBox>
+
          </children>
       </HBox>
    </top>
@@ -61,7 +82,8 @@
       <Pane fx:id="gamePane" prefHeight="0.0" prefWidth="0.0" BorderPane.alignment="CENTER" />
    </center>
    <bottom>
-      <Label prefHeight="100.0" text="Use ARROW KEYS or [WASD] to Move" BorderPane.alignment="CENTER">
+      <Label prefHeight="100.0" text="Use ARROW KEYS or [WASD] to Move"
+         BorderPane.alignment="CENTER">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>

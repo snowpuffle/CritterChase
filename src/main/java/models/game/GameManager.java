@@ -2,7 +2,6 @@ package models.game;
 
 import models.levels.Level;
 import models.levels.LevelConfig;
-import models.levels.LevelDefinition;
 import models.levels.LevelFactory;
 import models.objects.Score;
 import models.utils.Direction;
@@ -68,14 +67,14 @@ public class GameManager {
         // Process the Player's Turn
         boolean moved = level.takeTurn(direction);
 
-        // Invalid Movement Does Not Consume a Turn
-        if (!moved) {
-            return GameTurnResult.INVALID_MOVE;
-        }
-
         // Check if the Player Died During the Turn
         if (isGameOver()) {
             return GameTurnResult.GAME_OVER;
+        }
+
+        // Invalid Movement Does Not Consume a Turn
+        if (!moved) {
+            return GameTurnResult.INVALID_MOVE;
         }
 
         // Check if the Player Reached the Exit

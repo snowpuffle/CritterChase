@@ -99,6 +99,7 @@ public class GameController {
 
             // Nothing Changed
             case INVALID_MOVE:
+                updateHUD();
                 return;
 
             // Update Level and HUD After Valid Move
