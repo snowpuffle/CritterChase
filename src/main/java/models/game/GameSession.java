@@ -6,21 +6,31 @@ import models.objects.Score;
 // GameSession Stores the State of the Current Game
 public class GameSession {
 
-    // Persistent Game State
+    // Store the Player's Overall Game Score
     private final Score score;
 
-    // Current Level
+    // Store the Current Level
     private Level currentLevel;
 
-    // GameSession Constructor
+    // Create a New Game Session
     public GameSession() {
-        this.score = new Score();
-        this.currentLevel = null;
+        score = new Score();
     }
 
-    // Get the Persistent Score
-    public Score getScore() {
-        return score;
+    // Reset the Game Session State
+    public void reset() {
+        score.reset();
+        currentLevel = null;
+    }
+
+    // Add Points to the Overall Game Score
+    public void addScore(int points) {
+        score.addPoints(points);
+    }
+
+    // Get the Overall Game Score
+    public int getScore() {
+        return score.getPoints();
     }
 
     // Get the Current Level
@@ -30,26 +40,18 @@ public class GameSession {
 
     // Set the Current Level
     public void setCurrentLevel(Level level) {
-        this.currentLevel = level;
+        currentLevel = level;
     }
 
     // Get the Current Level Number
     public int getCurrentLevelNumber() {
-        if (currentLevel == null) {
-            return 0;
-        }
-
-        return currentLevel.getLevelNumber();
+        return currentLevel != null
+                ? currentLevel.getLevelNumber()
+                : 0;
     }
 
-    // Check if a Game Has Started
+    // Check if the Game Has Started
     public boolean isStarted() {
         return currentLevel != null;
-    }
-
-    // Reset the Game Session
-    public void reset() {
-        score.reset();
-        currentLevel = null;
     }
 }

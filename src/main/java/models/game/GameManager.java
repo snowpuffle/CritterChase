@@ -119,16 +119,17 @@ public class GameManager {
                 && level.isLevelComplete();
     }
 
-    // Gets the Total Max Score Across All Levels
+    // Get the Total Max Score Across All Levels
     public int getTotalMaxScore() {
-        
+
         int totalMaxScore = 0;
+
         for (int levelNumber = 1; levelNumber <= LevelConfig.getMaxLevel(); levelNumber++) {
 
-            // Creates Each Level Using the Level Factory
+            // Create Each Level Using the Level Factory
             Level level = LevelFactory.createLevel(levelNumber, new Score());
 
-            // Adds the Level's Max Score to the Total
+            // Add the Level's Max Score to the Total
             totalMaxScore += level.getMaxScore();
         }
 
@@ -140,14 +141,14 @@ public class GameManager {
         return gameSession.getCurrentLevel();
     }
 
-    // Get the Current Game Session
-    public GameSession getGameSession() {
-        return gameSession;
+    // Get the Total Game Score
+    public int getScore() {
+        return gameSession.getScore();
     }
 
-    // Get the Persistent Score
-    public int getScore() {
-        return gameSession.getScore().getPoints();
+    // Add Points to the Total Game Score
+    public void addScore(int points) {
+        gameSession.addScore(points);
     }
 
     // Get the Current Level Number
@@ -160,9 +161,9 @@ public class GameManager {
         return gameSession.isStarted();
     }
 
-    // Transfer the Completed Level's Score into the Persistent Total
+    // Transfer the Completed Level's Score into the Total Score
     public void addCurrentLevelScore() {
-        gameSession.getScore().addPoints(
+        gameSession.addScore(
                 gameSession.getCurrentLevel().getScore().getPoints());
     }
 }

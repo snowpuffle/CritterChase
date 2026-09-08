@@ -12,13 +12,9 @@ class GameSessionTest {
     @Test
     void newSessionHasNoCurrentLevel() {
 
-        // Create GameSession Instance
         GameSession session = new GameSession();
 
-        // Verify Session Has Not Started
         assertFalse(session.isStarted());
-
-        // Verify No Current Level Exists
         assertEquals(0, session.getCurrentLevelNumber());
     }
 
@@ -26,31 +22,29 @@ class GameSessionTest {
     @Test
     void scoreCanPersistAcrossLevels() {
 
-        // Create GameSession Instance
         GameSession session = new GameSession();
 
-        // Add Points to Session Score
-        session.getScore().addPoints(100);
+        // Add Points Through GameSession
+        session.addScore(100);
 
         // Verify Score Value Persists
-        assertEquals(100, session.getScore().getPoints());
+        assertEquals(100, session.getScore());
     }
 
     // Test Session Reset Functionality
     @Test
     void resetClearsSessionState() {
 
-        // Create GameSession Instance
         GameSession session = new GameSession();
 
-        // Add Points To Session Score
-        session.getScore().addPoints(100);
+        // Add Points Through GameSession
+        session.addScore(100);
 
         // Reset Session State
         session.reset();
 
         // Verify Score Reset
-        assertEquals(0, session.getScore().getPoints());
+        assertEquals(0, session.getScore());
 
         // Verify Session Returned To Initial State
         assertFalse(session.isStarted());

@@ -56,7 +56,7 @@ class GameManagerTest {
         manager.startGame();
 
         // Add Points To Current Score
-        manager.getGameSession().getScore().addPoints(100);
+        manager.addScore(100);
 
         // Restart Current Game Session
         manager.restartGame();
