@@ -3,14 +3,13 @@ package models.levels;
 import models.utils.GameBoard;
 import models.objects.Health;
 import models.objects.Score;
-import models.objects.Food;
 import models.utils.GameObjectType;
 import models.utils.EnemyManager;
+import models.utils.CollisionManager;
 import models.utils.Direction;
 import models.entities.Player;
 
 // Level Owns the Player, Board, Health, and Level Mechanics.
-// Score is owned by GameSession and shared across levels.
 public abstract class Level {
 
     // Board Dimensions
@@ -24,6 +23,7 @@ public abstract class Level {
     protected final Health health;
     protected final int levelNumber;
     protected final EnemyManager enemyManager;
+    protected final CollisionManager collisionManager;
 
     // Level Renderer
     private final LevelBuilder levelBuilder;
@@ -36,6 +36,7 @@ public abstract class Level {
         this.health = new Health(100);
         this.levelNumber = levelNumber;
         this.enemyManager = new EnemyManager(player, gameBoard, health);
+        this.collisionManager = new CollisionManager(gameBoard, score);
         this.levelBuilder = new LevelBuilder(gameBoard, enemyManager);
     }
 
@@ -67,7 +68,7 @@ public abstract class Level {
     // Move Player
     public boolean movePlayer(Direction direction) {
 
-        // Calculate New Position
+        // Calculate New Player Position
         int newRow = player.getRow() + direction.getRowChange();
         int newCol = player.getCol() + direction.getColChange();
 
@@ -76,58 +77,20 @@ public abstract class Level {
             return false;
         }
 
-        // Handle Player Collision with Enemies
+        // Check if the Player Collides with an Enemy
         if (enemyManager.handlePlayerCollision(newRow, newCol)) {
             return false;
         }
 
-        // Handle Player Collision with Static Objects
-        if (!handleCollision(newRow, newCol)) {
+        // Check if the Player Can Move to the New Position
+        if (!collisionManager.canPlayerMoveTo(newRow, newCol)) {
             return false;
         }
 
-        // Move the Player
+        // Move the Player to the New Position
         player.move(direction.getRowChange(), direction.getColChange());
 
         return true;
-    }
-
-    // Handle Static Object Collision
-    private boolean handleCollision(int row, int col) {
-
-        // Get the Game Object at the New Position
-        var object = gameBoard.getGameObjectAt(row, col);
-
-        // If There is No Object, the Position is Valid
-        if (object == null) {
-            return true;
-        }
-
-        // Handle Collision Based on Object Type
-        switch (object.getType()) {
-            case FOOD:
-                collectFood((Food) object);
-                return true;
-
-            case WALL:
-                return false;
-
-            case EXIT:
-                return true;
-
-            default:
-                return true;
-        }
-    }
-
-    // Collect Food
-    private void collectFood(Food food) {
-
-        // Add Points to the Shared Game Score
-        score.addPoints(food.getPoints());
-
-        // Remove Food from the Board
-        gameBoard.removeGameObjectAt(food.getRow(), food.getCol());
     }
 
     // Move Enemies

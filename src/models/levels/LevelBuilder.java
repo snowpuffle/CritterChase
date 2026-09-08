@@ -146,7 +146,7 @@ public class LevelBuilder {
 
         // Check Valid Maze Characters
         if (type != '#' && type != '%' && type != 'F' && type != 'E' && type != 'X' && type != ' ' && type != 'P') {
-            throw new IllegalArgumentException("Maze Error!");
+            throw new IllegalArgumentException("Maze Must Contain Exactly One Exit!");
         }
     }
 }

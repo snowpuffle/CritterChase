@@ -7,7 +7,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import models.GameManager;
 import models.levels.Level;
-import models.levels.LevelFactory;
 import models.utils.Direction;
 
 // GameController Controls Gameplay and User Input
