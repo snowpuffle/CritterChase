@@ -88,7 +88,7 @@ public class EnemyManager {
 
         // Attack the Player if Adjacent
         if (isAdjacentToPlayer(enemy)) {
-            hitPlayer(enemy);
+            damagePlayer(enemy);
             return;
         }
 
@@ -177,7 +177,7 @@ public class EnemyManager {
     }
 
     // Damage the Player
-    private void hitPlayer(Enemy enemy) {
+    private void damagePlayer(Enemy enemy) {
         health.takeDamage(enemy.getDamage());
     }
 

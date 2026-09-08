@@ -159,7 +159,7 @@ public class GameController {
     // Update the HUD Labels
     private void updateHUD() {
         Level level = gameManager.getCurrentLevel();
-        scoreLabel.setText("SCORE: " + gameManager.getScore() + " / " + level.getMaxScore());
+        scoreLabel.setText("SCORE: " + level.getScore().getPoints() + " / " + level.getMaxScore());
         levelLabel.setText("LEVEL: " + gameManager.getCurrentLevelNumber());
         healthLabel.setText("HEALTH: " + level.getHealth().getCurrentHealth());
     }
@@ -178,10 +178,17 @@ public class GameController {
     private void showGameResult(String result) {
         try {
             GameOverController controller = SceneManager.show("gameover.fxml");
+
+            System.out.println("FINAL SCORE: " + gameManager.getScore());
+            System.out.println("TOTAL MAX: " + gameManager.getTotalMaxScore());
+
             controller.setResult(result);
+            controller.setScore(
+                    gameManager.getScore(),
+                    gameManager.getTotalMaxScore());
 
         } catch (IOException e) {
-            System.err.println("Failed to Load the Game Result Screen.");
+            System.err.println("Failed to load the game result screen.");
             e.printStackTrace();
         }
     }

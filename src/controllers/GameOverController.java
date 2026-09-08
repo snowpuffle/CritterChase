@@ -19,12 +19,20 @@ public class GameOverController {
     private Button backButton;
 
     @FXML
+    private Label totalScoreLabel;
+
+    @FXML
     private Label resultLabel;
 
     // Set the Result Message (Game Over or Game Won)
     @FXML
     public void setResult(String result) {
         resultLabel.setText(result);
+    }
+
+    @FXML
+    public void setScore(int score, int maxScore) {
+        totalScoreLabel.setText("TOTAL SCORE: " + score + " / " + maxScore);
     }
 
     @FXML

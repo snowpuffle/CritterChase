@@ -1,6 +1,5 @@
 package models.game;
 
-import models.objects.Food;
 import models.objects.GameObject;
 
 public class GameBoard {
@@ -36,7 +35,7 @@ public class GameBoard {
 
         // Check for Null Object
         if (gameObject == null) {
-            return; // Null Object
+            return;
         }
 
         // Get the Position of the Object
@@ -61,23 +60,6 @@ public class GameBoard {
     // Check if a Position is Inside the Board
     public boolean isValidPosition(int row, int col) {
         return row >= 0 && row < height && col >= 0 && col < width;
-    }
-
-    
-    public int getMaxScore() {
-        int maxScore = 0;
-
-        for (int row = 0; row < height; row++) {
-            for (int col = 0; col < width; col++) {
-                GameObject object = getGameObjectAt(row, col);
-
-                if (object instanceof Food) {
-                    maxScore += ((Food) object).getPoints();
-                }
-            }
-        }
-
-        return maxScore;
     }
 
     // Getters
