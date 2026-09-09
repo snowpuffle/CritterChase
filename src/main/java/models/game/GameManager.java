@@ -163,7 +163,7 @@ public class GameManager {
     }
 
     // Transfer the Completed Level's Score into the Total Score
-    public void addCurrentLevelScore() {
+    private void addCurrentLevelScore() {
 
         // Do Not Add the Same Level's Score More Than Once
         if (currentLevelScoreAdded) {
