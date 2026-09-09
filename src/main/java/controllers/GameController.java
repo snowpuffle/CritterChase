@@ -176,6 +176,7 @@ public class GameController {
             GameOverController controller = SceneManager.show("gameover.fxml");
 
             controller.setResult(result);
+
             controller.setScore(
                     gameManager.getScore(),
                     gameManager.getTotalMaxScore());

@@ -10,29 +10,42 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 // GameOverController Controls the Game Over / Game Won Screen
 public class GameOverController {
 
     @FXML
-    private Button backButton;
+    private ImageView resultImage;
 
     @FXML
     private Label totalScoreLabel;
 
     @FXML
-    private Label resultLabel;
+    private Button backButton;
 
-    // Set the Result Message (Game Over or Game Won)
+    // Set the Result Image (Game Over or Game Won)
     @FXML
     public void setResult(String result) {
-        resultLabel.setText(result);
+
+        boolean won = result != null && result.toLowerCase().contains("won");
+
+        String imagePath = won
+                ? "/assets/others/youwon_title.png"
+                : "/assets/others/gameover_title.png";
+
+        Image image = new Image(
+                getClass().getResourceAsStream(imagePath));
+
+        resultImage.setImage(image);
     }
 
+    // Set the Final Game Score
     @FXML
     public void setScore(int score, int maxScore) {
-        totalScoreLabel.setText("TOTAL SCORE: " + score + " / " + maxScore);
+        totalScoreLabel.setText(score + " / " + maxScore);
     }
 
     @FXML
