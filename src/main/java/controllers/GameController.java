@@ -163,10 +163,26 @@ public class GameController {
 
     // Update the HUD Labels
     private void updateHUD() {
+
+        // Get Current Level
         Level level = gameManager.getCurrentLevel();
-        scoreLabel.setText("SCORE: " + level.getScore().getPoints() + " / " + level.getMaxScore());
-        levelLabel.setText("LEVEL: " + gameManager.getCurrentLevelNumber());
-        healthLabel.setText("HEALTH: " + level.getHealth().getCurrentHealth());
+
+        // Update Score Display
+        scoreLabel.setText(
+                "SCORE: "
+                        + level.getScore().getPoints()
+                        + " / "
+                        + level.getMaxScore());
+
+        // Update Level Display
+        levelLabel.setText(
+                "LEVEL: "
+                        + level.getLevelNumber());
+
+        // Update Health Display
+        healthLabel.setText(
+                "HEALTH: "
+                        + level.getHealth().getCurrentHealth());
     }
 
     // Show Game Over / Won Screen

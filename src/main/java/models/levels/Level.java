@@ -1,186 +1,228 @@
 package models.levels;
 
-import java.util.List;
-
 import models.entities.Player;
 import models.game.GameBoard;
 import models.game.GameBoardConfig;
 import models.game.GameObjectType;
+import models.objects.GameObject;
 import models.objects.Health;
 import models.objects.Score;
 import models.utils.CollisionManager;
 import models.utils.Direction;
 import models.utils.EnemyManager;
 
-// Level Owns the Player, Board, Health, and Level Mechanics.
+// Level Class Represents Individual Playable Game Level
 public class Level {
 
-    // Level Components
-    protected final Player player;
-    protected final GameBoard gameBoard;
-    protected final String backgroundPath;
-    protected final Score score;
-    protected final int maxScore;
-    protected final Health health;
-    protected final int levelNumber;
-    protected final EnemyManager enemyManager;
-    protected final CollisionManager collisionManager;
-
-    // Level Builder
+    private final Player player;
+    private final GameBoard gameBoard;
+    private final String backgroundPath;
+    private final Score score;
+    private final int maxScore;
+    private final Health health;
+    private final int levelNumber;
+    private final EnemyManager enemyManager;
+    private final CollisionManager collisionManager;
     private final LevelBuilder levelBuilder;
 
     // Level Constructor
-    public Level(LevelDefinition definition, Score score) {
+    public Level(
+            LevelDefinition definition,
+            Score score) {
 
         // Store Level Information
         this.levelNumber = definition.levelNumber();
-        this.score = score;
-        this.backgroundPath = definition.assets().background();
         this.maxScore = definition.maxScore();
+        this.backgroundPath = definition.assets().background();
 
-        // Create the Game Board
-        this.gameBoard = new GameBoard(GameBoardConfig.WIDTH, GameBoardConfig.HEIGHT);
+        // Store Level Score Reference
+        this.score = score;
 
-        // Create the Player
+        // Create GameBoard Using Level Dimensions
+        this.gameBoard = new GameBoard(
+                GameBoardConfig.WIDTH,
+                GameBoardConfig.HEIGHT);
+
+        // Create Player Using Level Player Definition
         this.player = new Player(
                 definition.player().row(),
                 definition.player().col(),
                 definition.assets().player());
 
-        // Create Health
+        // Create Player Health
         this.health = new Health(100);
 
-        // Create Level Managers
-        this.enemyManager = new EnemyManager(player, gameBoard, health);
+        // Create EnemyManager Using Player, GameBoard, and Health
+        this.enemyManager = new EnemyManager(
+                player,
+                gameBoard,
+                health);
 
-        this.collisionManager = new CollisionManager(gameBoard, score);
+        // Create CollisionManager
+        this.collisionManager = new CollisionManager(
+                gameBoard,
+                score);
 
-        // Create Level Builder
+        // Create LevelBuilder
         this.levelBuilder = new LevelBuilder(
                 gameBoard,
                 enemyManager);
 
-        // Create the Level Objects
-        createLevelObjects(
-                convertMaze(definition.maze()),
-                definition.assets().food(),
-                definition.assets().enemy(),
-                definition.assets().wall1(),
-                definition.assets().wall2(),
-                definition.assets().exit());
+        // Build Level Objects
+        buildLevel(definition);
     }
 
-    // Convert JSON Maze Rows into the char[][] Format Expected by LevelBuilder
-    private char[][] convertMaze(List<String> mazeRows) {
+    // Build Level Objects from Level Definition
+    private void buildLevel(LevelDefinition definition) {
 
-        // Create the Character Array
-        char[][] maze = new char[mazeRows.size()][];
+        // Get Maze Rows
+        int height = definition.maze().size();
 
-        // Convert Each Maze Row into a Character Array
-        for (int row = 0; row < mazeRows.size(); row++) {
-            maze[row] = mazeRows.get(row).toCharArray();
+        // Get Maze Columns
+        int width = definition.maze().get(0).length();
+
+        // Create Character Array for Maze
+        char[][] maze = new char[height][width];
+
+        // Convert Maze Strings into Character Array
+        for (int row = 0; row < height; row++) {
+
+            // Get Current Maze Row
+            String mazeRow = definition.maze().get(row);
+
+            // Convert Current Row into Character Array
+            maze[row] = mazeRow.toCharArray();
         }
 
-        // Return the Converted Maze
-        return maze;
+        // Get Level Assets
+        String foodImage = definition.assets().food();
+        String enemyImage = definition.assets().enemy();
+        String wallImage1 = definition.assets().wall1();
+        String wallImage2 = definition.assets().wall2();
+        String exitImage = definition.assets().exit();
+
+        // Build Game Objects Using LevelBuilder
+        levelBuilder.build(
+                maze,
+                foodImage,
+                enemyImage,
+                wallImage1,
+                wallImage2,
+                exitImage);
     }
 
-    // Create the Level Objects from the Maze
-    protected void createLevelObjects(char[][] maze, String foodImage, String enemyImage, String wallImage1,
-            String wallImage2, String exitImage) {
-        levelBuilder.build(maze, foodImage, enemyImage, wallImage1, wallImage2, exitImage);
-    }
-
-    // Process One Complete Player Turn
+    // Process One Player Turn
     public boolean takeTurn(Direction direction) {
 
-        // Move the Player
+        // Reject Null Direction Values
+        if (direction == null) {
+            return false;
+        }
+
+        // Attempt Player Movement
         boolean moved = movePlayer(direction);
 
-        // Stop if the Player Could Not Move
+        // Stop Turn Processing When Player Cannot Move
         if (!moved) {
             return false;
         }
 
-        // Move Enemies After the Player Moves
+        // Move Enemies After Successful Player Movement
         moveEnemies();
 
-        // Return True if the Turn Was Processed
+        // Return Successful Turn Result
         return true;
     }
 
-    // Move Player
-    public boolean movePlayer(Direction direction) {
+    // Move Player in Requested Direction
+    private boolean movePlayer(Direction direction) {
 
-        // Calculate New Player Position
-        int newRow = player.getRow() + direction.getRowChange();
-        int newCol = player.getCol() + direction.getColChange();
+        // Calculate New Player Row
+        int newRow = player.getRow()
+                + direction.getRowChange();
 
-        // Check if the New Position is Valid
+        // Calculate New Player Column
+        int newCol = player.getCol()
+                + direction.getColChange();
+
+        // Reject Positions Outside GameBoard
         if (!gameBoard.isValidPosition(newRow, newCol)) {
             return false;
         }
 
-        // Check if the Player Collides with an Enemy
+        // Check Enemy Collision Before Player Movement
         if (enemyManager.handlePlayerCollision(newRow, newCol)) {
             return false;
         }
 
-        // Check if the Player Can Move to the New Position
+        // Check GameObject Collision Before Player Movement
         if (!collisionManager.canPlayerMoveTo(newRow, newCol)) {
             return false;
         }
 
-        // Move the Player to the New Position
-        player.move(direction.getRowChange(), direction.getColChange());
+        // Move Player to New Position
+        player.setPosition(newRow, newCol);
 
+        // Return Successful Movement Result
         return true;
     }
 
-    // Move Enemies
-    public void moveEnemies() {
+    // Move All Enemies
+    private void moveEnemies() {
+
+        // Process Enemy Movement Through EnemyManager
         enemyManager.moveEnemies();
     }
 
-    // Check if the Level is Complete
+    // Check if Player Reached Level Exit
     public boolean isLevelComplete() {
 
-        // Get the Object at the Player's Current Position
-        var object = gameBoard.getGameObjectAt(player.getRow(), player.getCol());
+        // Get GameObject at Player Position
+        GameObject object = gameBoard.getGameObjectAt(
+                player.getRow(),
+                player.getCol());
 
-        // Return True if the Player is on the Exit
-        return object != null && object.getType() == GameObjectType.EXIT;
+        // Check Exit Object
+        return object != null
+                && object.getType() == GameObjectType.EXIT;
     }
 
-    // Getters
+    // Get Player
     public Player getPlayer() {
         return player;
     }
 
+    // Get GameBoard
     public GameBoard getGameBoard() {
         return gameBoard;
     }
 
-    public Score getScore() {
-        return score;
-    }
-
-    public int getMaxScore() {
-        return maxScore;
-    }
-
+    // Get Background Image Path
     public String getBackgroundPath() {
         return backgroundPath;
     }
 
+    // Get Level Score
+    public Score getScore() {
+        return score;
+    }
+
+    // Get Maximum Level Score
+    public int getMaxScore() {
+        return maxScore;
+    }
+
+    // Get Player Health
     public Health getHealth() {
         return health;
     }
 
+    // Get Level Number
     public int getLevelNumber() {
         return levelNumber;
     }
 
+    // Get EnemyManager
     public EnemyManager getEnemyManager() {
         return enemyManager;
     }

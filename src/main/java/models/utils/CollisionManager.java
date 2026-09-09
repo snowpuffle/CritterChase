@@ -5,50 +5,61 @@ import models.objects.Food;
 import models.objects.GameObject;
 import models.objects.Score;
 
-// 
+// CollisionManager Class Controls Player Collision Rules
 public class CollisionManager {
 
     private final GameBoard gameBoard;
     private final Score score;
 
-    // Collision Manager Constructor
+    // CollisionManager Constructor
     public CollisionManager(GameBoard gameBoard, Score score) {
         this.gameBoard = gameBoard;
         this.score = score;
     }
 
-    // Check if Player Can Move to Position
+    // Check if Player Can Move to Requested Position
     public boolean canPlayerMoveTo(int row, int col) {
 
-        // Get Game Object at Position
+        // Get GameObject at Requested Position
         GameObject object = gameBoard.getGameObjectAt(row, col);
 
-        // Allow Movement When Position is Empty
+        // Allow Movement When Position Contains No GameObject
         if (object == null) {
             return true;
         }
 
-        // Handle Collision based on Object Type
+        // Check Collision Based on GameObject Type
         switch (object.getType()) {
 
-            case FOOD: // Collect Food and Allow Movement
+            // Collect Food When Player Enters Food Position
+            case FOOD:
                 collectFood((Food) object);
                 return true;
 
-            case WALL: // Block Movement through Wall
+            // Prevent Player Movement Through Wall
+            case WALL:
                 return false;
 
-            case EXIT: // Allow Movement through Exit
+            // Allow Player Movement Onto Exit
+            case EXIT:
                 return true;
 
-            default: // Allow Movement for Other Object Types
-                return true;
+            // Prevent Movement Through Unknown Object Types
+            default:
+                return false;
         }
     }
 
-    // Collect Food and Add Points
+    // Collect Food and Add Food Points to Level Score
     private void collectFood(Food food) {
+
+        // Add Food Point Value to Current Score
         score.addPoints(food.getPoints());
-        gameBoard.removeGameObjectAt(food.getRow(), food.getCol());
+
+        // Remove Collected Food from GameBoard
+        gameBoard.removeGameObjectAt(
+                food.getRow(),
+                food.getCol()
+        );
     }
 }

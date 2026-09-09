@@ -21,204 +21,303 @@ import models.objects.Wall;
 // - Supports Multiple Enemies Moving Independently
 class EnemyManagerTest {
 
-        // Test Enemy Movement Toward the Player
-        @Test
-        void enemyMovesTowardPlayer() {
+    // Test Enemy Movement Toward the Player
+    @Test
+    void enemyMovesTowardPlayer() {
 
-                // Create Game Board
-                GameBoard board = new GameBoard(5, 5);
+        // Create Game Board
+        GameBoard board = new GameBoard(5, 5);
 
-                // Create Player at Center of Board
-                Player player = new Player(2, 2, "player.png");
+        // Create Player at Center of Board
+        Player player = new Player(
+                2,
+                2,
+                "player.png");
 
-                // Create Player Health
-                Health health = new Health(100);
+        // Create Player Health
+        Health health = new Health(100);
 
-                // Create Enemy Manager
-                EnemyManager enemyManager = new EnemyManager(player, board, health);
+        // Create Enemy Manager
+        EnemyManager enemyManager =
+                new EnemyManager(
+                        player,
+                        board,
+                        health);
 
-                // Create Enemy Two Spaces Away from Player
-                Enemy enemy = new Enemy(2, 4, "enemy.png");
+        // Create Enemy Two Spaces Away from Player
+        Enemy enemy = new Enemy(
+                2,
+                4,
+                "enemy.png");
 
-                // Add Enemy to Enemy Manager
-                enemyManager.addEnemy(enemy);
+        // Add Enemy to Enemy Manager
+        enemyManager.addEnemy(enemy);
 
-                // Move Enemy Toward Player
-                enemyManager.moveEnemies();
+        // Move Enemy Toward Player
+        enemyManager.moveEnemies();
 
-                // Verify Enemy Moved One Space Toward Player
-                assertEquals(2, enemy.getRow());
-                assertEquals(3, enemy.getCol());
-        }
+        // Verify Enemy Moved One Space Toward Player
+        assertEquals(2, enemy.getRow());
+        assertEquals(3, enemy.getCol());
+    }
 
-        // Test Enemy Movement Around Walls
-        @Test
-        void enemyMovesAroundWalls() {
+    // Test Enemy Movement Around Walls
+    @Test
+    void enemyMovesAroundWalls() {
 
-                // Create Game Board
-                GameBoard board = new GameBoard(5, 5);
+        // Create Game Board
+        GameBoard board = new GameBoard(5, 5);
 
-                // Create Player
-                Player player = new Player(2, 1, "player.png");
+        // Create Player
+        Player player = new Player(
+                2,
+                1,
+                "player.png");
 
-                // Create Player Health
-                Health health = new Health(100);
+        // Create Player Health
+        Health health = new Health(100);
 
-                // Place Wall Between Enemy and Player
-                board.setGameObjectAt(new Wall(2, 2, "wall.png"));
+        // Place Wall Between Enemy and Player
+        board.setGameObjectAt(
+                2,
+                2,
+                new Wall(
+                        2,
+                        2,
+                        "wall.png"));
 
-                // Create Enemy Manager
-                EnemyManager enemyManager = new EnemyManager(player, board, health);
+        // Create Enemy Manager
+        EnemyManager enemyManager =
+                new EnemyManager(
+                        player,
+                        board,
+                        health);
 
-                // Create Enemy on the Other Side of the Wall
-                Enemy enemy = new Enemy(2, 3, "enemy.png");
+        // Create Enemy on Other Side of Wall
+        Enemy enemy = new Enemy(
+                2,
+                3,
+                "enemy.png");
 
-                // Add Enemy to Enemy Manager
-                enemyManager.addEnemy(enemy);
+        // Add Enemy to Enemy Manager
+        enemyManager.addEnemy(enemy);
 
-                // Move Enemy Toward Player
-                enemyManager.moveEnemies();
+        // Move Enemy Toward Player
+        enemyManager.moveEnemies();
 
-                // Verify Enemy Moved Around the Wall
-                assertEquals(1, enemy.getRow());
-                assertEquals(3, enemy.getCol());
-        }
+        // Verify Enemy Moved Around Wall
+        assertEquals(1, enemy.getRow());
+        assertEquals(3, enemy.getCol());
+    }
 
-        // Test Multiple Enemies Do Not Occupy the Same Square
-        @Test
-        void enemiesDoNotOccupySameSquare() {
+    // Test Multiple Enemies Do Not Occupy Same Square
+    @Test
+    void enemiesDoNotOccupySameSquare() {
 
-                // Create Game Board
-                GameBoard board = new GameBoard(5, 5);
+        // Create Game Board
+        GameBoard board = new GameBoard(5, 5);
 
-                // Create Player
-                Player player = new Player(0, 0, "player.png");
+        // Create Player
+        Player player = new Player(
+                0,
+                0,
+                "player.png");
 
-                // Create Player Health
-                Health health = new Health(100);
+        // Create Player Health
+        Health health = new Health(100);
 
-                // Create Enemy Manager
-                EnemyManager enemyManager = new EnemyManager(player, board, health);
+        // Create Enemy Manager
+        EnemyManager enemyManager =
+                new EnemyManager(
+                        player,
+                        board,
+                        health);
 
-                // Create Two Enemies
-                Enemy enemyOne = new Enemy(0, 2, "enemy1.png");
-                Enemy enemyTwo = new Enemy(1, 1, "enemy2.png");
+        // Create Two Enemies
+        Enemy enemyOne = new Enemy(
+                0,
+                2,
+                "enemy1.png");
 
-                // Add Both Enemies to Enemy Manager
-                enemyManager.addEnemy(enemyOne);
-                enemyManager.addEnemy(enemyTwo);
+        Enemy enemyTwo = new Enemy(
+                1,
+                1,
+                "enemy2.png");
 
-                // Move Both Enemies Toward Player
-                enemyManager.moveEnemies();
+        // Add Both Enemies to Enemy Manager
+        enemyManager.addEnemy(enemyOne);
+        enemyManager.addEnemy(enemyTwo);
 
-                // Verify Enemies Do Not Occupy the Same Position
-                assertFalse(enemyOne.getRow() == enemyTwo.getRow() && enemyOne.getCol() == enemyTwo.getCol());
-        }
+        // Move Both Enemies Toward Player
+        enemyManager.moveEnemies();
 
-        // Test Adjacent Enemy Damage
-        @Test
-        void adjacentEnemyDamagesPlayer() {
+        // Verify Enemies Do Not Occupy Same Position
+        assertFalse(
+                enemyOne.getRow() == enemyTwo.getRow()
+                        && enemyOne.getCol() == enemyTwo.getCol());
+    }
 
-                // Create Game Board
-                GameBoard board = new GameBoard(5, 5);
+    // Test Adjacent Enemy Damage
+    @Test
+    void adjacentEnemyDamagesPlayer() {
 
-                // Create Player
-                Player player = new Player(2, 2, "player.png");
+        // Create Game Board
+        GameBoard board = new GameBoard(5, 5);
 
-                // Create Player Health
-                Health health = new Health(100);
+        // Create Player
+        Player player = new Player(
+                2,
+                2,
+                "player.png");
 
-                // Create Enemy Manager
-                EnemyManager enemyManager = new EnemyManager(player, board, health);
+        // Create Player Health
+        Health health = new Health(100);
 
-                // Create Enemy Directly Next to Player
-                Enemy enemy = new Enemy(2, 3, "enemy.png");
+        // Create Enemy Manager
+        EnemyManager enemyManager =
+                new EnemyManager(
+                        player,
+                        board,
+                        health);
 
-                // Add Enemy to Enemy Manager
-                enemyManager.addEnemy(enemy);
+        // Create Enemy Directly Next to Player
+        Enemy enemy = new Enemy(
+                2,
+                3,
+                "enemy.png");
 
-                // Move Enemies
-                // Adjacent Enemy Should Attack Instead of Moving
-                enemyManager.moveEnemies();
+        // Add Enemy to Enemy Manager
+        enemyManager.addEnemy(enemy);
 
-                // Verify Player Lost Enemy Damage
-                assertEquals(80, health.getCurrentHealth());
+        // Move Enemies
+        // Adjacent Enemy Should Attack Instead of Moving
+        enemyManager.moveEnemies();
 
-                // Verify Enemy Remains in Its Original Position
-                assertEquals(2, enemy.getRow());
-                assertEquals(3, enemy.getCol());
-        }
+        // Verify Player Lost Enemy Damage
+        assertEquals(
+                80,
+                health.getCurrentHealth());
 
-        // Test Player-Enemy Collision Damage
-        @Test
-        void playerCollisionWithEnemyCausesDamage() {
+        // Verify Enemy Remains in Original Position
+        assertEquals(
+                2,
+                enemy.getRow());
 
-                // Create Game Board
-                GameBoard board = new GameBoard(5, 5);
+        assertEquals(
+                3,
+                enemy.getCol());
+    }
 
-                // Create Player
-                Player player = new Player(2, 2, "player.png");
+    // Test Player-Enemy Collision Damage
+    @Test
+    void playerCollisionWithEnemyCausesDamage() {
 
-                // Create Player Health
-                Health health = new Health(100);
+        // Create Game Board
+        GameBoard board = new GameBoard(5, 5);
 
-                // Create Enemy Manager
-                EnemyManager enemyManager = new EnemyManager(player, board, health);
+        // Create Player
+        Player player = new Player(
+                2,
+                2,
+                "player.png");
 
-                // Create Enemy
-                Enemy enemy = new Enemy(2, 3, "enemy.png");
+        // Create Player Health
+        Health health = new Health(100);
 
-                // Add Enemy to Enemy Manager
-                enemyManager.addEnemy(enemy);
+        // Create Enemy Manager
+        EnemyManager enemyManager =
+                new EnemyManager(
+                        player,
+                        board,
+                        health);
 
-                // Trigger Player-Enemy Collision
-                boolean collision = enemyManager.handlePlayerCollision(2, 3);
+        // Create Enemy
+        Enemy enemy = new Enemy(
+                2,
+                3,
+                "enemy.png");
 
-                // Verify Collision Was Detected
-                assertTrue(collision);
+        // Add Enemy to Enemy Manager
+        enemyManager.addEnemy(enemy);
 
-                // Verify Player Lost Enemy Damage
-                assertEquals(80, health.getCurrentHealth());
-        }
+        // Trigger Player-Enemy Collision
+        boolean collision =
+                enemyManager.handlePlayerCollision(
+                        2,
+                        3);
 
-        // Test Multiple Enemy Movement
-        @Test
-        void multipleEnemiesMoveCorrectly() {
+        // Verify Collision Was Detected
+        assertTrue(collision);
 
-                // Create Game Board
-                GameBoard board = new GameBoard(5, 5);
+        // Verify Player Lost Enemy Damage
+        assertEquals(
+                80,
+                health.getCurrentHealth());
+    }
 
-                // Create Player at Center of Board
-                Player player = new Player(2, 2, "player.png");
+    // Test Multiple Enemy Movement
+    @Test
+    void multipleEnemiesMoveCorrectly() {
 
-                // Create Player Health
-                Health health = new Health(100);
+        // Create Game Board
+        GameBoard board = new GameBoard(5, 5);
 
-                // Create Enemy Manager
-                EnemyManager enemyManager = new EnemyManager(player, board, health);
+        // Create Player at Center of Board
+        Player player = new Player(
+                2,
+                2,
+                "player.png");
 
-                // Create Enemy Above Player
-                Enemy enemyOne = new Enemy(0, 2, "enemy1.png");
+        // Create Player Health
+        Health health = new Health(100);
 
-                // Create Enemy Below Player
-                Enemy enemyTwo = new Enemy(4, 2, "enemy2.png");
+        // Create Enemy Manager
+        EnemyManager enemyManager =
+                new EnemyManager(
+                        player,
+                        board,
+                        health);
 
-                // Add Both Enemies to Enemy Manager
-                enemyManager.addEnemy(enemyOne);
-                enemyManager.addEnemy(enemyTwo);
+        // Create Enemy Above Player
+        Enemy enemyOne = new Enemy(
+                0,
+                2,
+                "enemy1.png");
 
-                // Move Both Enemies Toward Player
-                enemyManager.moveEnemies();
+        // Create Enemy Below Player
+        Enemy enemyTwo = new Enemy(
+                4,
+                2,
+                "enemy2.png");
 
-                // Verify First Enemy Moved One Space Toward Player
-                assertEquals(1, enemyOne.getRow());
-                assertEquals(2, enemyOne.getCol());
+        // Add Both Enemies to Enemy Manager
+        enemyManager.addEnemy(enemyOne);
+        enemyManager.addEnemy(enemyTwo);
 
-                // Verify Second Enemy Moved One Space Toward Player
-                assertEquals(3, enemyTwo.getRow());
-                assertEquals(2, enemyTwo.getCol());
+        // Move Both Enemies Toward Player
+        enemyManager.moveEnemies();
 
-                // Verify Enemies Do Not Occupy the Same Position
-                assertFalse(enemyOne.getRow() == enemyTwo.getRow() && enemyOne.getCol() == enemyTwo.getCol());
-        }
+        // Verify First Enemy Moved One Space Toward Player
+        assertEquals(
+                1,
+                enemyOne.getRow());
+
+        assertEquals(
+                2,
+                enemyOne.getCol());
+
+        // Verify Second Enemy Moved One Space Toward Player
+        assertEquals(
+                3,
+                enemyTwo.getRow());
+
+        assertEquals(
+                2,
+                enemyTwo.getCol());
+
+        // Verify Enemies Do Not Occupy Same Position
+        assertFalse(
+                enemyOne.getRow() == enemyTwo.getRow()
+                        && enemyOne.getCol() == enemyTwo.getCol());
+    }
 }

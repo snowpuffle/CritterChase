@@ -69,7 +69,7 @@ class LevelTest {
             // Return Test Level Definition
             return new LevelDefinition(
                     1,
-                    20,
+                    10,
                     player,
                     assets,
                     maze);
@@ -86,8 +86,8 @@ class LevelTest {
         // Get Player
         var player = level.getPlayer();
 
-        // Move Player Right
-        boolean moved = level.movePlayer(Direction.RIGHT);
+        // Process Valid Player Turn
+        boolean moved = level.takeTurn(Direction.RIGHT);
 
         // Verify Player Moved Successfully
         assertTrue(moved);
@@ -110,7 +110,7 @@ class LevelTest {
         var player = level.getPlayer();
 
         // Attempt to Move Player Through Wall
-        boolean moved = level.movePlayer(Direction.DOWN);
+        boolean moved = level.takeTurn(Direction.DOWN);
 
         // Verify Player Did Not Move
         assertFalse(moved);
@@ -178,17 +178,19 @@ class LevelTest {
         // Get Player
         var player = level.getPlayer();
 
-        // Move Player to Food Position
+        // Move Player Next to Food
         player.setPosition(1, 2);
 
         // Move Player Onto Food
-        boolean moved = level.movePlayer(Direction.RIGHT);
+        boolean moved = level.takeTurn(Direction.RIGHT);
 
         // Verify Player Moved Successfully
         assertTrue(moved);
 
-        // Verify Food Added Its Points to Score
-        assertEquals(10, level.getScore().getPoints());
+        // Verify Food Added Points to Score
+        assertEquals(
+                10,
+                level.getScore().getPoints());
     }
 
     // Test Level Completion When Player Reaches Exit
@@ -204,19 +206,21 @@ class LevelTest {
         // Move Player Onto Exit
         player.setPosition(0, 4);
 
-        // Verify Level is Complete
-        assertTrue(level.isLevelComplete());
+        // Verify Level Is Complete
+        assertTrue(
+                level.isLevelComplete());
     }
 
-    // Test Level is Not Complete Before Reaching Exit
+    // Test Level Is Not Complete Before Reaching Exit
     @Test
     void levelIsNotCompleteBeforeReachingExit() {
 
         // Create Test Level
         TestLevel level = new TestLevel(new Score());
 
-        // Verify Level is Not Complete
-        assertFalse(level.isLevelComplete());
+        // Verify Level Is Not Complete
+        assertFalse(
+                level.isLevelComplete());
     }
 
     // Test Maximum Level Score Calculation
@@ -226,8 +230,10 @@ class LevelTest {
         // Create Test Level
         TestLevel level = new TestLevel(new Score());
 
-        // Verify Maximum Score Includes All Food Objects
-        assertEquals(20, level.getMaxScore());
+        // Verify Maximum Score Matches Level Definition
+        assertEquals(
+                10,
+                level.getMaxScore());
     }
 
     // Test Enemies Do Not Move When Player Cannot Move

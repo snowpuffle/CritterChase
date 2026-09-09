@@ -7,7 +7,7 @@ import models.objects.Food;
 import models.objects.Wall;
 import models.utils.EnemyManager;
 
-// LevelBuilder Creates the Game Objects from the Level Maze
+// LevelBuilder Creates Game Objects from Level Maze
 public class LevelBuilder {
 
     // Level Objects
@@ -15,12 +15,18 @@ public class LevelBuilder {
     private final EnemyManager enemyManager;
 
     // LevelBuilder Constructor
-    public LevelBuilder(GameBoard gameBoard, EnemyManager enemyManager) {
+    public LevelBuilder(
+            GameBoard gameBoard,
+            EnemyManager enemyManager) {
+
+        // Store GameBoard Reference
         this.gameBoard = gameBoard;
+
+        // Store EnemyManager Reference
         this.enemyManager = enemyManager;
     }
 
-    // Create the Level Objects from the Maze
+    // Create Level Objects from Maze
     public void build(
             char[][] maze,
             String foodImage,
@@ -29,13 +35,13 @@ public class LevelBuilder {
             String wallImage2,
             String exitImage) {
 
-        // Loop Through Each Row
+        // Loop Through Each Maze Row
         for (int row = 0; row < maze.length; row++) {
 
-            // Loop Through Each Column
+            // Loop Through Each Maze Column
             for (int col = 0; col < maze[row].length; col++) {
 
-                // Create the Object Based on the Maze Character
+                // Create Object Based on Maze Character
                 createObject(
                         maze[row][col],
                         row,
@@ -49,7 +55,7 @@ public class LevelBuilder {
         }
     }
 
-    // Create the Object Based on the Maze Character
+    // Create Game Object Based on Maze Character
     private void createObject(
             char type,
             int row,
@@ -60,44 +66,67 @@ public class LevelBuilder {
             String wallImage2,
             String exitImage) {
 
-        // Create the Object Based on the Maze Character
+        // Check Maze Character Type
         switch (type) {
 
-            // Create a Wall
+            // Create Standard Wall
             case '#':
                 gameBoard.setGameObjectAt(
-                        new Wall(row, col, wallImage1));
+                        row,
+                        col,
+                        new Wall(
+                                row,
+                                col,
+                                wallImage1));
                 break;
 
-            // Create an Alternate Wall
+            // Create Alternate Wall
             case '%':
                 gameBoard.setGameObjectAt(
-                        new Wall(row, col, wallImage2));
+                        row,
+                        col,
+                        new Wall(
+                                row,
+                                col,
+                                wallImage2));
                 break;
 
             // Create Food
             case 'F':
                 gameBoard.setGameObjectAt(
-                        new Food(row, col, foodImage));
+                        row,
+                        col,
+                        new Food(
+                                row,
+                                col,
+                                foodImage));
                 break;
 
-            // Create an Enemy
+            // Create Enemy
             case 'E':
                 enemyManager.addEnemy(
-                        new Enemy(row, col, enemyImage));
+                        new Enemy(
+                                row,
+                                col,
+                                enemyImage));
                 break;
 
-            // Create the Exit
+            // Create Exit
             case 'X':
                 gameBoard.setGameObjectAt(
-                        new Exit(row, col, exitImage));
+                        row,
+                        col,
+                        new Exit(
+                                row,
+                                col,
+                                exitImage));
                 break;
 
-            // Leave the Position Empty
+            // Leave Position Empty
             case ' ':
                 break;
 
-            // Ignore Unsupported Characters
+            // Reject Unsupported Maze Characters
             default:
                 throw new IllegalArgumentException(
                         "Invalid Maze Character: " + type);

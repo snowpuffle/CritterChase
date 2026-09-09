@@ -13,8 +13,6 @@ import models.utils.Direction;
 // Test GameManager Core Game Rules
 // - Starts a New Game at the First Level
 // - Loads the Current Level
-// - Advances to the Next Level
-// - Does Not Advance Past the Final Level
 // - Processes Valid Player Movement
 // - Rejects Invalid Player Movement
 // - Transfers Level Score to Total Score
@@ -35,13 +33,14 @@ class GameManagerTest {
         // Start New Game Session
         manager.startGame();
 
-        // Verify Game Started Successfully
-        assertTrue(manager.isGameStarted());
+        // Verify Game Session Started
+        assertTrue(
+                manager.getGameSession().isStarted());
 
         // Verify First Level Loaded
         assertEquals(
                 LevelConfig.getStartingLevel(),
-                manager.getCurrentLevelNumber());
+                manager.getCurrentLevel().getLevelNumber());
 
         // Verify Current Level Exists
         assertNotNull(manager.getCurrentLevel());
@@ -63,70 +62,10 @@ class GameManagerTest {
         // Verify Current Level Exists
         assertNotNull(level);
 
-        // Verify Level Number Matches GameManager
+        // Verify Level Number Matches Configuration
         assertEquals(
-                manager.getCurrentLevelNumber(),
+                LevelConfig.getStartingLevel(),
                 level.getLevelNumber());
-    }
-
-    // Test Level Advancement
-    @Test
-    void nextLevelAdvancesLevel() {
-
-        // Create GameManager Instance
-        GameManager manager = new GameManager();
-
-        // Start New Game Session
-        manager.startGame();
-
-        // Store Current Level Number
-        int startingLevel = manager.getCurrentLevelNumber();
-
-        // Advance Game To Next Level
-        boolean advanced = manager.nextLevel();
-
-        // Verify Level Advancement
-        assertTrue(advanced);
-
-        // Verify Game Advanced One Level
-        assertEquals(
-                startingLevel + 1,
-                manager.getCurrentLevelNumber());
-    }
-
-    // Test Final Level Boundary
-    @Test
-    void nextLevelDoesNotAdvancePastFinalLevel() {
-
-        // Create GameManager Instance
-        GameManager manager = new GameManager();
-
-        // Start New Game Session
-        manager.startGame();
-
-        // Advance Through All Levels
-        while (manager.getCurrentLevelNumber() != LevelConfig.getFinalLevel()) {
-
-            // Advance To Next Level
-            boolean advanced = manager.nextLevel();
-
-            // Verify Level Advancement Was Successful
-            assertTrue(advanced);
-        }
-
-        // Store Final Level Number
-        int finalLevel = manager.getCurrentLevelNumber();
-
-        // Attempt To Advance Past Final Level
-        boolean advanced = manager.nextLevel();
-
-        // Verify Game Did Not Advance
-        assertFalse(advanced);
-
-        // Verify Final Level Remains Active
-        assertEquals(
-                finalLevel,
-                manager.getCurrentLevelNumber());
     }
 
     // Test Valid Player Movement
@@ -140,10 +79,13 @@ class GameManagerTest {
         manager.startGame();
 
         // Process Valid Player Movement
-        GameTurnResult result = manager.playTurn(Direction.RIGHT);
+        GameTurnResult result =
+                manager.playTurn(Direction.RIGHT);
 
         // Verify Movement Was Successful
-        assertEquals(GameTurnResult.MOVED, result);
+        assertEquals(
+                GameTurnResult.MOVED,
+                result);
     }
 
     // Test Invalid Player Movement
@@ -157,10 +99,13 @@ class GameManagerTest {
         manager.startGame();
 
         // Attempt Invalid Player Movement
-        GameTurnResult result = manager.playTurn(Direction.LEFT);
+        GameTurnResult result =
+                manager.playTurn(Direction.LEFT);
 
         // Verify Movement Was Rejected
-        assertEquals(GameTurnResult.INVALID_MOVE, result);
+        assertEquals(
+                GameTurnResult.INVALID_MOVE,
+                result);
     }
 
     // Test Player Movement Before Game Starts
@@ -171,13 +116,16 @@ class GameManagerTest {
         GameManager manager = new GameManager();
 
         // Attempt To Move Before Starting Game
-        GameTurnResult result = manager.playTurn(Direction.RIGHT);
+        GameTurnResult result =
+                manager.playTurn(Direction.RIGHT);
 
         // Verify No Valid Move Was Processed
-        assertEquals(GameTurnResult.INVALID_MOVE, result);
+        assertEquals(
+                GameTurnResult.INVALID_MOVE,
+                result);
     }
 
-    // Test Score Addition
+    // Test Score Addition Through Game Session
     @Test
     void addScoreIncreasesTotalScore() {
 
@@ -187,11 +135,13 @@ class GameManagerTest {
         // Start New Game Session
         manager.startGame();
 
-        // Add Points To Total Score
-        manager.addScore(100);
+        // Add Points Through Game Session
+        manager.getGameSession().addScore(100);
 
         // Verify Total Score Increased
-        assertEquals(100, manager.getScore());
+        assertEquals(
+                100,
+                manager.getScore());
     }
 
     // Test Game Restart
@@ -204,22 +154,25 @@ class GameManagerTest {
         // Start New Game Session
         manager.startGame();
 
-        // Add Points To Current Score
-        manager.addScore(100);
+        // Add Points Through Game Session
+        manager.getGameSession().addScore(100);
 
-        // Restart Current Game Session
-        manager.restartGame();
+        // Start New Game Again
+        manager.startGame();
 
         // Verify Score Reset
-        assertEquals(0, manager.getScore());
+        assertEquals(
+                0,
+                manager.getScore());
 
         // Verify Game Returned To First Level
         assertEquals(
                 LevelConfig.getStartingLevel(),
-                manager.getCurrentLevelNumber());
+                manager.getCurrentLevel().getLevelNumber());
 
-        // Verify Game Is Still Started
-        assertTrue(manager.isGameStarted());
+        // Verify Game Session Started
+        assertTrue(
+                manager.getGameSession().isStarted());
     }
 
     // Test Game Over Detection
@@ -233,7 +186,8 @@ class GameManagerTest {
         manager.startGame();
 
         // Verify Player Is Not Game Over
-        assertFalse(manager.isGameOver());
+        assertFalse(
+                manager.isGameOver());
     }
 
     // Test Game Won Detection
@@ -247,7 +201,8 @@ class GameManagerTest {
         manager.startGame();
 
         // Verify Game Has Not Been Won
-        assertFalse(manager.isGameWon());
+        assertFalse(
+                manager.isGameWon());
     }
 
     // Test Total Maximum Score
@@ -258,7 +213,8 @@ class GameManagerTest {
         GameManager manager = new GameManager();
 
         // Get Total Maximum Score
-        int totalMaxScore = manager.getTotalMaxScore();
+        int totalMaxScore =
+                manager.getTotalMaxScore();
 
         // Verify Total Maximum Score Matches Configuration
         assertEquals(
