@@ -157,7 +157,7 @@ class GameManagerTest {
         manager.startGame();
 
         // Attempt Invalid Player Movement
-        GameTurnResult result = manager.playTurn(Direction.DOWN);
+        GameTurnResult result = manager.playTurn(Direction.LEFT);
 
         // Verify Movement Was Rejected
         assertEquals(GameTurnResult.INVALID_MOVE, result);

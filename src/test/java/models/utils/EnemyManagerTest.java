@@ -53,7 +53,7 @@ class EnemyManagerTest {
 
         // Test Enemy Movement Around Walls
         @Test
-        void enemyDoesNotMoveThroughWalls() {
+        void enemyMovesAroundWalls() {
 
                 // Create Game Board
                 GameBoard board = new GameBoard(5, 5);
@@ -76,11 +76,11 @@ class EnemyManagerTest {
                 // Add Enemy to Enemy Manager
                 enemyManager.addEnemy(enemy);
 
-                // Attempt to Move Enemy Toward Player
+                // Move Enemy Toward Player
                 enemyManager.moveEnemies();
 
-                // Verify Enemy Does Not Move Onto the Wall
-                assertEquals(2, enemy.getRow());
+                // Verify Enemy Moved Around the Wall
+                assertEquals(1, enemy.getRow());
                 assertEquals(3, enemy.getCol());
         }
 

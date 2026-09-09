@@ -30,15 +30,19 @@ public class GameOverController {
     @FXML
     public void setResult(String result) {
 
+        // Check If Player Won The Game
         boolean won = result != null && result.toLowerCase().contains("won");
 
+        // Select Result Image
         String imagePath = won
                 ? "/assets/others/youwon_title.png"
                 : "/assets/others/gameover_title.png";
 
+        // Load Result Image
         Image image = new Image(
                 getClass().getResourceAsStream(imagePath));
 
+        // Display Result Image
         resultImage.setImage(image);
     }
 
@@ -48,6 +52,7 @@ public class GameOverController {
         totalScoreLabel.setText(score + " / " + maxScore);
     }
 
+    // Return To Main Menu
     @FXML
     private void handleMainMenu(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(getClass().getResource("/views/menu.fxml"));
