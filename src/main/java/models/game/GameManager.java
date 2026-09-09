@@ -69,6 +69,10 @@ public class GameManager {
 
         // Check if the Player Died During the Turn
         if (isGameOver()) {
+
+            // Preserve the Current Level's Score
+            addCurrentLevelScore();
+
             return GameTurnResult.GAME_OVER;
         }
 

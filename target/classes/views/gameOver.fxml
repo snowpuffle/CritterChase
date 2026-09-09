@@ -11,7 +11,7 @@
     prefHeight="750.0"
     prefWidth="1000.0"
     stylesheets="@../css/gameover.css"
-    xmlns="http://javafx.com/javafx/23.0.1"
+    xmlns="http://javafx.com/javafx/21"
     xmlns:fx="http://javafx.com/fxml/1"
     fx:controller="controllers.GameOverController">
 
