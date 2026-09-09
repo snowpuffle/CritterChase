@@ -2,7 +2,7 @@ package models.utils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -12,17 +12,23 @@ import models.game.GameBoard;
 import models.objects.Health;
 import models.objects.Wall;
 
-// Test EnemyManager Game Rules
+// Test EnemyManager Core Game Rules
+// - Moves Enemies Toward the Player
+// - Prevents Enemies from Moving Through Walls
+// - Prevents Enemies from Occupying the Same Position
+// - Damages the Player When an Enemy Is Adjacent
+// - Damages the Player During Player-Enemy Collision
+// - Supports Multiple Enemies Moving Independently
 class EnemyManagerTest {
 
-        // Test Enemy Moves Toward Player
+        // Test Enemy Movement Toward the Player
         @Test
         void enemyMovesTowardPlayer() {
 
                 // Create Game Board
                 GameBoard board = new GameBoard(5, 5);
 
-                // Create Player
+                // Create Player at Center of Board
                 Player player = new Player(2, 2, "player.png");
 
                 // Create Player Health
@@ -31,7 +37,7 @@ class EnemyManagerTest {
                 // Create Enemy Manager
                 EnemyManager enemyManager = new EnemyManager(player, board, health);
 
-                // Create Enemy
+                // Create Enemy Two Spaces Away from Player
                 Enemy enemy = new Enemy(2, 4, "enemy.png");
 
                 // Add Enemy to Enemy Manager
@@ -40,34 +46,45 @@ class EnemyManagerTest {
                 // Move Enemy Toward Player
                 enemyManager.moveEnemies();
 
-                // Verify Enemy Moved One Position Toward Player
+                // Verify Enemy Moved One Space Toward Player
                 assertEquals(2, enemy.getRow());
                 assertEquals(3, enemy.getCol());
         }
 
-        // Test Enemy Does Not Move Through Walls
+        // Test Enemy Movement Around Walls
         @Test
         void enemyDoesNotMoveThroughWalls() {
+
+                // Create Game Board
                 GameBoard board = new GameBoard(5, 5);
+
+                // Create Player
                 Player player = new Player(2, 1, "player.png");
+
+                // Create Player Health
                 Health health = new Health(100);
 
-                // Create Wall Between Enemy and Player
+                // Place Wall Between Enemy and Player
                 board.setGameObjectAt(new Wall(2, 2, "wall.png"));
 
-                // Create Enemy
+                // Create Enemy Manager
                 EnemyManager enemyManager = new EnemyManager(player, board, health);
+
+                // Create Enemy on the Other Side of the Wall
                 Enemy enemy = new Enemy(2, 3, "enemy.png");
+
+                // Add Enemy to Enemy Manager
                 enemyManager.addEnemy(enemy);
 
-                // Move Enemy Toward Player
+                // Attempt to Move Enemy Toward Player
                 enemyManager.moveEnemies();
 
-                // Verify Enemy Did Not Move Onto the Wall
-                assertFalse(enemy.getRow() == 2 && enemy.getCol() == 2);
+                // Verify Enemy Does Not Move Onto the Wall
+                assertEquals(2, enemy.getRow());
+                assertEquals(3, enemy.getCol());
         }
 
-        // Test Enemies Do Not Occupy the Same Square
+        // Test Multiple Enemies Do Not Occupy the Same Square
         @Test
         void enemiesDoNotOccupySameSquare() {
 
@@ -87,24 +104,18 @@ class EnemyManagerTest {
                 Enemy enemyOne = new Enemy(0, 2, "enemy1.png");
                 Enemy enemyTwo = new Enemy(1, 1, "enemy2.png");
 
-                // Add Enemies to Enemy Manager
+                // Add Both Enemies to Enemy Manager
                 enemyManager.addEnemy(enemyOne);
                 enemyManager.addEnemy(enemyTwo);
 
-                // Move Enemies Toward Player
+                // Move Both Enemies Toward Player
                 enemyManager.moveEnemies();
 
-                // Create Position Identifier for First Enemy
-                int enemyOnePosition = enemyOne.getRow() * board.getWidth() + enemyOne.getCol();
-
-                // Create Position Identifier for Second Enemy
-                int enemyTwoPosition = enemyTwo.getRow() * board.getWidth() + enemyTwo.getCol();
-
-                // Verify Enemies Have Different Positions
-                assertNotEquals(enemyOnePosition, enemyTwoPosition);
+                // Verify Enemies Do Not Occupy the Same Position
+                assertFalse(enemyOne.getRow() == enemyTwo.getRow() && enemyOne.getCol() == enemyTwo.getCol());
         }
 
-        // Test Adjacent Enemy Damages Player
+        // Test Adjacent Enemy Damage
         @Test
         void adjacentEnemyDamagesPlayer() {
 
@@ -120,26 +131,27 @@ class EnemyManagerTest {
                 // Create Enemy Manager
                 EnemyManager enemyManager = new EnemyManager(player, board, health);
 
-                // Create Adjacent Enemy
+                // Create Enemy Directly Next to Player
                 Enemy enemy = new Enemy(2, 3, "enemy.png");
 
                 // Add Enemy to Enemy Manager
                 enemyManager.addEnemy(enemy);
 
                 // Move Enemies
+                // Adjacent Enemy Should Attack Instead of Moving
                 enemyManager.moveEnemies();
 
-                // Verify Player Takes Enemy Damage
+                // Verify Player Lost Enemy Damage
                 assertEquals(80, health.getCurrentHealth());
 
-                // Verify Enemy Attacks Without Moving
+                // Verify Enemy Remains in Its Original Position
                 assertEquals(2, enemy.getRow());
                 assertEquals(3, enemy.getCol());
         }
 
-        // Test Multiple Enemies Behave Correctly
+        // Test Player-Enemy Collision Damage
         @Test
-        void multipleEnemiesMoveCorrectly() {
+        void playerCollisionWithEnemyCausesDamage() {
 
                 // Create Game Board
                 GameBoard board = new GameBoard(5, 5);
@@ -153,28 +165,60 @@ class EnemyManagerTest {
                 // Create Enemy Manager
                 EnemyManager enemyManager = new EnemyManager(player, board, health);
 
-                // Create Two Enemies
+                // Create Enemy
+                Enemy enemy = new Enemy(2, 3, "enemy.png");
+
+                // Add Enemy to Enemy Manager
+                enemyManager.addEnemy(enemy);
+
+                // Trigger Player-Enemy Collision
+                boolean collision = enemyManager.handlePlayerCollision(2, 3);
+
+                // Verify Collision Was Detected
+                assertTrue(collision);
+
+                // Verify Player Lost Enemy Damage
+                assertEquals(80, health.getCurrentHealth());
+        }
+
+        // Test Multiple Enemy Movement
+        @Test
+        void multipleEnemiesMoveCorrectly() {
+
+                // Create Game Board
+                GameBoard board = new GameBoard(5, 5);
+
+                // Create Player at Center of Board
+                Player player = new Player(2, 2, "player.png");
+
+                // Create Player Health
+                Health health = new Health(100);
+
+                // Create Enemy Manager
+                EnemyManager enemyManager = new EnemyManager(player, board, health);
+
+                // Create Enemy Above Player
                 Enemy enemyOne = new Enemy(0, 2, "enemy1.png");
+
+                // Create Enemy Below Player
                 Enemy enemyTwo = new Enemy(4, 2, "enemy2.png");
 
-                // Add Enemies to Enemy Manager
+                // Add Both Enemies to Enemy Manager
                 enemyManager.addEnemy(enemyOne);
                 enemyManager.addEnemy(enemyTwo);
 
-                // Move Enemies Toward Player
+                // Move Both Enemies Toward Player
                 enemyManager.moveEnemies();
 
-                // Verify First Enemy Moves Toward Player
+                // Verify First Enemy Moved One Space Toward Player
                 assertEquals(1, enemyOne.getRow());
                 assertEquals(2, enemyOne.getCol());
 
-                // Verify Second Enemy Moves Toward Player
+                // Verify Second Enemy Moved One Space Toward Player
                 assertEquals(3, enemyTwo.getRow());
                 assertEquals(2, enemyTwo.getCol());
 
                 // Verify Enemies Do Not Occupy the Same Position
-                assertNotEquals(
-                                enemyOne.getRow() + "," + enemyOne.getCol(),
-                                enemyTwo.getRow() + "," + enemyTwo.getCol());
+                assertFalse(enemyOne.getRow() == enemyTwo.getRow() && enemyOne.getCol() == enemyTwo.getCol());
         }
 }

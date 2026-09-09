@@ -12,6 +12,7 @@ class HealthTest {
     // Test Maximum Health Initialization
     @Test
     void healthStartsAtMaximum() {
+
         // Create Health Instance
         Health health = new Health(100);
 
@@ -28,6 +29,7 @@ class HealthTest {
     // Test Health Damage Functionality
     @Test
     void takeDamageReducesHealth() {
+
         // Create Health Instance
         Health health = new Health(100);
 
@@ -36,11 +38,32 @@ class HealthTest {
 
         // Verify Reduced Health Value
         assertEquals(70, health.getCurrentHealth());
+
+        // Verify Player Is Still Alive
+        assertTrue(health.isAlive());
+    }
+
+    // Test Health Reaches Zero
+    @Test
+    void healthReachesZeroAfterExactDamage() {
+
+        // Create Health Instance
+        Health health = new Health(100);
+
+        // Apply Damage Equal to Maximum Health
+        health.takeDamage(100);
+
+        // Verify Health Reaches Zero
+        assertEquals(0, health.getCurrentHealth());
+
+        // Verify Player Is Defeated
+        assertFalse(health.isAlive());
     }
 
     // Test Minimum Health Limit
     @Test
     void healthCannotGoBelowZero() {
+
         // Create Health Instance
         Health health = new Health(100);
 

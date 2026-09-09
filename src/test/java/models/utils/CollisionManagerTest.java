@@ -13,7 +13,12 @@ import models.objects.Food;
 import models.objects.Score;
 import models.objects.Wall;
 
-// Test CollisionManager Game Rules
+// Test CollisionManager Core Game Rules
+// - Blocks Player Movement Through Walls
+// - Collects Food and Adds Points
+// - Prevents Food from Being Collected More Than Once
+// - Allows Player Movement Onto the Exit
+// - Allows Player Movement Onto Empty Spaces
 class CollisionManagerTest {
 
     // Test Player Cannot Walk Through a Wall
@@ -47,7 +52,7 @@ class CollisionManagerTest {
 
     // Test Food is Collected
     @Test
-    void foodIsCollected() {
+    void collectingFoodAddsPointsAndRemovesFood() {
 
         // Create Game Board
         GameBoard board = new GameBoard(5, 5);
@@ -135,6 +140,29 @@ class CollisionManagerTest {
         assertTrue(canMove);
 
         // Verify Exit Does Not Add Points
+        assertEquals(0, score.getPoints());
+    }
+
+    // Test Player Can Move Onto Empty Space
+    @Test
+    void playerCanMoveOntoEmptySpace() {
+
+        // Create Game Board
+        GameBoard board = new GameBoard(5, 5);
+
+        // Create Score
+        Score score = new Score();
+
+        // Create Collision Manager
+        CollisionManager collisionManager = new CollisionManager(board, score);
+
+        // Attempt to Move Player Onto Empty Space
+        boolean canMove = collisionManager.canPlayerMoveTo(2, 2);
+
+        // Verify Player Can Move
+        assertTrue(canMove);
+
+        // Verify Score Does Not Increase
         assertEquals(0, score.getPoints());
     }
 }

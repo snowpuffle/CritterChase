@@ -12,7 +12,16 @@ import models.objects.Score;
 import models.utils.Direction;
 import models.utils.PlayerStart;
 
-// Test Level Game Rules
+// Test Level Core Game Rules
+// - Moves Player Through Valid Spaces
+// - Prevents Player from Moving Through Walls
+// - Processes Valid Player Turns
+// - Does Not Process Invalid Player Turns
+// - Collects Food and Updates Score
+// - Detects Level Completion at Exit
+// - Does Not Complete Level Before Reaching Exit
+// - Calculates Maximum Level Score
+// - Prevents Enemy Movement When Player Cannot Move
 class LevelTest {
 
     // Create Test Level for Unit Testing
@@ -136,6 +145,52 @@ class LevelTest {
         assertEquals(1, player.getCol());
     }
 
+    // Test Invalid Turn Processing
+    @Test
+    void invalidTurnDoesNotProcess() {
+
+        // Create Test Level
+        TestLevel level = new TestLevel(new Score());
+
+        // Get Player
+        var player = level.getPlayer();
+
+        // Attempt to Process Turn Through Wall
+        boolean turnProcessed = level.takeTurn(Direction.DOWN);
+
+        // Verify Turn Was Not Processed
+        assertFalse(turnProcessed);
+
+        // Verify Player Row Did Not Change
+        assertEquals(0, player.getRow());
+
+        // Verify Player Column Did Not Change
+        assertEquals(0, player.getCol());
+    }
+
+    // Test Food Collection
+    @Test
+    void collectingFoodIncreasesScore() {
+
+        // Create Test Level
+        TestLevel level = new TestLevel(new Score());
+
+        // Get Player
+        var player = level.getPlayer();
+
+        // Move Player to Food Position
+        player.setPosition(1, 2);
+
+        // Move Player Onto Food
+        boolean moved = level.movePlayer(Direction.RIGHT);
+
+        // Verify Player Moved Successfully
+        assertTrue(moved);
+
+        // Verify Food Added Its Points to Score
+        assertEquals(10, level.getScore().getPoints());
+    }
+
     // Test Level Completion When Player Reaches Exit
     @Test
     void levelIsCompleteWhenPlayerReachesExit() {
@@ -171,7 +226,7 @@ class LevelTest {
         // Create Test Level
         TestLevel level = new TestLevel(new Score());
 
-        // Verify Maximum Score Includes Both Food Objects
+        // Verify Maximum Score Includes All Food Objects
         assertEquals(20, level.getMaxScore());
     }
 
