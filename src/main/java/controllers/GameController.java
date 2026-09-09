@@ -12,7 +12,6 @@ import javafx.scene.layout.Pane;
 import models.game.GameManager;
 import models.game.GameTurnResult;
 import models.levels.Level;
-import models.levels.LevelDefinition;
 import models.utils.Direction;
 
 // GameController Controls Gameplay and User Input

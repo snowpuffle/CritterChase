@@ -1,0 +1,118 @@
+/* ROOT */
+.root {
+    -fx-font-smoothing-type: lcd;
+}
+
+/* IMAGE BUTTON */
+.image-button {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-padding: 0;
+    -fx-cursor: hand;
+}
+
+/* IMAGE BUTTON - FOCUS */
+.image-button:focused {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+/* IMAGE BUTTON - HOVER */
+.image-button:hover {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-scale-x: 1.04;
+    -fx-scale-y: 1.04;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.35), 10, 0.20, 0, 5);
+}
+
+/* IMAGE BUTTON - PRESSED */
+.image-button:pressed {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-scale-x: 0.97;
+    -fx-scale-y: 0.97;
+    -fx-translate-y: 3px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.20), 4, 0.15, 0, 2);
+}
+
+/* IMAGE VIEW */
+.game-image {
+    -fx-smooth: true;
+}
+
+/* SCREEN CONTAINER */
+.screen-container {
+    -fx-padding: 20px;
+}
+
+/* STANDARD TITLE */
+.screen-title {
+    -fx-font-family: "Arial Rounded MT Bold";
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.50), 4, 0.25, 0, 3);
+}
+
+/* STANDARD TEXT */
+.game-text {
+    -fx-font-family: "Arial Rounded MT Bold";
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+/* WOODLAND PANEL */
+.woodland-panel {
+    -fx-background-color: rgba(45, 70, 35, 0.94);
+    -fx-background-radius: 16px;
+    -fx-border-color: #6B8E52;
+    -fx-border-width: 2px;
+    -fx-border-radius: 16px;
+    -fx-padding: 15px 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.40), 7, 0.25, 0, 4);
+}
+
+/* STANDARD BUTTON TEXT For regular JavaFX buttons if needed */
+.standard-button {
+    -fx-font-family: "Arial Rounded MT Bold";
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-background-color: #5B9E4A;
+    -fx-background-radius: 12px;
+    -fx-border-color: #315F2D;
+    -fx-border-width: 2px;
+    -fx-border-radius: 12px;
+    -fx-padding: 10px 22px;
+    -fx-cursor: hand;
+}
+
+.standard-button:hover {
+    -fx-background-color: #6FBA4F;
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+
+.standard-button:pressed {
+    -fx-background-color: #4A843D;
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+    -fx-translate-y: 2px;
+}
+
+/* ACCESSIBILITY / FOCUS */
+.standard-button:focused {
+    -fx-border-color: #F5E6C8;
+    -fx-border-width: 2px;
+}
+
+/* DIVIDER */
+.woodland-divider {
+    -fx-background-color: #6B8E52;
+    -fx-pref-height: 2px;
+}

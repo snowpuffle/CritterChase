@@ -1,40 +1,15 @@
-/* =========================================
-   IMAGE BUTTON
-   ========================================= */
+/* MENU LAYOUT */
 
-.image-button {
-    -fx-background-color: transparent;
-    -fx-background-insets: 0;
-    -fx-background-radius: 0;
-
-    -fx-border-color: transparent;
-    -fx-border-width: 0;
-
-    -fx-padding: 0;
-
-    -fx-cursor: hand;
+.menu-container {
+    -fx-spacing: 15px;
 }
 
-
-/* Remove JavaFX focus border */
-.image-button:focused {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-}
-
-
-/* Hover */
-.image-button:hover {
-    -fx-background-color: transparent;
-    -fx-scale-x: 1.04;
-    -fx-scale-y: 1.04;
-}
-
-
-/* Press */
-.image-button:pressed {
-    -fx-background-color: transparent;
-    -fx-scale-x: 0.97;
-    -fx-scale-y: 0.97;
-    -fx-translate-y: 4px;
+/* MENU TITLE */
+.menu-title {
+    -fx-effect: dropshadow(gaussian,
+            rgba(0, 0, 0, 0.45),
+            6,
+            0.25,
+            0,
+            4);
 }

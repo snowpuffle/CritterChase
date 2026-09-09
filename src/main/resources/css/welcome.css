@@ -1,47 +1,30 @@
-/* =========================================
-   CRITTER CHASE - WELCOME SCREEN
-   ========================================= */
-
-
-/* =========================================
-   LOADING TEXT
-   ========================================= */
-
+/* LOADING TEXT */
 .loading-text {
     -fx-font-family: "Arial Rounded MT Bold";
     -fx-font-size: 22px;
     -fx-font-weight: bold;
 
     -fx-text-fill: white;
-
     -fx-stroke: #3B2415;
     -fx-stroke-width: 2px;
 
-    -fx-effect: dropshadow(
-        gaussian,
-        rgba(0, 0, 0, 0.65),
-        3,
-        0.3,
-        0,
-        3
-    );
+    -fx-effect: dropshadow(gaussian,
+            rgba(0, 0, 0, 0.65),
+            3,
+            0.30,
+            0,
+            3);
 }
 
-
-/* =========================================
-   PROGRESS BAR
-   ========================================= */
+/* LOADING BAR */
 
 .loading-bar {
     -fx-pref-height: 25px;
 }
 
-
-/* Background / empty portion */
-
-.loading-bar > .track {
+/* Loading Bar Track */
+.loading-bar>.track {
     -fx-background-color: #3B2415;
-
     -fx-background-radius: 15px;
 
     -fx-border-color: #6B4325;
@@ -51,13 +34,9 @@
     -fx-padding: 3px;
 }
 
-
-/* Filled portion */
-
-.loading-bar > .bar {
+/* Loading Bar Progress */
+.loading-bar>.bar {
     -fx-background-color: #6FBA4F;
-
     -fx-background-radius: 10px;
-
     -fx-background-insets: 0;
 }

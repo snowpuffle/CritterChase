@@ -1,12 +1,4 @@
-/* =========================================
-   CRITTER CHASE - GAME HUD
-   ========================================= */
-
-
-/* =========================================
-   TOP HUD
-   ========================================= */
-
+/* GAME HUD */
 .game-hud {
     -fx-padding: 15px 25px 15px 25px;
 
@@ -16,37 +8,26 @@
     -fx-border-width: 0 0 4px 0;
 }
 
-
-/* =========================================
-   HUD BOX
-   ========================================= */
-
+/* HUD BOX */
 .hud-box {
     -fx-min-width: 240px;
     -fx-pref-height: 55px;
 
     -fx-background-radius: 16px;
     -fx-border-radius: 16px;
-
     -fx-border-width: 3px;
 
-    -fx-padding: 5px 18px 5px 18px;
+    -fx-padding: 5px 18px;
 
-    -fx-effect: dropshadow(
-        gaussian,
-        rgba(0, 0, 0, 0.45),
-        6,
-        0.25,
-        0,
-        4
-    );
+    -fx-effect: dropshadow(gaussian,
+            rgba(0, 0, 0, 0.45),
+            6,
+            0.25,
+            0,
+            4);
 }
 
-
-/* =========================================
-   SCORE
-   ========================================= */
-
+/* SCORE */
 .score-box {
     -fx-background-color:
         #936323,
@@ -59,11 +40,7 @@
     -fx-border-color: #704719;
 }
 
-
-/* =========================================
-   LEVEL
-   ========================================= */
-
+/* LEVEL */
 .level-box {
     -fx-background-color:
         #315F2D,
@@ -76,11 +53,7 @@
     -fx-border-color: #244820;
 }
 
-
-/* =========================================
-   HEALTH
-   ========================================= */
-
+/* HEALTH */
 .health-box {
     -fx-background-color:
         #873528,
@@ -93,11 +66,7 @@
     -fx-border-color: #67271F;
 }
 
-
-/* =========================================
-   HUD TEXT
-   ========================================= */
-
+/* HUD LABEL */
 .hud-label {
     -fx-font-family: "Arial Rounded MT Bold";
     -fx-font-size: 20px;
@@ -105,29 +74,32 @@
 
     -fx-text-fill: white;
 
-    -fx-effect: dropshadow(
-        gaussian,
-        rgba(0, 0, 0, 0.45),
-        2,
-        0.2,
-        0,
-        2
-    );
+    -fx-effect: dropshadow(gaussian,
+            rgba(0, 0, 0, 0.45),
+            2,
+            0.20,
+            0,
+            2);
+}
+
+/* GAME BOARD */
+.game-board-border {
+    -fx-background-color: #F5E6C8;
+
+    -fx-border-color: #8B5A2B;
+    -fx-border-width: 2px;
 }
 
 
-/* =========================================
-   BOTTOM CONTROLS
-   ========================================= */
+.game-board {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
 
+/* CONTROLS */
 .controls-container {
     -fx-padding: 12px 0 15px 0;
 }
-
-
-/* =========================================
-   CONTROLS LABEL
-   ========================================= */
 
 .controls-label {
     -fx-font-family: "Arial Rounded MT Bold";
@@ -137,21 +109,18 @@
     -fx-text-fill: white;
 
     -fx-background-color: rgba(45, 70, 35, 0.92);
-
     -fx-background-radius: 15px;
 
     -fx-border-color: #6B8E52;
     -fx-border-width: 2px;
     -fx-border-radius: 15px;
 
-    -fx-padding: 10px 22px 10px 22px;
+    -fx-padding: 10px 22px;
 
-    -fx-effect: dropshadow(
-        gaussian,
-        rgba(0, 0, 0, 0.40),
-        5,
-        0.25,
-        0,
-        3
-    );
+    -fx-effect: dropshadow(gaussian,
+            rgba(0, 0, 0, 0.40),
+            5,
+            0.25,
+            0,
+            3);
 }
