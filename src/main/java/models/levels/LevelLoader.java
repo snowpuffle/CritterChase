@@ -1,11 +1,13 @@
 package models.levels;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
+import models.game.GameBoardConfig;
 import models.utils.Direction;
 
 // LevelLoader Class Loads and Validates Level JSON Files
@@ -103,6 +105,22 @@ public class LevelLoader {
         // Get Maze Width
         int width = definition.maze().get(0).length();
 
+        // Validate Maze Height
+        if (height != GameBoardConfig.HEIGHT) {
+            throw new IllegalArgumentException(
+                    "Level Must Have Exactly "
+                            + GameBoardConfig.HEIGHT
+                            + " Rows.");
+        }
+
+        // Validate Maze Width
+        if (width != GameBoardConfig.WIDTH) {
+            throw new IllegalArgumentException(
+                    "Level Must Have Exactly "
+                            + GameBoardConfig.WIDTH
+                            + " Columns.");
+        }
+
         // Validate Maze Rows
         for (int row = 0; row < height; row++) {
 
@@ -167,13 +185,17 @@ public class LevelLoader {
         int playerCol = definition.player().col();
 
         // Validate Player Row Boundaries
-        if (playerRow < 0 || playerRow >= height) {
+        if (playerRow < 0
+                || playerRow >= height) {
+
             throw new IllegalArgumentException(
                     "Player Row Exists Outside Maze.");
         }
 
         // Validate Player Column Boundaries
-        if (playerCol < 0 || playerCol >= width) {
+        if (playerCol < 0
+                || playerCol >= width) {
+
             throw new IllegalArgumentException(
                     "Player Column Exists Outside Maze.");
         }
@@ -256,7 +278,10 @@ public class LevelLoader {
             for (int col = 0; col < width; col++) {
 
                 // Find Exit Character
-                if (definition.maze().get(row).charAt(col) == 'X') {
+                if (definition.maze()
+                        .get(row)
+                        .charAt(col) == 'X') {
+
                     exitRow = row;
                     exitCol = col;
                 }
@@ -292,7 +317,9 @@ public class LevelLoader {
             int col = current[1];
 
             // Check if Exit Has Been Reached
-            if (row == exitRow && col == exitCol) {
+            if (row == exitRow
+                    && col == exitCol) {
+
                 return;
             }
 
@@ -325,7 +352,9 @@ public class LevelLoader {
                         .charAt(newCol);
 
                 // Skip Wall Positions
-                if (cell == '#' || cell == '%') {
+                if (cell == '#'
+                        || cell == '%') {
+
                     continue;
                 }
 
