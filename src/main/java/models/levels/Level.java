@@ -1,7 +1,10 @@
 package models.levels;
 
+import java.util.List;
+
 import models.entities.Player;
 import models.game.GameBoard;
+import models.game.GameBoardConfig;
 import models.game.GameObjectType;
 import models.objects.Health;
 import models.objects.Score;
@@ -11,10 +14,6 @@ import models.utils.EnemyManager;
 
 // Level Owns the Player, Board, Health, and Level Mechanics.
 public class Level {
-
-    // Board Dimensions
-    protected static final int WIDTH = 15;
-    protected static final int HEIGHT = 15;
 
     // Level Components
     protected final Player player;
@@ -27,25 +26,41 @@ public class Level {
     protected final EnemyManager enemyManager;
     protected final CollisionManager collisionManager;
 
-    // Level Renderer
+    // Level Builder
     private final LevelBuilder levelBuilder;
 
     // Level Constructor
     public Level(LevelDefinition definition, Score score) {
+
+        // Store Level Information
         this.levelNumber = definition.levelNumber();
-        this.gameBoard = new GameBoard(WIDTH, HEIGHT);
+        this.score = score;
+        this.backgroundPath = definition.assets().background();
+        this.maxScore = definition.maxScore();
+
+        // Create the Game Board
+        this.gameBoard = new GameBoard(GameBoardConfig.WIDTH, GameBoardConfig.HEIGHT);
+
+        // Create the Player
         this.player = new Player(
                 definition.player().row(),
                 definition.player().col(),
                 definition.assets().player());
-        this.score = score;
-        this.backgroundPath = definition.assets().background();
-        this.maxScore = definition.maxScore();
-        this.health = new Health(100);
-        this.enemyManager = new EnemyManager(player, gameBoard, health);
-        this.collisionManager = new CollisionManager(gameBoard, score);
-        this.levelBuilder = new LevelBuilder(gameBoard, enemyManager);
 
+        // Create Health
+        this.health = new Health(100);
+
+        // Create Level Managers
+        this.enemyManager = new EnemyManager(player, gameBoard, health);
+
+        this.collisionManager = new CollisionManager(gameBoard, score);
+
+        // Create Level Builder
+        this.levelBuilder = new LevelBuilder(
+                gameBoard,
+                enemyManager);
+
+        // Create the Level Objects
         createLevelObjects(
                 convertMaze(definition.maze()),
                 definition.assets().food(),
@@ -55,13 +70,13 @@ public class Level {
                 definition.assets().exit());
     }
 
-    // Convert JSON Maze Rows into the char[][] format (Expected by LevelBuilder)
-    private char[][] convertMaze(java.util.List<String> mazeRows) {
+    // Convert JSON Maze Rows into the char[][] Format Expected by LevelBuilder
+    private char[][] convertMaze(List<String> mazeRows) {
 
-        // Create the Character Array Using the Number of Maze Rows
+        // Create the Character Array
         char[][] maze = new char[mazeRows.size()][];
 
-        // Convert Each Maze Row from a String into a Character Array
+        // Convert Each Maze Row into a Character Array
         for (int row = 0; row < mazeRows.size(); row++) {
             maze[row] = mazeRows.get(row).toCharArray();
         }
@@ -117,9 +132,7 @@ public class Level {
         }
 
         // Move the Player to the New Position
-        player.move(
-                direction.getRowChange(),
-                direction.getColChange());
+        player.move(direction.getRowChange(), direction.getColChange());
 
         return true;
     }
@@ -129,16 +142,14 @@ public class Level {
         enemyManager.moveEnemies();
     }
 
-    // Check Level Complete
+    // Check if the Level is Complete
     public boolean isLevelComplete() {
 
-        // Check if the Player is on the Exit Object
-        var object = gameBoard.getGameObjectAt(
-                player.getRow(),
-                player.getCol());
+        // Get the Object at the Player's Current Position
+        var object = gameBoard.getGameObjectAt(player.getRow(), player.getCol());
 
-        return object != null
-                && object.getType() == GameObjectType.EXIT;
+        // Return True if the Player is on the Exit
+        return object != null && object.getType() == GameObjectType.EXIT;
     }
 
     // Getters

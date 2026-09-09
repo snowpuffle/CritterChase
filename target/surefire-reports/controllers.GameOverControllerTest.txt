@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
-Test set: models.levels.LevelDefinitionTest
+Test set: controllers.GameOverControllerTest
 -------------------------------------------------------------------------------
-Tests run: 9, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 s -- in models.levels.LevelDefinitionTest
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.496 s -- in controllers.GameOverControllerTest

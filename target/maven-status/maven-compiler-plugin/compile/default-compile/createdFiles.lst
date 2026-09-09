@@ -1,4 +1,5 @@
 models\game\GameBoard.class
+models\game\GameBoardConfig.class
 controllers\GameController.class
 models\levels\LevelBuilder.class
 models\utils\CollisionManager.class

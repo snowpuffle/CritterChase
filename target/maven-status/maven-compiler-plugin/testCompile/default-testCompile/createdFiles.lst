@@ -1,6 +1,8 @@
 models\game\GameManagerTest.class
+controllers\GameOverControllerTest.class
 models\utils\CollisionManagerTest.class
 models\levels\LevelTest.class
+controllers\GameControllerTest.class
 models\objects\ScoreTest.class
 models\levels\LevelDefinitionTest.class
 models\game\GameSessionTest.class

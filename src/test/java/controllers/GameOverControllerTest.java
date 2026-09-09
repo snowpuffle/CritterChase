@@ -3,8 +3,12 @@ package controllers;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import java.util.concurrent.CountDownLatch;
+
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 
@@ -13,6 +17,22 @@ import javafx.scene.image.ImageView;
 // - Displays Game Over Image
 // - Displays Final Score
 class GameOverControllerTest {
+
+    // Initialize JavaFX Toolkit Before Running Tests
+    @BeforeAll
+    static void initializeJavaFX() throws Exception {
+
+        // Use a Latch to Wait for JavaFX to Start
+        CountDownLatch latch = new CountDownLatch(1);
+
+        try {
+            Platform.startup(latch::countDown);
+            latch.await();
+
+        } catch (IllegalStateException e) {
+            // JavaFX Toolkit is Already Running
+        }
+    }
 
     // Test Game Won Result
     @Test
