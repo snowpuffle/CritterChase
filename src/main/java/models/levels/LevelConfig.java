@@ -1,13 +1,19 @@
 package models.levels;
 
+import java.util.List;
+
 // LevelConfig Stores the Level Configuration and Level Order
 public final class LevelConfig {
 
     // Define the Starting Level Number
     private static final int STARTING_LEVEL = 1;
 
-    // Define the Total Number of Available Levels
-    private static final int MAX_LEVEL = 3;
+    // Define the Available Levels
+    private static final List<Integer> AVAILABLE_LEVELS = List.of(
+            1,
+            2,
+            3,
+            4);
 
     // Private Constructor Prevents the Class from Being Instantiated
     private LevelConfig() {
@@ -17,12 +23,11 @@ public final class LevelConfig {
     // Get a Level Definition for the Given Level Number
     public static LevelDefinition getLevel(int levelNumber) {
 
-        // Check if the Requested Level Number Exists
         if (!exists(levelNumber)) {
-            throw new IllegalArgumentException("Invalid Level Number: " + levelNumber);
+            throw new IllegalArgumentException(
+                    "Invalid Level Number: " + levelNumber);
         }
 
-        // Load and Return the Level Definition from the JSON Resource
         return LevelLoader.load(levelNumber);
     }
 
@@ -31,33 +36,41 @@ public final class LevelConfig {
         return STARTING_LEVEL;
     }
 
-    // Get the Total Number of Available Levels
-    public static int getMaxLevel() {
-        return MAX_LEVEL;
+    // Get the Final Level Number
+    public static int getFinalLevel() {
+        return AVAILABLE_LEVELS.get(AVAILABLE_LEVELS.size() - 1);
     }
 
-    // Check if a Level Number Exists
+    // Check if a Level Exists
     public static boolean exists(int levelNumber) {
-
-        // Check if the Level Number is Within the Valid Level Range
-        return levelNumber >= STARTING_LEVEL
-                && levelNumber <= MAX_LEVEL;
+        return AVAILABLE_LEVELS.contains(levelNumber);
     }
 
     // Get the Total Maximum Score Across All Levels
     public static int getTotalMaxScore() {
 
-        // Initialize the Total Maximum Score
         int total = 0;
 
-        // Loop Through Each Available Level
-        for (int levelNumber = STARTING_LEVEL; levelNumber <= MAX_LEVEL; levelNumber++) {
-
-            // Add the Current Level's Maximum Score to the Total
+        for (int levelNumber : AVAILABLE_LEVELS) {
             total += getLevel(levelNumber).maxScore();
         }
 
-        // Return the Total Maximum Score
         return total;
+    }
+
+    public static int getNextLevel(int currentLevel) {
+
+        int currentIndex = AVAILABLE_LEVELS.indexOf(currentLevel);
+
+        if (currentIndex == -1) {
+            throw new IllegalArgumentException(
+                    "Invalid Level Number: " + currentLevel);
+        }
+
+        if (currentIndex + 1 >= AVAILABLE_LEVELS.size()) {
+            return -1;
+        }
+
+        return AVAILABLE_LEVELS.get(currentIndex + 1);
     }
 }

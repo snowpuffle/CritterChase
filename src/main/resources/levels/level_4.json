@@ -1,0 +1,34 @@
+{
+    "levelNumber": 4,
+    "maxScore": 100,
+    "player": {
+        "row": 1,
+        "col": 1
+    },
+    "assets": {
+        "background": "/assets/backgrounds/sky.png",
+        "player": "/assets/animals/bird.png",
+        "food": "/assets/food/sunflower.png",
+        "enemy": "/assets/animals/eagle.png",
+        "wall1": "/assets/walls/cloud.png",
+        "wall2": "/assets/walls/rainbow.png",
+        "exit": "/assets/others/exit.png"
+    },
+    "maze": [
+        "#####%#########",
+        "# F     #    F#",
+        "# ### # ### # #",
+        "#   # # F   # #",
+        "### # ### ### #",
+        "#   #     #   #",
+        "# % ### # # F #",
+        "#     # #   # E",
+        "# ### # ### ###",
+        "# F   #   F   #",
+        "# # ##### # % #",
+        "# #     # #   #",
+        "# ### F # ### #",
+        "#F    %     F X",
+        "###%###########"
+    ]
+}

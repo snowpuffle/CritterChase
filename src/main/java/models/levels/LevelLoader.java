@@ -37,7 +37,7 @@ public final class LevelLoader {
             LevelDefinition definition = MAPPER.readValue(input, LevelDefinition.class);
 
             // Validate the Loaded Level Definition
-            validate(definition);
+            validate(definition, levelNumber);
 
             // Return the Validated Level Definition
             return definition;
@@ -50,11 +50,18 @@ public final class LevelLoader {
     }
 
     // Validate the Data Loaded from the Level JSON File
-    private static void validate(LevelDefinition definition) {
+    private static void validate(LevelDefinition definition, int requestedLevelNumber) {
 
         // Check that the Level Number is Valid
         if (definition.levelNumber() <= 0) {
             throw new IllegalArgumentException("Level Number Must be > 0.");
+        }
+
+        // Check that the Loaded Level Matches the Requested Level
+        if (definition.levelNumber() != requestedLevelNumber) {
+            throw new IllegalArgumentException(
+                    "Requested Level " + requestedLevelNumber
+                            + " but Loaded Level " + definition.levelNumber() + ".");
         }
 
         // Check that the Maximum Score is Not Negative
@@ -99,7 +106,8 @@ public final class LevelLoader {
             // Check that the Current Row Contains Exactly 15 Characters
             if (mazeRow.length() != 15) {
                 throw new IllegalArgumentException(
-                        "Level " + definition.levelNumber() + " Row " + row + " Must Contain Exactly 15 Characters.");
+                        "Level " + definition.levelNumber() + " Row " + row
+                                + " Must Contain Exactly 15 Characters.");
             }
 
             // Validate Each Character in the Current Row
@@ -116,8 +124,9 @@ public final class LevelLoader {
                 // Check that the Maze Character is a Valid Game Object
                 if ("#%FEXP ".indexOf(cell) == -1) {
                     throw new IllegalArgumentException(
-                            "Invalid Maze Character '" + cell + "' at Row " + row + ", Column " + col + " in Level "
-                                    + definition.levelNumber());
+                            "Invalid Maze Character '" + cell
+                                    + "' at Row " + row + ", Column " + col
+                                    + " in Level " + definition.levelNumber());
                 }
             }
         }

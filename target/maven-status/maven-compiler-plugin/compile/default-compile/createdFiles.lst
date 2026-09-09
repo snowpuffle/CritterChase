@@ -4,8 +4,11 @@ models\levels\LevelBuilder.class
 models\utils\CollisionManager.class
 models\game\GameObjectType.class
 models\objects\Food.class
+models\utils\PlayerStart.class
 models\game\GameManager.class
 controllers\LevelRenderer.class
+models\levels\LevelAssets.class
+models\levels\LevelLoader.class
 Main.class
 models\entities\Player.class
 models\entities\Enemy.class

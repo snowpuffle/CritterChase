@@ -12,6 +12,9 @@ public class GameManager {
     // Game Settings
     private static final int STARTING_LEVEL = LevelConfig.getStartingLevel();
 
+    // Track Whether the Current Level's Score Has Been Added
+    private boolean currentLevelScoreAdded;
+
     // Current Game Session
     private final GameSession gameSession;
 
@@ -34,6 +37,9 @@ public class GameManager {
 
         // Store the Level in the Current Session
         gameSession.setCurrentLevel(level);
+
+        // Reset the Level Score Transfer State
+        currentLevelScoreAdded = false;
     }
 
     // Move to the Next Level
@@ -42,13 +48,16 @@ public class GameManager {
         // Get the Current Level Number
         int currentLevel = gameSession.getCurrentLevelNumber();
 
+        // Get the Next Level Number
+        int nextLevel = LevelConfig.getNextLevel(currentLevel);
+
         // Do Not Advance Past the Final Level
-        if (currentLevel >= LevelConfig.getMaxLevel()) {
+        if (nextLevel == -1) {
             return false;
         }
 
         // Start the Next Level
-        startLevel(currentLevel + 1);
+        startLevel(nextLevel);
 
         return true;
     }
@@ -88,7 +97,7 @@ public class GameManager {
             addCurrentLevelScore();
 
             // Check if the Final Level Was Completed
-            if (level.getLevelNumber() == LevelConfig.getMaxLevel()) {
+            if (level.getLevelNumber() == LevelConfig.getFinalLevel()) {
                 return GameTurnResult.GAME_WON;
             }
 
@@ -119,7 +128,7 @@ public class GameManager {
         Level level = gameSession.getCurrentLevel();
 
         return level != null
-                && level.getLevelNumber() == LevelConfig.getMaxLevel()
+                && level.getLevelNumber() == LevelConfig.getFinalLevel()
                 && level.isLevelComplete();
     }
 
@@ -155,7 +164,16 @@ public class GameManager {
 
     // Transfer the Completed Level's Score into the Total Score
     public void addCurrentLevelScore() {
-        gameSession.addScore(
-                gameSession.getCurrentLevel().getScore().getPoints());
+
+        // Do Not Add the Same Level's Score More Than Once
+        if (currentLevelScoreAdded) {
+            return;
+        }
+
+        // Add the Current Level's Score to the Total Score
+        gameSession.addScore(gameSession.getCurrentLevel().getScore().getPoints());
+
+        // Mark the Current Level's Score as Added
+        currentLevelScoreAdded = true;
     }
 }
