@@ -32,30 +32,47 @@ public class Level {
 
     // Level Constructor
     public Level(LevelDefinition definition, Score score) {
-        this.levelNumber = definition.getLevelNumber();
+        this.levelNumber = definition.levelNumber();
         this.gameBoard = new GameBoard(WIDTH, HEIGHT);
-        this.player = new Player(definition.getPlayerRow(), definition.getPlayerCol(), definition.getPlayerImage());
+        this.player = new Player(
+                definition.player().row(),
+                definition.player().col(),
+                definition.assets().player());
         this.score = score;
-        this.backgroundPath = definition.getBackgroundPath();
-        this.maxScore = definition.getMaxScore();
+        this.backgroundPath = definition.assets().background();
+        this.maxScore = definition.maxScore();
         this.health = new Health(100);
         this.enemyManager = new EnemyManager(player, gameBoard, health);
         this.collisionManager = new CollisionManager(gameBoard, score);
         this.levelBuilder = new LevelBuilder(gameBoard, enemyManager);
 
         createLevelObjects(
-                definition.getMaze(),
-                definition.getFoodImage(),
-                definition.getEnemyImage(),
-                definition.getWallImage1(),
-                definition.getWallImage2(),
-                definition.getExitImage());
+                convertMaze(definition.maze()),
+                definition.assets().food(),
+                definition.assets().enemy(),
+                definition.assets().wall1(),
+                definition.assets().wall2(),
+                definition.assets().exit());
+    }
+
+    // Convert JSON Maze Rows into the char[][] format (Expected by LevelBuilder)
+    private char[][] convertMaze(java.util.List<String> mazeRows) {
+
+        // Create the Character Array Using the Number of Maze Rows
+        char[][] maze = new char[mazeRows.size()][];
+
+        // Convert Each Maze Row from a String into a Character Array
+        for (int row = 0; row < mazeRows.size(); row++) {
+            maze[row] = mazeRows.get(row).toCharArray();
+        }
+
+        // Return the Converted Maze
+        return maze;
     }
 
     // Create the Level Objects from the Maze
     protected void createLevelObjects(char[][] maze, String foodImage, String enemyImage, String wallImage1,
             String wallImage2, String exitImage) {
-
         levelBuilder.build(maze, foodImage, enemyImage, wallImage1, wallImage2, exitImage);
     }
 
@@ -100,7 +117,9 @@ public class Level {
         }
 
         // Move the Player to the New Position
-        player.move(direction.getRowChange(), direction.getColChange());
+        player.move(
+                direction.getRowChange(),
+                direction.getColChange());
 
         return true;
     }
@@ -114,9 +133,12 @@ public class Level {
     public boolean isLevelComplete() {
 
         // Check if the Player is on the Exit Object
-        var object = gameBoard.getGameObjectAt(player.getRow(), player.getCol());
+        var object = gameBoard.getGameObjectAt(
+                player.getRow(),
+                player.getCol());
 
-        return object != null && object.getType() == GameObjectType.EXIT;
+        return object != null
+                && object.getType() == GameObjectType.EXIT;
     }
 
     // Getters

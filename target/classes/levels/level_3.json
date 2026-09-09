@@ -1,0 +1,34 @@
+{
+    "levelNumber": 3,
+    "maxScore": 100,
+    "player": {
+        "row": 1,
+        "col": 1
+    },
+    "assets": {
+        "background": "/assets/backgrounds/pond.png",
+        "player": "/assets/animals/frog.png",
+        "food": "/assets/food/butterfly.png",
+        "enemy": "/assets/animals/raccoon.png",
+        "wall1": "/assets/walls/wood.png",
+        "wall2": "/assets/walls/lilypad.png",
+        "exit": "/assets/others/exit.png"
+    },
+    "maze": [
+        "###%#####%#####",
+        "#  F  #  F   F#",
+        "# ### # ### # #",
+        "#  F#   #F  # #",
+        "### # # # # # #",
+        "#F    %   #   #",
+        "# #%# ### # ###",
+        "#       # F  E#",
+        "### ### # ### #",
+        "#F    F    #% #",
+        "# ### #%# # # #",
+        "#           # #",
+        "### ### #%# # #",
+        "#F      F    EX",
+        "#####%######%##"
+    ]
+}

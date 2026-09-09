@@ -1,87 +1,23 @@
 package models.levels;
 
-public class LevelDefinition {
+import java.util.List;
 
-    private final int levelNumber;
-    private final int maxScore;
-    private final int playerRow;
-    private final int playerCol;
+import models.utils.PlayerStart;
 
-    private final String playerImage;
-    private final String foodImage;
-    private final String enemyImage;
-    private final String wallImage1;
-    private final String wallImage2;
-    private final String exitImage;
-    private final String backgroundPath;
+// LevelDefinition Stores the Data Used to Create a Level
+public record LevelDefinition(int levelNumber, int maxScore, PlayerStart player, LevelAssets assets,
+        List<String> maze) {
 
-    private final char[][] maze;
+    // Validate the Level Definition When it is Created
+    public LevelDefinition {
 
-    // Level Definition Contructor
-    public LevelDefinition(int levelNumber, String backgroundPath, int maxScore, int playerRow, int playerCol,
-            String playerImage, String foodImage, String enemyImage, String wallImage1, String wallImage2,
-            String exitImage, char[][] maze) {
+        // Check that the Maze Exists and Contains at Least One Row
+        if (maze == null || maze.isEmpty()) {
+            throw new IllegalArgumentException("Maze Cannot Be Empty.");
+        }
 
-        this.levelNumber = levelNumber;
-        this.maxScore = maxScore;
-        this.backgroundPath = backgroundPath;
-        this.playerRow = playerRow;
-        this.playerCol = playerCol;
-        this.playerImage = playerImage;
-        this.foodImage = foodImage;
-        this.enemyImage = enemyImage;
-        this.wallImage1 = wallImage1;
-        this.wallImage2 = wallImage2;
-        this.exitImage = exitImage;
-        this.maze = maze;
-    }
-
-    // Getters
-    public int getLevelNumber() {
-        return levelNumber;
-    }
-
-    public String getBackgroundPath() {
-        return backgroundPath;
-    }
-
-    public int getMaxScore() {
-        return maxScore;
-    }
-
-    public int getPlayerRow() {
-        return playerRow;
-    }
-
-    public int getPlayerCol() {
-        return playerCol;
-    }
-
-    public String getPlayerImage() {
-        return playerImage;
-    }
-
-    public String getFoodImage() {
-        return foodImage;
-    }
-
-    public String getEnemyImage() {
-        return enemyImage;
-    }
-
-    public String getWallImage1() {
-        return wallImage1;
-    }
-
-    public String getWallImage2() {
-        return wallImage2;
-    }
-
-    public String getExitImage() {
-        return exitImage;
-    }
-
-    public char[][] getMaze() {
-        return maze;
+        // Create an Unmodifiable Copy of the Maze
+        // Prevents the Original List from Being Changed After Creation
+        maze = List.copyOf(maze);
     }
 }

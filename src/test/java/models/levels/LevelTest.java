@@ -4,10 +4,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
+
 import org.junit.jupiter.api.Test;
 
 import models.objects.Score;
 import models.utils.Direction;
+import models.utils.PlayerStart;
 
 // Test Level Game Rules
 class LevelTest {
@@ -24,27 +27,42 @@ class LevelTest {
         private static LevelDefinition createTestDefinition() {
 
             // Create Test Level Maze
-            char[][] maze = {
-                    { ' ', ' ', 'F', ' ', 'X' },
-                    { '#', '#', 'F', '#', '#' },
-                    { ' ', ' ', ' ', ' ', ' ' },
-                    { ' ', ' ', ' ', ' ', ' ' },
-                    { ' ', ' ', ' ', ' ', ' ' }
-            };
+            List<String> maze = List.of(
+                    "    X          ",
+                    "## F###########",
+                    "               ",
+                    "               ",
+                    "               ",
+                    "               ",
+                    "               ",
+                    "               ",
+                    "               ",
+                    "               ",
+                    "               ",
+                    "               ",
+                    "               ",
+                    "               ",
+                    "               ");
 
-            // Return Test Level Definition
-            return new LevelDefinition(
-                    1,
+            // Create Test Level Starting Position
+            PlayerStart player = new PlayerStart(0, 0);
+
+            // Create Test Level Assets
+            LevelAssets assets = new LevelAssets(
                     "woodlands.png",
-                    20,
-                    0,
-                    0,
                     "player.png",
                     "food.png",
                     "enemy.png",
                     "wall1.png",
                     "wall2.png",
-                    "exit.png",
+                    "exit.png");
+
+            // Return Test Level Definition
+            return new LevelDefinition(
+                    1,
+                    20,
+                    player,
+                    assets,
                     maze);
         }
     }
