@@ -1,0 +1,15 @@
+/* MENU LAYOUT */
+
+.menu-container {
+    -fx-spacing: 15px;
+}
+
+/* MENU TITLE */
+.menu-title {
+    -fx-effect: dropshadow(gaussian,
+            rgba(0, 0, 0, 0.45),
+            6,
+            0.25,
+            0,
+            4);
+}

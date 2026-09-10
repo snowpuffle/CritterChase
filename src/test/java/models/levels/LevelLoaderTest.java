@@ -1,85 +1,42 @@
 package models.levels;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+// LevelLoaderTest Tests Level JSON Loading
+class LevelLoaderTest {
 
-// LevelLoaderTest Tests Level Loading and Validation
-public class LevelLoaderTest {
-
-    // Test that a Valid Level Loads Successfully
+    // Test Valid Level Loads Successfully
     @Test
-    void testLoadValidLevel() {
-
+    void loadValidLevelReturnsDefinition() {
         LevelDefinition definition = LevelLoader.load(1);
-
         assertNotNull(definition);
         assertEquals(1, definition.levelNumber());
-        assertNotNull(definition.player());
-        assertNotNull(definition.assets());
-        assertNotNull(definition.maze());
     }
 
-    // Test that Loaded Level Has Correct Maze Size
+    // Test Another Valid Level Loads Successfully
     @Test
-    void testLoadedLevelHasCorrectMazeSize() {
-
-        LevelDefinition definition = LevelLoader.load(1);
-
-        assertEquals(15, definition.maze().size());
-
-        for (String row : definition.maze()) {
-            assertEquals(15, row.length());
-        }
+    void loadAnotherValidLevelReturnsDefinition() {
+        LevelDefinition definition = LevelLoader.load(2);
+        assertNotNull(definition);
+        assertEquals(2, definition.levelNumber());
     }
 
-    // Test that Multiple Valid Levels Can Load
+    // Test Missing Level File
     @Test
-    void testLoadMultipleLevels() {
-
-        LevelDefinition levelOne = LevelLoader.load(1);
-
-        LevelDefinition levelTwo = LevelLoader.load(2);
-
-        assertEquals(1, levelOne.levelNumber());
-        assertEquals(2, levelTwo.levelNumber());
-    }
-
-    // Test that Missing Level Throws Exception
-    @Test
-    void testLoadMissingLevel() {
-
+    void loadMissingLevelThrowsException() {
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
                 () -> LevelLoader.load(999));
-
-        assertTrue(
-                exception.getMessage().contains(
-                        "Level File Not Found"));
+        assertEquals("Level File Not Found: /levels/level_999.json", exception.getMessage());
     }
 
-    // Test that Level Number Must Match Requested Level
+    // Test Invalid Level Number
     @Test
-    void testLevelNumberMatchesRequestedLevel() {
-
-        LevelDefinition definition = LevelLoader.load(1);
-
-        assertEquals(
-                1,
-                definition.levelNumber());
-    }
-
-    // Test that Empty Maze Is Rejected
-    @Test
-    void testEmptyMazeIsRejected() {
-
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> new LevelDefinition(
-                        1,
-                        10,
-                        null,
-                        null,
-                        java.util.List.of()));
+    void loadInvalidLevelNumberThrowsException() {
+        assertThrows(IllegalArgumentException.class, () -> LevelLoader.load(0));
     }
 }

@@ -1,0 +1,14 @@
+models\game\GameManagerTest.class
+controllers\GameOverControllerTest.class
+models\levels\LevelTest.class
+models\levels\LevelLoaderTest.class
+models\objects\ScoreTest.class
+models\game\GameSessionTest.class
+models\objects\HealthTest.class
+models\utils\EnemyManagerTest.class
+models\utils\CollisionManagerTest.class
+controllers\GameControllerTest.class
+models\levels\LevelValidatorTest.class
+models\levels\LevelDefinitionTest.class
+models\utils\BFSPathFinderTest.class
+models\levels\LevelTest$TestLevel.class

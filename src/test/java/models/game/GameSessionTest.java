@@ -60,9 +60,7 @@ class GameSessionTest {
         assertNotNull(session.getCurrentLevel());
 
         // Verify Current Level Number
-        assertEquals(
-                level.getLevelNumber(),
-                session.getCurrentLevelNumber());
+        assertEquals(level.getLevelNumber(), session.getCurrentLevelNumber());
     }
 
     // Test Score Persistence
