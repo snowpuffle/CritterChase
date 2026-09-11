@@ -12,7 +12,8 @@
         "enemy": "/assets/animals/cat.png",
         "wall1": "/assets/walls/brick_wall.png",
         "wall2": "/assets/walls/brown_square.png",
-        "exit": "/assets/others/house.png"
+        "exit": "/assets/others/house.png",
+        "weapon": "/assets/weapons/dagger.png"
     },
     "maze": [
         "###X#################",
@@ -24,7 +25,7 @@
         "####### # ##### # # #",
         "#F      #  F      # #",
         "# %%% ### ### ##### #",
-        "#     #             #",
+        "#     #W            #",
         "# ### ## ## #### ####",
         "#F          #       #",
         "##### %%%%% # ## ## #",

@@ -7,14 +7,12 @@ import java.util.List;
 import models.entities.Enemy;
 import models.entities.Player;
 import models.game.GameBoard;
-import models.objects.Health;
 
 // EnemyManager Owns Enemy Movement and Behavior
 public class EnemyManager {
 
     // Objects Needed for Enemy Behavior
     private final Player player;
-    private final Health health;
     private final GameBoard gameBoard;
 
     // Level Enemies
@@ -25,9 +23,8 @@ public class EnemyManager {
     private final BFSPathFinder pathFinder;
 
     // EnemyManager Constructor
-    public EnemyManager(Player player, GameBoard gameBoard, Health health) {
+    public EnemyManager(Player player, GameBoard gameBoard) {
         this.player = player;
-        this.health = health;
         this.gameBoard = gameBoard;
         this.enemies = new ArrayList<>();
         this.enemyPositions = new Enemy[gameBoard.getHeight()][gameBoard.getWidth()];
@@ -218,10 +215,11 @@ public class EnemyManager {
 
     // Damage the Player
     private void damagePlayer(Enemy enemy) {
-        health.takeDamage(enemy.getDamage());
+        player.getHealth().takeDamage(enemy.getDamage());
     }
 
     /* Collision / Lookup */
+
     // Handle a Player Collision with an Enemy
     public boolean handlePlayerCollision(int row, int col) {
 
@@ -233,8 +231,23 @@ public class EnemyManager {
             return false;
         }
 
-        // Damage the Player
-        health.takeDamage(enemy.getDamage());
+        // Check if Player Has a Weapon
+        if (player.hasWeapon()) {
+
+            // Damage the Enemy
+            enemy.takeDamage(player.getWeapon().getDamage());
+
+            // Remove Enemy When Health Reaches Zero
+            if (!enemy.getHealth().isAlive()) {
+                removeEnemy(enemy);
+            }
+
+            // Stop Player Movement After Attacking
+            return true;
+        }
+
+        // Damage the Player Without a Weapon
+        player.getHealth().takeDamage(enemy.getDamage());
         return true;
     }
 
@@ -249,6 +262,16 @@ public class EnemyManager {
 
         // Return True if the Enemy Is Adjacent to the Player
         return rowDifference + colDifference == 1;
+    }
+
+    // Check if Player Can Attack an Enemy
+    public boolean canPlayerAttack(int row, int col) {
+
+        // Find the Enemy at the Position
+        Enemy enemy = getEnemyAt(row, col);
+
+        // Return True When Player Has a Weapon and Enemy Exists
+        return enemy != null && player.hasWeapon();
     }
 
     // Find an Enemy at a Position

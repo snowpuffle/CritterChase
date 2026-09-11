@@ -116,6 +116,31 @@
                </children>
             </HBox>
 
+            <!-- WEAPON -->
+            <HBox
+               alignment="CENTER"
+               prefWidth="240.0"
+               spacing="10.0"
+               styleClass="hud-box weapon-box">
+
+               <children>
+
+                  <Label
+                     fx:id="weaponLabel"
+                     styleClass="hud-label"
+                     text="WEAPON:" />
+
+                  <ImageView
+                     fx:id="weaponImage"
+                     fitHeight="30.0"
+                     fitWidth="30.0"
+                     pickOnBounds="true"
+                     preserveRatio="true"
+                     visible="false" />
+
+               </children>
+            </HBox>
+
          </children>
       </HBox>
    </top>

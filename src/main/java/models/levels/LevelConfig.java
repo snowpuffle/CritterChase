@@ -9,7 +9,8 @@ public final class LevelConfig {
     private static final int STARTING_LEVEL = 1;
 
     // Define Available Levels
-    private static final List<Integer> AVAILABLE_LEVELS = List.of(1, 2, 3, 4, 5);
+    private static final List<Integer> AVAILABLE_LEVELS = List.of(1);
+    // private static final List<Integer> AVAILABLE_LEVELS = List.of(1, 2, 3, 4, 5);
 
     // Private Constructor Prevents Class Instantiation
     private LevelConfig() {

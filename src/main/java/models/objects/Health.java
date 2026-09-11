@@ -1,6 +1,6 @@
 package models.objects;
 
-// Health Class Represents Player's Health in Game
+// Health Class Represents Health in Game
 public class Health {
 
     private final int maxHealth;

@@ -33,6 +33,12 @@ public class GameController {
     @FXML
     private ImageView levelBackground;
 
+    @FXML
+    private ImageView weaponImage;
+
+    @FXML
+    private Label weaponLabel;
+
     // Game Manager
     private final GameManager gameManager = new GameManager();
 
@@ -169,32 +175,35 @@ public class GameController {
 
         // Update Score Display
         scoreLabel.setText(
-                "SCORE: "
-                        + level.getScore().getPoints()
-                        + " / "
-                        + level.getMaxScore());
+                "SCORE: " + level.getScore().getPoints() + " / " + level.getMaxScore());
 
         // Update Level Display
         levelLabel.setText(
-                "LEVEL: "
-                        + level.getLevelNumber());
+                "LEVEL: " + level.getLevelNumber());
 
         // Update Health Display
         healthLabel.setText(
-                "HEALTH: "
-                        + level.getHealth().getCurrentHealth());
+                "HEALTH: " + level.getPlayer().getHealth().getCurrentHealth());
+
+        // Update Weapon Display
+        weaponLabel.setText("WEAPON:");
+
+        if (level.getPlayer().hasWeapon()) {
+            weaponImage.setImage(new Image(
+                    getClass().getResourceAsStream(
+                            level.getPlayer().getWeapon().getImagePath())));
+            weaponImage.setVisible(true);
+        } else {
+            weaponImage.setVisible(false);
+        }
     }
 
     // Show Game Over / Won Screen
     private void showGameResult(String result) {
         try {
             GameOverController controller = SceneManager.show("gameover.fxml");
-
             controller.setResult(result);
-
-            controller.setScore(
-                    gameManager.getScore(),
-                    gameManager.getTotalMaxScore());
+            controller.setScore(gameManager.getScore(), gameManager.getTotalMaxScore());
 
         } catch (IOException e) {
             System.err.println("Failed to Load the Game Result Screen.");
@@ -203,7 +212,6 @@ public class GameController {
     }
 
     private void updateLevelBackground(String backgroundPath) {
-
         Image image = new Image(
                 getClass().getResourceAsStream(backgroundPath));
 

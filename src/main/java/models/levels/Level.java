@@ -7,6 +7,7 @@ import models.game.GameObjectType;
 import models.objects.GameObject;
 import models.objects.Health;
 import models.objects.Score;
+import models.objects.Weapon;
 import models.utils.CollisionManager;
 import models.utils.Direction;
 import models.utils.EnemyManager;
@@ -19,54 +20,22 @@ public class Level {
     private final String backgroundPath;
     private final Score score;
     private final int maxScore;
-    private final Health health;
     private final int levelNumber;
     private final EnemyManager enemyManager;
     private final CollisionManager collisionManager;
     private final LevelBuilder levelBuilder;
 
     // Level Constructor
-    public Level(
-            LevelDefinition definition,
-            Score score) {
-
-        // Store Level Information
+    public Level(LevelDefinition definition, Score score) {
         this.levelNumber = definition.levelNumber();
         this.maxScore = definition.maxScore();
         this.backgroundPath = definition.assets().background();
-
-        // Store Level Score Reference
         this.score = score;
-
-        // Create GameBoard Using Level Dimensions
-        this.gameBoard = new GameBoard(
-                GameBoardConfig.WIDTH,
-                GameBoardConfig.HEIGHT);
-
-        // Create Player Using Level Player Definition
-        this.player = new Player(
-                definition.player().row(),
-                definition.player().col(),
-                definition.assets().player());
-
-        // Create Player Health
-        this.health = new Health(100);
-
-        // Create EnemyManager Using Player, GameBoard, and Health
-        this.enemyManager = new EnemyManager(
-                player,
-                gameBoard,
-                health);
-
-        // Create CollisionManager
-        this.collisionManager = new CollisionManager(
-                gameBoard,
-                score);
-
-        // Create LevelBuilder
-        this.levelBuilder = new LevelBuilder(
-                gameBoard,
-                enemyManager);
+        this.gameBoard = new GameBoard(GameBoardConfig.WIDTH, GameBoardConfig.HEIGHT);
+        this.player = new Player(definition.player().row(), definition.player().col(), definition.assets().player());
+        this.enemyManager = new EnemyManager(player, gameBoard);
+        this.collisionManager = new CollisionManager(gameBoard, score);
+        this.levelBuilder = new LevelBuilder(gameBoard, enemyManager);
 
         // Build Level Objects
         buildLevel(definition);
@@ -100,37 +69,52 @@ public class Level {
         String wallImage1 = definition.assets().wall1();
         String wallImage2 = definition.assets().wall2();
         String exitImage = definition.assets().exit();
+        String weaponImage = definition.assets().weapon();
 
         // Build Game Objects Using LevelBuilder
-        levelBuilder.build(
-                maze,
-                foodImage,
-                enemyImage,
-                wallImage1,
-                wallImage2,
-                exitImage);
+        levelBuilder.build(maze, foodImage, enemyImage, wallImage1, wallImage2, exitImage, weaponImage);
     }
 
     // Process One Player Turn
     public boolean takeTurn(Direction direction) {
-
-        // Reject Null Direction Values
         if (direction == null) {
             return false;
         }
 
+        // Check if Player Already Has a Weapon
+        boolean hadWeapon = player.hasWeapon();
+
+        // Calculate New Player Row
+        int newRow = player.getRow() + direction.getRowChange();
+
+        // Calculate New Player Column
+        int newCol = player.getCol() + direction.getColChange();
+
+        // Check if Player Is Attacking an Enemy
+        boolean attacking = gameBoard.isValidPosition(newRow, newCol)
+                && hadWeapon
+                && enemyManager.getEnemyAt(newRow, newCol) != null;
+
         // Attempt Player Movement
         boolean moved = movePlayer(direction);
 
-        // Stop Turn Processing When Player Cannot Move
-        if (!moved) {
+        // Stop Turn Processing When Player Cannot Move or Attack
+        if (!moved && !attacking) {
             return false;
         }
 
-        // Move Enemies After Successful Player Movement
-        moveEnemies();
+        // Increase Weapon Move Counter After Weapon Use
+        if (hadWeapon) {
+            player.incrementWeaponMoves();
+        }
 
-        // Return Successful Turn Result
+        // Remove Weapon When Move Limit Is Reached
+        if (player.isWeaponExpired()) {
+            player.removeWeapon();
+        }
+
+        // Move Enemies After Successful Player Movement or Attack
+        moveEnemies();
         return true;
     }
 
@@ -138,12 +122,10 @@ public class Level {
     private boolean movePlayer(Direction direction) {
 
         // Calculate New Player Row
-        int newRow = player.getRow()
-                + direction.getRowChange();
+        int newRow = player.getRow() + direction.getRowChange();
 
         // Calculate New Player Column
-        int newCol = player.getCol()
-                + direction.getColChange();
+        int newCol = player.getCol() + direction.getColChange();
 
         // Reject Positions Outside GameBoard
         if (!gameBoard.isValidPosition(newRow, newCol)) {
@@ -163,6 +145,9 @@ public class Level {
         // Move Player to New Position
         player.setPosition(newRow, newCol);
 
+        // Collect Weapon at Player Position
+        collectWeapon(newRow, newCol);
+
         // Return Successful Movement Result
         return true;
     }
@@ -174,17 +159,34 @@ public class Level {
         enemyManager.moveEnemies();
     }
 
+    // Collect Weapon at Player Position
+    private void collectWeapon(int row, int col) {
+
+        // Get GameObject at Player Position
+        GameObject object = gameBoard.getGameObjectAt(row, col);
+
+        // Check if GameObject is a Weapon
+        if (object != null && object.getType() == GameObjectType.WEAPON) {
+
+            // Convert GameObject to Weapon
+            Weapon weapon = (Weapon) object;
+
+            // Equip Weapon to Player
+            player.equipWeapon(weapon);
+
+            // Remove Weapon from GameBoard
+            gameBoard.removeGameObjectAt(row, col);
+        }
+    }
+
     // Check if Player Reached Level Exit
     public boolean isLevelComplete() {
 
         // Get GameObject at Player Position
-        GameObject object = gameBoard.getGameObjectAt(
-                player.getRow(),
-                player.getCol());
+        GameObject object = gameBoard.getGameObjectAt(player.getRow(), player.getCol());
 
         // Check Exit Object
-        return object != null
-                && object.getType() == GameObjectType.EXIT;
+        return object != null && object.getType() == GameObjectType.EXIT;
     }
 
     // Get Player
@@ -210,11 +212,6 @@ public class Level {
     // Get Maximum Level Score
     public int getMaxScore() {
         return maxScore;
-    }
-
-    // Get Player Health
-    public Health getHealth() {
-        return health;
     }
 
     // Get Level Number

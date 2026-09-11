@@ -2,6 +2,7 @@ package models.utils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -10,8 +11,8 @@ import org.junit.jupiter.api.Test;
 import models.entities.Enemy;
 import models.entities.Player;
 import models.game.GameBoard;
-import models.objects.Health;
 import models.objects.Wall;
+import models.objects.Weapon;
 
 // Test EnemyManager Core Game Rules
 // - Moves Enemies Toward the Player
@@ -36,14 +37,11 @@ class EnemyManagerTest {
                 // Create Player at Center of Board
                 Player player = new Player(2, 2, "player.png");
 
-                // Create Player Health
-                Health health = new Health(100);
-
                 // Create Enemy Manager
-                EnemyManager enemyManager = new EnemyManager(player, board, health);
+                EnemyManager enemyManager = new EnemyManager(player, board);
 
                 // Create Enemy Two Spaces Away from Player
-                Enemy enemy = new Enemy(2, 4, "enemy.png");
+                Enemy enemy = new Enemy(2, 4, "enemy.png", 40);
 
                 // Add Enemy to Enemy Manager
                 enemyManager.addEnemy(enemy);
@@ -72,17 +70,14 @@ class EnemyManagerTest {
                 // Create Player
                 Player player = new Player(2, 1, "player.png");
 
-                // Create Player Health
-                Health health = new Health(100);
-
                 // Place Wall Between Enemy and Player
                 board.setGameObjectAt(2, 2, new Wall(2, 2, "wall.png"));
 
                 // Create Enemy Manager
-                EnemyManager enemyManager = new EnemyManager(player, board, health);
+                EnemyManager enemyManager = new EnemyManager(player, board);
 
                 // Create Enemy on Other Side of Wall
-                Enemy enemy = new Enemy(2, 3, "enemy.png");
+                Enemy enemy = new Enemy(2, 3, "enemy.png", 40);
 
                 // Add Enemy to Enemy Manager
                 enemyManager.addEnemy(enemy);
@@ -114,17 +109,14 @@ class EnemyManagerTest {
                 // Create Player
                 Player player = new Player(0, 0, "player.png");
 
-                // Create Player Health
-                Health health = new Health(100);
-
                 // Create Enemy Manager
-                EnemyManager enemyManager = new EnemyManager(player, board, health);
+                EnemyManager enemyManager = new EnemyManager(player, board);
 
                 // Create First Enemy Between Second Enemy and Player
-                Enemy enemyOne = new Enemy(0, 1, "enemy1.png");
+                Enemy enemyOne = new Enemy(0, 1, "enemy1.png", 40);
 
                 // Create Second Enemy Behind First Enemy
-                Enemy enemyTwo = new Enemy(0, 2, "enemy2.png");
+                Enemy enemyTwo = new Enemy(0, 2, "enemy2.png", 40);
 
                 // Add Both Enemies to Enemy Manager
                 enemyManager.addEnemy(enemyOne);
@@ -154,15 +146,12 @@ class EnemyManagerTest {
                 // Create Player
                 Player player = new Player(0, 0, "player.png");
 
-                // Create Player Health
-                Health health = new Health(100);
-
                 // Create Enemy Manager
-                EnemyManager enemyManager = new EnemyManager(player, board, health);
+                EnemyManager enemyManager = new EnemyManager(player, board);
 
                 // Create Two Enemies
-                Enemy enemyOne = new Enemy(0, 2, "enemy1.png");
-                Enemy enemyTwo = new Enemy(1, 1, "enemy2.png");
+                Enemy enemyOne = new Enemy(0, 2, "enemy1.png", 40);
+                Enemy enemyTwo = new Enemy(1, 1, "enemy2.png", 40);
 
                 // Add Both Enemies to Enemy Manager
                 enemyManager.addEnemy(enemyOne);
@@ -186,14 +175,11 @@ class EnemyManagerTest {
                 // Create Player
                 Player player = new Player(2, 2, "player.png");
 
-                // Create Player Health
-                Health health = new Health(100);
-
                 // Create Enemy Manager
-                EnemyManager enemyManager = new EnemyManager(player, board, health);
+                EnemyManager enemyManager = new EnemyManager(player, board);
 
                 // Create Enemy Directly Next to Player
-                Enemy enemy = new Enemy(2, 3, "enemy.png");
+                Enemy enemy = new Enemy(2, 3, "enemy.png", 40);
 
                 // Add Enemy to Enemy Manager
                 enemyManager.addEnemy(enemy);
@@ -203,7 +189,7 @@ class EnemyManagerTest {
                 enemyManager.moveEnemies();
 
                 // Verify Player Lost Enemy Damage
-                assertEquals(80, health.getCurrentHealth());
+                assertEquals(80, player.getHealth().getCurrentHealth());
 
                 // Verify Enemy Remains in Original Position
                 assertEquals(2, enemy.getRow());
@@ -223,14 +209,11 @@ class EnemyManagerTest {
                 // Create Player
                 Player player = new Player(2, 2, "player.png");
 
-                // Create Player Health
-                Health health = new Health(100);
-
                 // Create Enemy Manager
-                EnemyManager enemyManager = new EnemyManager(player, board, health);
+                EnemyManager enemyManager = new EnemyManager(player, board);
 
                 // Create Enemy
-                Enemy enemy = new Enemy(2, 3, "enemy.png");
+                Enemy enemy = new Enemy(2, 3, "enemy.png", 40);
 
                 // Add Enemy to Enemy Manager
                 enemyManager.addEnemy(enemy);
@@ -242,7 +225,7 @@ class EnemyManagerTest {
                 assertTrue(collision);
 
                 // Verify Player Lost Enemy Damage
-                assertEquals(80, health.getCurrentHealth());
+                assertEquals(80, player.getHealth().getCurrentHealth());
         }
 
         // Test Multiple Enemy Movement
@@ -255,17 +238,14 @@ class EnemyManagerTest {
                 // Create Player at Center of Board
                 Player player = new Player(2, 2, "player.png");
 
-                // Create Player Health
-                Health health = new Health(100);
-
                 // Create Enemy Manager
-                EnemyManager enemyManager = new EnemyManager(player, board, health);
+                EnemyManager enemyManager = new EnemyManager(player, board);
 
                 // Create Enemy Above Player
-                Enemy enemyOne = new Enemy(0, 2, "enemy1.png");
+                Enemy enemyOne = new Enemy(0, 2, "enemy1.png", 40);
 
                 // Create Enemy Below Player
-                Enemy enemyTwo = new Enemy(4, 2, "enemy2.png");
+                Enemy enemyTwo = new Enemy(4, 2, "enemy2.png", 40);
 
                 // Add Both Enemies to Enemy Manager
                 enemyManager.addEnemy(enemyOne);
@@ -307,14 +287,10 @@ class EnemyManagerTest {
                                 && enemyOne.getCol() == enemyTwo.getCol());
 
                 // Verify First Enemy Position Was Updated
-                assertEquals(
-                                enemyOne,
-                                enemyManager.getEnemyAt(enemyOne.getRow(), enemyOne.getCol()));
+                assertEquals(enemyOne, enemyManager.getEnemyAt(enemyOne.getRow(), enemyOne.getCol()));
 
                 // Verify Second Enemy Position Was Updated
-                assertEquals(
-                                enemyTwo,
-                                enemyManager.getEnemyAt(enemyTwo.getRow(), enemyTwo.getCol()));
+                assertEquals(enemyTwo, enemyManager.getEnemyAt(enemyTwo.getRow(), enemyTwo.getCol()));
         }
 
         // Test Duplicate Enemy Position Is Rejected
@@ -327,17 +303,14 @@ class EnemyManagerTest {
                 // Create Player
                 Player player = new Player(0, 0, "player.png");
 
-                // Create Player Health
-                Health health = new Health(100);
-
                 // Create Enemy Manager
-                EnemyManager enemyManager = new EnemyManager(player, board, health);
+                EnemyManager enemyManager = new EnemyManager(player, board);
 
                 // Create First Enemy
-                Enemy enemyOne = new Enemy(2, 2, "enemy1.png");
+                Enemy enemyOne = new Enemy(2, 2, "enemy1.png", 40);
 
                 // Create Second Enemy at Same Position
-                Enemy enemyTwo = new Enemy(2, 2, "enemy2.png");
+                Enemy enemyTwo = new Enemy(2, 2, "enemy2.png", 40);
 
                 // Add First Enemy to Enemy Manager
                 enemyManager.addEnemy(enemyOne);
@@ -359,14 +332,11 @@ class EnemyManagerTest {
                 // Create Player
                 Player player = new Player(0, 0, "player.png");
 
-                // Create Player Health
-                Health health = new Health(100);
-
                 // Create Enemy Manager
-                EnemyManager enemyManager = new EnemyManager(player, board, health);
+                EnemyManager enemyManager = new EnemyManager(player, board);
 
                 // Create Enemy Outside GameBoard
-                Enemy enemy = new Enemy(5, 5, "enemy.png");
+                Enemy enemy = new Enemy(5, 5, "enemy.png", 40);
 
                 // Verify Invalid Position Is Rejected
                 assertThrows(IllegalArgumentException.class, () -> enemyManager.addEnemy(enemy));
@@ -382,14 +352,11 @@ class EnemyManagerTest {
                 // Create Player
                 Player player = new Player(0, 0, "player.png");
 
-                // Create Player Health
-                Health health = new Health(100);
-
                 // Create Enemy Manager
-                EnemyManager enemyManager = new EnemyManager(player, board, health);
+                EnemyManager enemyManager = new EnemyManager(player, board);
 
                 // Create Enemy
-                Enemy enemy = new Enemy(2, 2, "enemy.png");
+                Enemy enemy = new Enemy(2, 2, "enemy.png", 40);
 
                 // Add Enemy to Enemy Manager
                 enemyManager.addEnemy(enemy);
@@ -402,5 +369,82 @@ class EnemyManagerTest {
 
                 // Verify Enemy Was Removed from Enemy List
                 assertFalse(enemyManager.getEnemies().contains(enemy));
+        }
+
+        // Test Player Damages Enemy with Weapon
+        @Test
+        void playerDamagesEnemyWithWeapon() {
+
+                // Create Player
+                Player player = new Player(1, 1, "player.png");
+
+                // Create GameBoard
+                GameBoard board = new GameBoard(5, 5);
+
+                // Create EnemyManager
+                EnemyManager enemyManager = new EnemyManager(player, board);
+
+                // Create Weapon
+                Weapon weapon = new Weapon(1, 2, "weapon.png");
+
+                // Equip Weapon to Player
+                player.equipWeapon(weapon);
+
+                // Create Enemy
+                Enemy enemy = new Enemy(1, 3, "enemy.png", 40);
+
+                // Add Enemy to EnemyManager
+                enemyManager.addEnemy(enemy);
+
+                // Attack Enemy
+                boolean handled = enemyManager.handlePlayerCollision(1, 3);
+
+                // Verify Collision Was Handled
+                assertTrue(handled);
+
+                // Verify Enemy Lost Health
+                assertEquals(20, enemy.getHealth().getCurrentHealth());
+
+                // Verify Player Did Not Lose Health
+                assertEquals(100, player.getHealth().getCurrentHealth());
+        }
+
+        // Test Player Defeats Enemy with Two Attacks
+        @Test
+        void playerDefeatsEnemyWithTwoAttacks() {
+
+                // Create Player
+                Player player = new Player(1, 1, "player.png");
+
+                // Create GameBoard
+                GameBoard board = new GameBoard(5, 5);
+
+                // Create EnemyManager
+                EnemyManager enemyManager = new EnemyManager(player, board);
+
+                // Create Weapon
+                Weapon weapon = new Weapon(1, 2, "weapon.png");
+
+                // Equip Weapon to Player
+                player.equipWeapon(weapon);
+
+                // Create Enemy
+                Enemy enemy = new Enemy(1, 3, "enemy.png", 40);
+
+                // Add Enemy to EnemyManager
+                enemyManager.addEnemy(enemy);
+
+                // Attack Enemy Twice
+                enemyManager.handlePlayerCollision(1, 3);
+                enemyManager.handlePlayerCollision(1, 3);
+
+                // Verify Enemy Is Defeated
+                assertFalse(enemy.getHealth().isAlive());
+
+                // Verify Enemy Was Removed
+                assertNull(enemyManager.getEnemyAt(1, 3));
+
+                // Verify Player Did Not Lose Health
+                assertEquals(100, player.getHealth().getCurrentHealth());
         }
 }

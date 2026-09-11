@@ -33,6 +33,7 @@ models\levels\Level.class
 controllers\SceneManager.class
 models\game\GameSession.class
 models\objects\Score.class
+models\objects\Weapon.class
 models\utils\EnemyManager.class
 models\utils\CollisionManager$1.class
 models\levels\LevelDefinition.class

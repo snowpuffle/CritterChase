@@ -169,7 +169,7 @@ public class GameManager {
         }
 
         // Check Player Health
-        return !level.getHealth().isAlive();
+        return !level.getPlayer().getHealth().isAlive();
     }
 
     // Check Game Won Status

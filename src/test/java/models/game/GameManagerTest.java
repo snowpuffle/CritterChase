@@ -146,14 +146,11 @@ class GameManagerTest {
                 // Move Player Onto Exit
                 GameTurnResult result = manager.playTurn(direction);
 
-                // Verify Level Was Completed
-                assertEquals(GameTurnResult.LEVEL_COMPLETE, result);
+                // Verify Final Level Was Won
+                assertEquals(GameTurnResult.GAME_WON, result);
 
                 // Verify Level Score Was Transferred
                 assertEquals(30, manager.getScore());
-
-                // Verify Next Level Loaded
-                assertEquals(2, manager.getCurrentLevel().getLevelNumber());
         }
 
         // Test Final Level Score Transfers Only Once

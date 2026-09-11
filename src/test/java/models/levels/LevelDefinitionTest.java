@@ -41,7 +41,8 @@ class LevelDefinitionTest {
                                 "enemy.png",
                                 "wall1.png",
                                 "wall2.png",
-                                "exit.png");
+                                "exit.png",
+                                "dagger.png");
         }
 
         // Create Test Maze
@@ -157,6 +158,9 @@ class LevelDefinitionTest {
 
                 // Verify Exit Image
                 assertEquals("exit.png", definition.assets().exit());
+
+                // Verify Weapon Image
+                assertEquals("dagger.png", definition.assets().weapon());
         }
 
         // Test Maze Storage

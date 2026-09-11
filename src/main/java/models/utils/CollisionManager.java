@@ -44,6 +44,10 @@ public class CollisionManager {
             case EXIT:
                 return true;
 
+            // Allow Player Movement Onto Weapon
+            case WEAPON:
+                return true;
+
             // Prevent Movement Through Unknown Object Types
             default:
                 return false;
@@ -57,9 +61,6 @@ public class CollisionManager {
         score.addPoints(food.getPoints());
 
         // Remove Collected Food from GameBoard
-        gameBoard.removeGameObjectAt(
-                food.getRow(),
-                food.getCol()
-        );
+        gameBoard.removeGameObjectAt(food.getRow(), food.getCol());
     }
 }

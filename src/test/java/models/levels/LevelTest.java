@@ -8,7 +8,9 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import models.entities.Enemy;
 import models.objects.Score;
+import models.objects.Weapon;
 import models.utils.Direction;
 import models.utils.PlayerStart;
 
@@ -64,15 +66,11 @@ class LevelTest {
                     "enemy.png",
                     "wall1.png",
                     "wall2.png",
-                    "exit.png");
+                    "exit.png",
+                    "dagger.png");
 
             // Return Test Level Definition
-            return new LevelDefinition(
-                    1,
-                    10,
-                    player,
-                    assets,
-                    maze);
+            return new LevelDefinition(1, 10, player, assets, maze);
         }
     }
 
@@ -257,5 +255,274 @@ class LevelTest {
 
         // Verify Player Column Did Not Change
         assertEquals(0, player.getCol());
+    }
+
+    // Test Player Attacks Enemy with Weapon
+    @Test
+    void playerAttacksEnemyWithWeapon() {
+
+        // Create Test Level
+        TestLevel level = new TestLevel(new Score());
+
+        // Get Player
+        var player = level.getPlayer();
+
+        // Get Enemy Manager
+        var enemyManager = level.getEnemyManager();
+
+        // Create Weapon
+        Weapon weapon = new Weapon(0, 1, "dagger.png");
+
+        // Equip Weapon to Player
+        player.equipWeapon(weapon);
+
+        // Create Enemy
+        Enemy enemy = new Enemy(0, 2, "enemy.png", 40);
+
+        // Add Enemy to Enemy Manager
+        enemyManager.addEnemy(enemy);
+
+        // Move Player Toward Enemy
+        player.setPosition(0, 1);
+
+        // Attack Enemy
+        boolean turnProcessed = level.takeTurn(Direction.RIGHT);
+
+        // Verify Turn Was Processed
+        assertTrue(turnProcessed);
+
+        // Verify Enemy Lost Health
+        assertEquals(20, enemy.getHealth().getCurrentHealth());
+
+        // Verify Player Took Enemy Damage
+        assertEquals(80, player.getHealth().getCurrentHealth());
+
+        // Verify Player Did Not Move Into Enemy
+        assertEquals(0, player.getRow());
+        assertEquals(1, player.getCol());
+    }
+
+    // Test Player Takes Damage Without Weapon
+    @Test
+    void playerTakesDamageWithoutWeapon() {
+
+        // Create Test Level
+        TestLevel level = new TestLevel(new Score());
+
+        // Get Player
+        var player = level.getPlayer();
+
+        // Get Enemy Manager
+        var enemyManager = level.getEnemyManager();
+
+        // Create Enemy
+        Enemy enemy = new Enemy(0, 2, "enemy.png", 40);
+
+        // Add Enemy to Enemy Manager
+        enemyManager.addEnemy(enemy);
+
+        // Move Player Next to Enemy
+        player.setPosition(0, 1);
+
+        // Attempt to Move Into Enemy
+        boolean turnProcessed = level.takeTurn(Direction.RIGHT);
+
+        // Verify Turn Was Not Processed as Movement
+        assertFalse(turnProcessed);
+
+        // Verify Player Lost Health
+        assertEquals(80, player.getHealth().getCurrentHealth());
+
+        // Verify Enemy Health Did Not Change
+        assertEquals(40, enemy.getHealth().getCurrentHealth());
+
+        // Verify Player Did Not Move Into Enemy
+        assertEquals(0, player.getRow());
+        assertEquals(1, player.getCol());
+    }
+
+    // Test Player Defeats Enemy with Two Attacks
+    @Test
+    void playerDefeatsEnemyWithTwoAttacks() {
+
+        // Create Test Level
+        TestLevel level = new TestLevel(new Score());
+
+        // Get Player
+        var player = level.getPlayer();
+
+        // Get Enemy Manager
+        var enemyManager = level.getEnemyManager();
+
+        // Create Weapon
+        Weapon weapon = new Weapon(0, 1, "dagger.png");
+
+        // Equip Weapon to Player
+        player.equipWeapon(weapon);
+
+        // Create Enemy
+        Enemy enemy = new Enemy(0, 2, "enemy.png", 40);
+
+        // Add Enemy to Enemy Manager
+        enemyManager.addEnemy(enemy);
+
+        // Move Player Next to Enemy
+        player.setPosition(0, 1);
+
+        // Attack Enemy First Time
+        boolean firstAttack = level.takeTurn(Direction.RIGHT);
+
+        // Verify First Attack Was Processed
+        assertTrue(firstAttack);
+
+        // Verify Enemy Lost 20 Health
+        assertEquals(20, enemy.getHealth().getCurrentHealth());
+
+        // Move Player Back Next to Enemy
+        player.setPosition(0, 1);
+
+        // Attack Enemy Second Time
+        boolean secondAttack = level.takeTurn(Direction.RIGHT);
+
+        // Verify Second Attack Was Processed
+        assertTrue(secondAttack);
+
+        // Verify Enemy Has No Health
+        assertFalse(enemy.getHealth().isAlive());
+
+        // Verify Enemy Was Removed
+        assertFalse(enemyManager.getEnemies().contains(enemy));
+
+        // Verify Player Remains Alive
+        assertTrue(player.getHealth().isAlive());
+    }
+
+    // Test Weapon Expires After Five Successful Moves
+    @Test
+    void weaponExpiresAfterFiveSuccessfulMoves() {
+
+        // Create Test Level
+        TestLevel level = new TestLevel(new Score());
+
+        // Get Player
+        var player = level.getPlayer();
+
+        // Create Weapon
+        Weapon weapon = new Weapon(0, 1, "dagger.png");
+
+        // Place Weapon on GameBoard
+        level.getGameBoard().setGameObjectAt(0, 1, weapon);
+
+        // Pick Up Weapon
+        boolean pickedUp = level.takeTurn(Direction.RIGHT);
+
+        // Verify Weapon Was Picked Up
+        assertTrue(pickedUp);
+        assertTrue(player.hasWeapon());
+
+        // Move Player Away from Weapon
+        player.setPosition(2, 0);
+
+        // Process Four Successful Moves
+        for (int move = 0; move < 4; move++) {
+            boolean moved = level.takeTurn(Direction.RIGHT);
+            assertTrue(moved);
+        }
+
+        // Verify Weapon Is Still Equipped
+        assertTrue(player.hasWeapon());
+
+        // Process Fifth Successful Move
+        boolean moved = level.takeTurn(Direction.RIGHT);
+
+        // Verify Fifth Move Was Successful
+        assertTrue(moved);
+
+        // Verify Weapon Expired
+        assertFalse(player.hasWeapon());
+    }
+
+    // Test Blocked Movement Does Not Consume Weapon Move
+    @Test
+    void blockedMovementDoesNotConsumeWeaponMove() {
+
+        // Create Test Level
+        TestLevel level = new TestLevel(new Score());
+
+        // Get Player
+        var player = level.getPlayer();
+
+        // Create Weapon
+        Weapon weapon = new Weapon(0, 1, "dagger.png");
+
+        // Equip Weapon to Player
+        player.equipWeapon(weapon);
+
+        // Attempt Invalid Movement Through Wall
+        boolean moved = level.takeTurn(Direction.DOWN);
+
+        // Verify Movement Was Not Processed
+        assertFalse(moved);
+
+        // Verify Weapon Is Still Equipped
+        assertTrue(player.hasWeapon());
+    }
+
+    // Test Player Collects Weapon
+    @Test
+    void playerCollectsWeapon() {
+
+        // Create Test Level
+        TestLevel level = new TestLevel(new Score());
+
+        // Get Player
+        var player = level.getPlayer();
+
+        // Create Weapon
+        Weapon weapon = new Weapon(0, 1, "dagger.png");
+
+        // Place Weapon on GameBoard
+        level.getGameBoard().setGameObjectAt(0, 1, weapon);
+
+        // Move Player Onto Weapon
+        boolean moved = level.takeTurn(Direction.RIGHT);
+
+        // Verify Player Moved Successfully
+        assertTrue(moved);
+
+        // Verify Player Has Weapon
+        assertTrue(player.hasWeapon());
+
+        // Verify Weapon Is Removed from GameBoard
+        assertEquals(null, level.getGameBoard().getGameObjectAt(0, 1));
+    }
+
+    // Test Weapon Pickup Does Not Consume a Weapon Move
+    @Test
+    void weaponPickupDoesNotConsumeWeaponMove() {
+
+        // Create Test Level
+        TestLevel level = new TestLevel(new Score());
+
+        // Get Player
+        var player = level.getPlayer();
+
+        // Create Weapon
+        Weapon weapon = new Weapon(0, 1, "dagger.png");
+
+        // Place Weapon on GameBoard
+        level.getGameBoard().setGameObjectAt(0, 1, weapon);
+
+        // Pick Up Weapon
+        boolean moved = level.takeTurn(Direction.RIGHT);
+
+        // Verify Player Moved Successfully
+        assertTrue(moved);
+
+        // Verify Weapon Is Equipped
+        assertTrue(player.hasWeapon());
+
+        // Verify Weapon Has Not Expired
+        assertFalse(player.isWeaponExpired());
     }
 }
