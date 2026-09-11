@@ -9,7 +9,7 @@ import models.entities.Player;
 import models.game.GameBoard;
 import models.objects.Health;
 
-// EnemyManager Owns Enemy Movement and Behavior.
+// EnemyManager Owns Enemy Movement and Behavior
 public class EnemyManager {
 
     // Objects Needed for Enemy Behavior
@@ -34,7 +34,8 @@ public class EnemyManager {
         this.pathFinder = new BFSPathFinder(gameBoard);
     }
 
-    // Add an Enemy
+    /* Enemy Lifecycle */
+    // Add an Enemy to the Level
     public void addEnemy(Enemy enemy) {
 
         // Ignore Null Enemies
@@ -42,16 +43,30 @@ public class EnemyManager {
             return;
         }
 
-        // Add the Enemy to the List of Enemies
+        // Get Enemy Row
+        int row = enemy.getRow();
+
+        // Get Enemy Column
+        int col = enemy.getCol();
+
+        // Reject Positions Outside GameBoard
+        if (!gameBoard.isValidPosition(row, col)) {
+            throw new IllegalArgumentException("Enemy Position Exists Outside GameBoard.");
+        }
+
+        // Reject Positions Occupied by Another Enemy
+        if (getEnemyAt(row, col) != null) {
+            throw new IllegalArgumentException("Another Enemy Already Occupies This Position.");
+        }
+
+        // Add Enemy to Enemy List
         enemies.add(enemy);
 
-        // Store Enemy at its Current Position
-        if (gameBoard.isValidPosition(enemy.getRow(), enemy.getCol())) {
-            enemyPositions[enemy.getRow()][enemy.getCol()] = enemy;
-        }
+        // Store Enemy at Its Current Position
+        enemyPositions[row][col] = enemy;
     }
 
-    // Remove an Enemy
+    // Remove an Enemy from the Level
     public void removeEnemy(Enemy enemy) {
 
         // Ignore Null Enemies
@@ -59,31 +74,37 @@ public class EnemyManager {
             return;
         }
 
-        // Remove Enemy from its Current Position
-        if (gameBoard.isValidPosition(enemy.getRow(), enemy.getCol())) {
-            enemyPositions[enemy.getRow()][enemy.getCol()] = null;
+        // Get Enemy Row
+        int row = enemy.getRow();
+
+        // Get Enemy Column
+        int col = enemy.getCol();
+
+        // Remove Enemy from Current Position
+        if (gameBoard.isValidPosition(row, col) && enemyPositions[row][col] == enemy) {
+            enemyPositions[row][col] = null;
         }
 
-        // Remove the Enemy from the List of Enemies
+        // Remove Enemy from Enemy List
         enemies.remove(enemy);
     }
 
+    /* Enemy Behavior */
     // Move All Enemies
     public void moveEnemies() {
 
-        // Create One BFS Distance Map from the Player
-        int[][] distanceMap = pathFinder.createDistanceMap(
-                player.getRow(),
-                player.getCol(),
-                this);
-
-        // Move Each Enemy Using the Same Distance Map
+        // Move Each Enemy Toward the Player
         for (Enemy enemy : enemies) {
+
+            // Create BFS Distance Map for Current Enemy
+            int[][] distanceMap = pathFinder.createDistanceMap(player.getRow(), player.getCol(), this, enemy);
+
+            // Move Current Enemy
             moveEnemy(enemy, distanceMap);
         }
     }
 
-    // Move One Enemy Toward the Player Using the Shared Distance Map
+    // Move One Enemy Toward the Player Using the Distance Map
     private void moveEnemy(Enemy enemy, int[][] distanceMap) {
 
         // Attack the Player if Adjacent
@@ -95,42 +116,58 @@ public class EnemyManager {
         // Find the Best Neighboring Position
         int[] nextPosition = findNextPosition(enemy, distanceMap);
 
-        // No Valid Position Found
+        // Stop When No Valid Position Is Found
         if (nextPosition == null) {
             return;
         }
 
-        // Get Current Position
-        int oldRow = enemy.getRow();
-        int oldCol = enemy.getCol();
-
-        // Get New Position
+        // Get New Enemy Row
         int newRow = nextPosition[0];
+
+        // Get New Enemy Column
         int newCol = nextPosition[1];
 
-        // Remove Enemy from Its Old Position
+        // Move Enemy Through Centralized Movement Method
+        moveEnemyTo(enemy, newRow, newCol);
+    }
+
+    // Move Enemy to New Position
+    private void moveEnemyTo(Enemy enemy, int newRow, int newCol) {
+
+        // Get Current Enemy Row
+        int oldRow = enemy.getRow();
+
+        // Get Current Enemy Column
+        int oldCol = enemy.getCol();
+
+        // Remove Enemy from Old Position
         enemyPositions[oldRow][oldCol] = null;
 
-        // Move Enemy
+        // Update Enemy's Position
         enemy.setPosition(newRow, newCol);
 
-        // Store Enemy at Its New Position
+        // Store Enemy at New Position
         enemyPositions[newRow][newCol] = enemy;
     }
 
     // Find the Best Next Position for an Enemy
     private int[] findNextPosition(Enemy enemy, int[][] distanceMap) {
 
+        // Get Current Enemy Row
         int currentRow = enemy.getRow();
+
+        // Get Current Enemy Column
         int currentCol = enemy.getCol();
 
+        // Get Current Distance from Player
         int currentDistance = distanceMap[currentRow][currentCol];
 
-        // If the Enemy Cannot Reach the Player
+        // Stop When Enemy Cannot Reach the Player
         if (currentDistance == -1) {
             return null;
         }
 
+        // Store Current Position as Best Position
         int bestRow = currentRow;
         int bestCol = currentCol;
         int bestDistance = currentDistance;
@@ -138,29 +175,31 @@ public class EnemyManager {
         // Check Each Possible Direction
         for (Direction direction : Direction.values()) {
 
+            // Calculate New Enemy Row
             int newRow = currentRow + direction.getRowChange();
+
+            // Calculate New Enemy Column
             int newCol = currentCol + direction.getColChange();
 
-            // Skip Invalid Positions
+            // Skip Positions Outside GameBoard
             if (!gameBoard.isValidPosition(newRow, newCol)) {
                 continue;
             }
 
+            // Get Distance from New Position to Player
             int newDistance = distanceMap[newRow][newCol];
 
-            // Skip Unreachable Positions
+            // Skip Positions the Enemy Cannot Reach
             if (newDistance == -1) {
                 continue;
             }
 
             // Skip Positions Occupied by Another Enemy
-            Enemy otherEnemy = getEnemyAt(newRow, newCol);
-
-            if (otherEnemy != null && otherEnemy != enemy) {
+            if (getEnemyAt(newRow, newCol) != null) {
                 continue;
             }
 
-            // Move Toward the Player
+            // Choose Position Closer to the Player
             if (newDistance < bestDistance) {
                 bestDistance = newDistance;
                 bestRow = newRow;
@@ -168,11 +207,12 @@ public class EnemyManager {
             }
         }
 
-        // No Better Position Found
+        // Stop When No Better Position Is Found
         if (bestRow == currentRow && bestCol == currentCol) {
             return null;
         }
 
+        // Return the Best Next Position
         return new int[] { bestRow, bestCol };
     }
 
@@ -181,6 +221,7 @@ public class EnemyManager {
         health.takeDamage(enemy.getDamage());
     }
 
+    /* Collision / Lookup */
     // Handle a Player Collision with an Enemy
     public boolean handlePlayerCollision(int row, int col) {
 
@@ -200,20 +241,20 @@ public class EnemyManager {
     // Check if an Enemy is Next to the Player
     private boolean isAdjacentToPlayer(Enemy enemy) {
 
-        // Check if the Enemy is Adjacent to the Player
+        // Get Row Difference
         int rowDifference = Math.abs(enemy.getRow() - player.getRow());
 
-        // Check if the Enemy is Adjacent to the Player
+        // Get Column Difference
         int colDifference = Math.abs(enemy.getCol() - player.getCol());
 
-        // Return True if the Enemy is Adjacent to the Player
+        // Return True if the Enemy Is Adjacent to the Player
         return rowDifference + colDifference == 1;
     }
 
     // Find an Enemy at a Position
     public Enemy getEnemyAt(int row, int col) {
 
-        // Check if the Position is Valid
+        // Check if the Position Is Valid
         if (!gameBoard.isValidPosition(row, col)) {
             return null;
         }

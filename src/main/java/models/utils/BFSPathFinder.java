@@ -4,7 +4,9 @@ import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Queue;
 
+import models.entities.Enemy;
 import models.game.GameBoard;
+import models.objects.Wall;
 
 // BFSPathFinder Finds the Shortest Distance from the Player to Every Reachable Position.
 public class BFSPathFinder {
@@ -19,6 +21,15 @@ public class BFSPathFinder {
 
     // Create a Distance Map Starting from the Player
     public int[][] createDistanceMap(int playerRow, int playerCol, EnemyManager enemyManager) {
+        return createDistanceMap(playerRow, playerCol, enemyManager, null);
+    }
+
+    // Create a Distance Map for a Specific Enemy
+    public int[][] createDistanceMap(
+            int playerRow,
+            int playerCol,
+            EnemyManager enemyManager,
+            Enemy movingEnemy) {
 
         int height = gameBoard.getHeight();
         int width = gameBoard.getWidth();
@@ -53,7 +64,7 @@ public class BFSPathFinder {
                 int newCol = col + direction.getColChange();
 
                 // Skip Positions the Enemy Cannot Enter
-                if (!canEnemyMoveTo(newRow, newCol, enemyManager, playerRow, playerCol)) {
+                if (!canEnemyMoveTo(newRow, newCol, enemyManager, movingEnemy)) {
                     continue;
                 }
 
@@ -73,26 +84,34 @@ public class BFSPathFinder {
         return distances;
     }
 
-    // Check if an Enemy Can Move Through a Position
-    private boolean canEnemyMoveTo(int row, int col, EnemyManager enemyManager, int playerRow, int playerCol) {
+    // Check if Enemy Can Move to a Position
+    private boolean canEnemyMoveTo(
+            int row,
+            int col,
+            EnemyManager enemyManager,
+            Enemy movingEnemy) {
 
-        // Check if Position is Valid
+        // Reject Positions Outside GameBoard
         if (!gameBoard.isValidPosition(row, col)) {
             return false;
         }
 
-        // Always Allow the Player's Position
-        if (row == playerRow && col == playerCol) {
-            return true;
-        }
-
-        // Check if Position is Occupied by a Game Object
-        if (gameBoard.getGameObjectAt(row, col) != null) {
+        // Reject Wall Positions
+        if (gameBoard.getGameObjectAt(row, col) instanceof Wall) {
             return false;
         }
 
-        // Enemy positions are intentionally allowed during BFS.
-        // Enemy occupancy is checked later when choosing the actual movement position.
+        // Check if Position Is Occupied by Another Enemy
+        if (enemyManager != null) {
+
+            Enemy enemy = enemyManager.getEnemyAt(row, col);
+
+            // Allow the Moving Enemy to Use Its Current Position
+            if (enemy != null && enemy != movingEnemy) {
+                return false;
+            }
+        }
+
         return true;
     }
 }
