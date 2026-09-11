@@ -9,11 +9,7 @@ public final class LevelConfig {
     private static final int STARTING_LEVEL = 1;
 
     // Define Available Levels
-    private static final List<Integer> AVAILABLE_LEVELS = List.of(
-            1,
-            2,
-            3,
-            4);
+    private static final List<Integer> AVAILABLE_LEVELS = List.of(1, 2, 3, 4, 5);
 
     // Private Constructor Prevents Class Instantiation
     private LevelConfig() {
@@ -70,8 +66,7 @@ public final class LevelConfig {
     public static int getNextLevel(int currentLevel) {
 
         // Find Current Level Position
-        int currentIndex =
-                AVAILABLE_LEVELS.indexOf(currentLevel);
+        int currentIndex = AVAILABLE_LEVELS.indexOf(currentLevel);
 
         // Reject Invalid Current Level
         if (currentIndex == -1) {

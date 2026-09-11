@@ -1,0 +1,40 @@
+{
+    "levelNumber": 5,
+    "maxScore": 100,
+    "player": {
+        "row": 1,
+        "col": 1
+    },
+    "assets": {
+        "background": "/assets/backgrounds/underwater.png",
+        "player": "/assets/animals/squid.png",
+        "food": "/assets/food/shrimp.png",
+        "enemy": "/assets/animals/shark.png",
+        "wall1": "/assets/walls/wave.png",
+        "wall2": "/assets/walls/coral.png",
+        "exit": "/assets/others/house.png"
+    },
+    "maze": [
+        "#####################",
+        "#   #      F#       #",
+        "### # ####% # ##### #",
+        "#   # #   # #     # #",
+        "# ##% # # # %#### # #",
+        "#     # # #   F #   #",
+        "####%   # ### # #####",
+        "#   # # #     #     #",
+        "# # # # %#### ##### #",
+        "# #   #   F #     # #",
+        "# ####% ### ##### # #",
+        "#     #   #   E   # #",
+        "### # ### ##### ### #",
+        "#F  #   #     #     #",
+        "# ### # ##### # #####",
+        "#   # #   F   #     #",
+        "# # # %#### ##% ### #",
+        "# # #   F #   # E   #",
+        "# # %#### # ### #####",
+        "#F#     E #     F   X",
+        "#####################"
+    ]
+}

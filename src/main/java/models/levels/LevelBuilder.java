@@ -42,15 +42,7 @@ public class LevelBuilder {
             for (int col = 0; col < maze[row].length; col++) {
 
                 // Create Object Based on Maze Character
-                createObject(
-                        maze[row][col],
-                        row,
-                        col,
-                        foodImage,
-                        enemyImage,
-                        wallImage1,
-                        wallImage2,
-                        exitImage);
+                createObject(maze[row][col], row, col, foodImage, enemyImage, wallImage1, wallImage2, exitImage);
             }
         }
     }
