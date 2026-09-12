@@ -231,23 +231,10 @@ public class EnemyManager {
             return false;
         }
 
-        // Check if Player Has a Weapon
-        if (player.hasWeapon()) {
-
-            // Damage the Enemy
-            enemy.takeDamage(player.getWeapon().getDamage());
-
-            // Remove Enemy When Health Reaches Zero
-            if (!enemy.getHealth().isAlive()) {
-                removeEnemy(enemy);
-            }
-
-            // Stop Player Movement After Attacking
-            return true;
-        }
-
-        // Damage the Player Without a Weapon
+        // Damage the Player When Moving Into an Enemy
         player.getHealth().takeDamage(enemy.getDamage());
+
+        // Stop Player Movement After Collision
         return true;
     }
 

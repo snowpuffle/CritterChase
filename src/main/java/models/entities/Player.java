@@ -7,52 +7,44 @@ import models.objects.Weapon;
 public class Player extends Entity {
 
     private Weapon weapon;
-    private int weaponMoves;
     private final Health health;
 
     // Player Constructor
     public Player(int row, int col, String imagePath) {
         super(row, col, imagePath);
         this.weapon = null;
-        this.weaponMoves = 0;
         this.health = new Health(100);
     }
 
-    // Give the Player a Weapon
+    // Equip a Weapon
     public void equipWeapon(Weapon weapon) {
         this.weapon = weapon;
-        this.weaponMoves = 0;
     }
 
-    // Increase Weapon Move Counter
-    public void incrementWeaponMoves() {
-        if (weapon != null) {
-            weaponMoves++;
+    // Use the Equipped Weapon
+    public void useWeapon() {
+        if (weapon == null) {
+            return;
+        }
+
+        weapon.use();
+
+        if (weapon.isBroken()) {
+            weapon = null;
         }
     }
 
-    // Check if Weapon Has Expired
-    public boolean isWeaponExpired() {
-        return weapon != null && weaponMoves >= 5;
-    }
-
-    // Remove Expired Weapon
-    public void removeWeapon() {
-        weapon = null;
-        weaponMoves = 0;
-    }
-
-    // Check if the Player has a Weapon
+    // Check if Player Has a Weapon
     public boolean hasWeapon() {
         return weapon != null;
     }
 
-    // Get the Player's Weapon
+    // Get Player's Weapon
     public Weapon getWeapon() {
         return weapon;
     }
 
-    // Get the Player's Health
+    // Get Player's Health
     public Health getHealth() {
         return health;
     }

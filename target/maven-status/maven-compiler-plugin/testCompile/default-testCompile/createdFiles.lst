@@ -3,6 +3,7 @@ controllers\GameOverControllerTest.class
 models\levels\LevelTest.class
 models\levels\LevelLoaderTest.class
 models\objects\ScoreTest.class
+models\utils\CombatManagerTest.class
 models\game\GameSessionTest.class
 models\objects\HealthTest.class
 models\utils\EnemyManagerTest.class

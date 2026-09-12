@@ -28,6 +28,7 @@ models\utils\Direction.class
 models\objects\Health.class
 models\objects\Exit.class
 models\objects\Wall.class
+models\utils\CombatManager.class
 models\game\GameTurnResult.class
 models\levels\Level.class
 controllers\SceneManager.class

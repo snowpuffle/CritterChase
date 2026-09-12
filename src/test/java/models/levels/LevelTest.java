@@ -2,6 +2,7 @@ package models.levels;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
@@ -24,6 +25,10 @@ import models.utils.PlayerStart;
 // - Does Not Complete Level Before Reaching Exit
 // - Calculates Maximum Level Score
 // - Prevents Enemy Movement When Player Cannot Move
+// - Processes Player Attacks Through CombatManager
+// - Damages Player When Moving Into an Enemy Without a Weapon
+// - Does Not Consume Weapon Use on Movement
+// - Collects Weapon from GameBoard
 class LevelTest {
 
     // Create Test Level for Unit Testing
@@ -186,9 +191,7 @@ class LevelTest {
         assertTrue(moved);
 
         // Verify Food Added Points to Score
-        assertEquals(
-                10,
-                level.getScore().getPoints());
+        assertEquals(10, level.getScore().getPoints());
     }
 
     // Test Level Completion When Player Reaches Exit
@@ -205,8 +208,7 @@ class LevelTest {
         player.setPosition(0, 4);
 
         // Verify Level Is Complete
-        assertTrue(
-                level.isLevelComplete());
+        assertTrue(level.isLevelComplete());
     }
 
     // Test Level Is Not Complete Before Reaching Exit
@@ -217,8 +219,7 @@ class LevelTest {
         TestLevel level = new TestLevel(new Score());
 
         // Verify Level Is Not Complete
-        assertFalse(
-                level.isLevelComplete());
+        assertFalse(level.isLevelComplete());
     }
 
     // Test Maximum Level Score Calculation
@@ -229,9 +230,7 @@ class LevelTest {
         TestLevel level = new TestLevel(new Score());
 
         // Verify Maximum Score Matches Level Definition
-        assertEquals(
-                10,
-                level.getMaxScore());
+        assertEquals(10, level.getMaxScore());
     }
 
     // Test Enemies Do Not Move When Player Cannot Move
@@ -282,7 +281,7 @@ class LevelTest {
         // Add Enemy to Enemy Manager
         enemyManager.addEnemy(enemy);
 
-        // Move Player Toward Enemy
+        // Move Player Next to Enemy
         player.setPosition(0, 1);
 
         // Attack Enemy
@@ -341,9 +340,9 @@ class LevelTest {
         assertEquals(1, player.getCol());
     }
 
-    // Test Player Defeats Enemy with Two Attacks
+    // Test Weapon Is Not Consumed When Player Moves
     @Test
-    void playerDefeatsEnemyWithTwoAttacks() {
+    void weaponIsNotConsumedWhenPlayerMoves() {
 
         // Create Test Level
         TestLevel level = new TestLevel(new Score());
@@ -351,118 +350,17 @@ class LevelTest {
         // Get Player
         var player = level.getPlayer();
 
-        // Get Enemy Manager
-        var enemyManager = level.getEnemyManager();
-
         // Create Weapon
-        Weapon weapon = new Weapon(0, 1, "dagger.png");
+        Weapon weapon = new Weapon(0, 0, "dagger.png");
 
         // Equip Weapon to Player
         player.equipWeapon(weapon);
 
-        // Create Enemy
-        Enemy enemy = new Enemy(0, 2, "enemy.png", 40);
-
-        // Add Enemy to Enemy Manager
-        enemyManager.addEnemy(enemy);
-
-        // Move Player Next to Enemy
-        player.setPosition(0, 1);
-
-        // Attack Enemy First Time
-        boolean firstAttack = level.takeTurn(Direction.RIGHT);
-
-        // Verify First Attack Was Processed
-        assertTrue(firstAttack);
-
-        // Verify Enemy Lost 20 Health
-        assertEquals(20, enemy.getHealth().getCurrentHealth());
-
-        // Move Player Back Next to Enemy
-        player.setPosition(0, 1);
-
-        // Attack Enemy Second Time
-        boolean secondAttack = level.takeTurn(Direction.RIGHT);
-
-        // Verify Second Attack Was Processed
-        assertTrue(secondAttack);
-
-        // Verify Enemy Has No Health
-        assertFalse(enemy.getHealth().isAlive());
-
-        // Verify Enemy Was Removed
-        assertFalse(enemyManager.getEnemies().contains(enemy));
-
-        // Verify Player Remains Alive
-        assertTrue(player.getHealth().isAlive());
-    }
-
-    // Test Weapon Expires After Five Successful Moves
-    @Test
-    void weaponExpiresAfterFiveSuccessfulMoves() {
-
-        // Create Test Level
-        TestLevel level = new TestLevel(new Score());
-
-        // Get Player
-        var player = level.getPlayer();
-
-        // Create Weapon
-        Weapon weapon = new Weapon(0, 1, "dagger.png");
-
-        // Place Weapon on GameBoard
-        level.getGameBoard().setGameObjectAt(0, 1, weapon);
-
-        // Pick Up Weapon
-        boolean pickedUp = level.takeTurn(Direction.RIGHT);
-
-        // Verify Weapon Was Picked Up
-        assertTrue(pickedUp);
-        assertTrue(player.hasWeapon());
-
-        // Move Player Away from Weapon
-        player.setPosition(2, 0);
-
-        // Process Four Successful Moves
-        for (int move = 0; move < 4; move++) {
-            boolean moved = level.takeTurn(Direction.RIGHT);
-            assertTrue(moved);
-        }
-
-        // Verify Weapon Is Still Equipped
-        assertTrue(player.hasWeapon());
-
-        // Process Fifth Successful Move
+        // Move Player
         boolean moved = level.takeTurn(Direction.RIGHT);
 
-        // Verify Fifth Move Was Successful
+        // Verify Movement Was Successful
         assertTrue(moved);
-
-        // Verify Weapon Expired
-        assertFalse(player.hasWeapon());
-    }
-
-    // Test Blocked Movement Does Not Consume Weapon Move
-    @Test
-    void blockedMovementDoesNotConsumeWeaponMove() {
-
-        // Create Test Level
-        TestLevel level = new TestLevel(new Score());
-
-        // Get Player
-        var player = level.getPlayer();
-
-        // Create Weapon
-        Weapon weapon = new Weapon(0, 1, "dagger.png");
-
-        // Equip Weapon to Player
-        player.equipWeapon(weapon);
-
-        // Attempt Invalid Movement Through Wall
-        boolean moved = level.takeTurn(Direction.DOWN);
-
-        // Verify Movement Was Not Processed
-        assertFalse(moved);
 
         // Verify Weapon Is Still Equipped
         assertTrue(player.hasWeapon());
@@ -494,35 +392,6 @@ class LevelTest {
         assertTrue(player.hasWeapon());
 
         // Verify Weapon Is Removed from GameBoard
-        assertEquals(null, level.getGameBoard().getGameObjectAt(0, 1));
-    }
-
-    // Test Weapon Pickup Does Not Consume a Weapon Move
-    @Test
-    void weaponPickupDoesNotConsumeWeaponMove() {
-
-        // Create Test Level
-        TestLevel level = new TestLevel(new Score());
-
-        // Get Player
-        var player = level.getPlayer();
-
-        // Create Weapon
-        Weapon weapon = new Weapon(0, 1, "dagger.png");
-
-        // Place Weapon on GameBoard
-        level.getGameBoard().setGameObjectAt(0, 1, weapon);
-
-        // Pick Up Weapon
-        boolean moved = level.takeTurn(Direction.RIGHT);
-
-        // Verify Player Moved Successfully
-        assertTrue(moved);
-
-        // Verify Weapon Is Equipped
-        assertTrue(player.hasWeapon());
-
-        // Verify Weapon Has Not Expired
-        assertFalse(player.isWeaponExpired());
+        assertNull(level.getGameBoard().getGameObjectAt(0, 1));
     }
 }

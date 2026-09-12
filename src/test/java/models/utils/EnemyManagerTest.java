@@ -2,7 +2,6 @@ package models.utils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -12,7 +11,6 @@ import models.entities.Enemy;
 import models.entities.Player;
 import models.game.GameBoard;
 import models.objects.Wall;
-import models.objects.Weapon;
 
 // Test EnemyManager Core Game Rules
 // - Moves Enemies Toward the Player
@@ -369,82 +367,5 @@ class EnemyManagerTest {
 
                 // Verify Enemy Was Removed from Enemy List
                 assertFalse(enemyManager.getEnemies().contains(enemy));
-        }
-
-        // Test Player Damages Enemy with Weapon
-        @Test
-        void playerDamagesEnemyWithWeapon() {
-
-                // Create Player
-                Player player = new Player(1, 1, "player.png");
-
-                // Create GameBoard
-                GameBoard board = new GameBoard(5, 5);
-
-                // Create EnemyManager
-                EnemyManager enemyManager = new EnemyManager(player, board);
-
-                // Create Weapon
-                Weapon weapon = new Weapon(1, 2, "weapon.png");
-
-                // Equip Weapon to Player
-                player.equipWeapon(weapon);
-
-                // Create Enemy
-                Enemy enemy = new Enemy(1, 3, "enemy.png", 40);
-
-                // Add Enemy to EnemyManager
-                enemyManager.addEnemy(enemy);
-
-                // Attack Enemy
-                boolean handled = enemyManager.handlePlayerCollision(1, 3);
-
-                // Verify Collision Was Handled
-                assertTrue(handled);
-
-                // Verify Enemy Lost Health
-                assertEquals(20, enemy.getHealth().getCurrentHealth());
-
-                // Verify Player Did Not Lose Health
-                assertEquals(100, player.getHealth().getCurrentHealth());
-        }
-
-        // Test Player Defeats Enemy with Two Attacks
-        @Test
-        void playerDefeatsEnemyWithTwoAttacks() {
-
-                // Create Player
-                Player player = new Player(1, 1, "player.png");
-
-                // Create GameBoard
-                GameBoard board = new GameBoard(5, 5);
-
-                // Create EnemyManager
-                EnemyManager enemyManager = new EnemyManager(player, board);
-
-                // Create Weapon
-                Weapon weapon = new Weapon(1, 2, "weapon.png");
-
-                // Equip Weapon to Player
-                player.equipWeapon(weapon);
-
-                // Create Enemy
-                Enemy enemy = new Enemy(1, 3, "enemy.png", 40);
-
-                // Add Enemy to EnemyManager
-                enemyManager.addEnemy(enemy);
-
-                // Attack Enemy Twice
-                enemyManager.handlePlayerCollision(1, 3);
-                enemyManager.handlePlayerCollision(1, 3);
-
-                // Verify Enemy Is Defeated
-                assertFalse(enemy.getHealth().isAlive());
-
-                // Verify Enemy Was Removed
-                assertNull(enemyManager.getEnemyAt(1, 3));
-
-                // Verify Player Did Not Lose Health
-                assertEquals(100, player.getHealth().getCurrentHealth());
         }
 }
