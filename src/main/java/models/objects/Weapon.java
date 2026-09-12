@@ -14,10 +14,10 @@ public class Weapon extends GameObject {
     private int usesRemaining;
 
     // Weapon Constructor
-    public Weapon(int row, int col, String imagePath) {
+    public Weapon(int row, int col, String imagePath, String name, int damage) {
         super(row, col, imagePath);
-        this.name = "Sword";
-        this.damage = 20;
+        this.name = name;
+        this.damage = damage;
         this.usesRemaining = MAX_USES;
     }
 

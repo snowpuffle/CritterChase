@@ -68,7 +68,7 @@ public class LevelBuilder {
 
             // Create Weapon
             case 'W':
-                gameBoard.setGameObjectAt(row, col, new Weapon(row, col, weaponImage));
+                gameBoard.setGameObjectAt(row, col, new Weapon(row, col, weaponImage, "Sword", 20));
                 break;
 
             // Create Enemy

@@ -33,10 +33,14 @@ public class CombatManager {
         }
 
         // Deal Weapon Damage to Enemy
-        enemy.takeDamage(player.getWeapon().getDamage());
+        int damage = player.getWeapon().getDamage();
 
         // Use One Weapon Charge
-        player.useWeapon();
+        if (!player.useWeapon()) {
+            return false;
+        }
+
+        enemy.takeDamage(damage);
 
         // Remove Enemy When Health Reaches Zero
         if (!enemy.getHealth().isAlive()) {

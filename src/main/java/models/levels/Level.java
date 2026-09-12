@@ -140,13 +140,10 @@ public class Level {
         // Get GameObject at Player Position
         GameObject object = gameBoard.getGameObjectAt(row, col);
 
-        // Check if GameObject is a Weapon
-        if (object == null || object.getType() != GameObjectType.WEAPON) {
+        // Return When GameObject Is Not a Weapon
+        if (!(object instanceof Weapon weapon)) {
             return;
         }
-
-        // Convert GameObject to Weapon
-        Weapon weapon = (Weapon) object;
 
         // Equip Weapon to Player
         player.equipWeapon(weapon);

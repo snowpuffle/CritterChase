@@ -22,16 +22,18 @@ public class Player extends Entity {
     }
 
     // Use the Equipped Weapon
-    public void useWeapon() {
+    public boolean useWeapon() {
         if (weapon == null) {
-            return;
+            return false;
         }
 
-        weapon.use();
+        boolean used = weapon.use();
 
         if (weapon.isBroken()) {
             weapon = null;
         }
+
+        return used;
     }
 
     // Check if Player Has a Weapon

@@ -251,16 +251,6 @@ public class EnemyManager {
         return rowDifference + colDifference == 1;
     }
 
-    // Check if Player Can Attack an Enemy
-    public boolean canPlayerAttack(int row, int col) {
-
-        // Find the Enemy at the Position
-        Enemy enemy = getEnemyAt(row, col);
-
-        // Return True When Player Has a Weapon and Enemy Exists
-        return enemy != null && player.hasWeapon();
-    }
-
     // Find an Enemy at a Position
     public Enemy getEnemyAt(int row, int col) {
 
