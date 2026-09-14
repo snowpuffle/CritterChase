@@ -36,7 +36,7 @@ public class CombatManagerTest {
         enemy = new Enemy(2, 2, "enemy.png", 40);
 
         // Create Weapon
-        weapon = new Weapon(0, 0, "weapon.png");
+        weapon = new Weapon(0, 0, "weapon.png", "Test Weapon", 20);
 
         // Create EnemyManager
         enemyManager = new EnemyManager(player, gameBoard);

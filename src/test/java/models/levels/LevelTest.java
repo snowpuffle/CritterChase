@@ -270,7 +270,7 @@ class LevelTest {
         var enemyManager = level.getEnemyManager();
 
         // Create Weapon
-        Weapon weapon = new Weapon(0, 1, "dagger.png");
+        Weapon weapon = new Weapon(0, 1, "dagger.png", "Dagger", 20);
 
         // Equip Weapon to Player
         player.equipWeapon(weapon);
@@ -351,7 +351,7 @@ class LevelTest {
         var player = level.getPlayer();
 
         // Create Weapon
-        Weapon weapon = new Weapon(0, 0, "dagger.png");
+        Weapon weapon = new Weapon(0, 0, "dagger.png", "Dagger", 20);
 
         // Equip Weapon to Player
         player.equipWeapon(weapon);
@@ -377,7 +377,7 @@ class LevelTest {
         var player = level.getPlayer();
 
         // Create Weapon
-        Weapon weapon = new Weapon(0, 1, "dagger.png");
+        Weapon weapon = new Weapon(0, 0, "dagger.png", "Dagger", 20);
 
         // Place Weapon on GameBoard
         level.getGameBoard().setGameObjectAt(0, 1, weapon);
