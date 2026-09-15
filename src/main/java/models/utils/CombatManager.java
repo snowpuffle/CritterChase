@@ -2,6 +2,7 @@ package models.utils;
 
 import models.entities.Enemy;
 import models.entities.Player;
+import models.objects.Weapon;
 
 // CombatManager Handles Player Combat and Weapon Attacks
 public class CombatManager {
@@ -16,38 +17,42 @@ public class CombatManager {
         this.enemyManager = enemyManager;
     }
 
-    // Attempt to Attack an Enemy at the Target Position
+    // Attack Enemy at Requested Position
     public boolean attack(int row, int col) {
 
-        // Player Must Have a Weapon to Attack
+        // Check if Player Has a Weapon
         if (!player.hasWeapon()) {
             return false;
         }
 
-        // Get Enemy at Target Position
+        // Get Enemy at Requested Position
         Enemy enemy = enemyManager.getEnemyAt(row, col);
 
-        // Return False When No Enemy Is at Target Position
+        // Check if Enemy Exists
         if (enemy == null) {
             return false;
         }
 
-        // Deal Weapon Damage to Enemy
-        int damage = player.getWeapon().getDamage();
+        // Get Equipped Weapon
+        Weapon weapon = player.getWeapon();
 
-        // Use One Weapon Charge
-        if (!player.useWeapon()) {
+        // Check if Weapon Can Be Used
+        if (!weapon.canBeUsed()) {
             return false;
         }
 
-        enemy.takeDamage(damage);
+        // Attack Enemy
+        enemy.takeDamage(weapon.getDamage());
 
-        // Remove Enemy When Health Reaches Zero
-        if (!enemy.getHealth().isAlive()) {
+        // Consume One Weapon Use
+        weapon.consumeUse();
+
+        // Remove Defeated Enemy
+        if (enemy.getHealth().getCurrentHealth() <= 0) {
             enemyManager.removeEnemy(enemy);
         }
 
-        // Return True When Attack Is Successful
+        // Return Successful Attack
         return true;
     }
 }

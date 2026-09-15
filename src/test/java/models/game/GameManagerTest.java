@@ -41,7 +41,9 @@ class GameManagerTest {
                 assertTrue(manager.getGameSession().isStarted());
 
                 // Verify First Level Loaded
-                assertEquals(LevelConfig.getStartingLevel(), manager.getCurrentLevel().getLevelNumber());
+                assertEquals(
+                                LevelConfig.getStartingLevel(),
+                                manager.getCurrentLevel().getLevelNumber());
 
                 // Verify Current Level Exists
                 assertNotNull(manager.getCurrentLevel());
@@ -58,13 +60,15 @@ class GameManagerTest {
                 manager.startGame();
 
                 // Get Current Level
-                var level = manager.getCurrentLevel();
+                Level level = manager.getCurrentLevel();
 
                 // Verify Current Level Exists
                 assertNotNull(level);
 
                 // Verify Level Number Matches Configuration
-                assertEquals(LevelConfig.getStartingLevel(), level.getLevelNumber());
+                assertEquals(
+                                LevelConfig.getStartingLevel(),
+                                level.getLevelNumber());
         }
 
         // Test Valid Player Movement
@@ -115,7 +119,7 @@ class GameManagerTest {
                 assertEquals(GameTurnResult.INVALID_MOVE, result);
         }
 
-        // Test Level Score Transfers To Total Score
+        // Test Final Level Score Transfers To Total Score
         @Test
         void completingLevelTransfersScoreToTotalScore() {
 
@@ -125,8 +129,13 @@ class GameManagerTest {
                 // Start New Game Session
                 manager.startGame();
 
-                // Get Current Level
-                var level = manager.getCurrentLevel();
+                // Create Final Level
+                Level level = LevelFactory.createLevel(
+                                LevelConfig.getFinalLevel(),
+                                new Score());
+
+                // Set Final Level As Current Level
+                manager.getGameSession().setCurrentLevel(level);
 
                 // Add Points To Current Level
                 level.getScore().addPoints(30);
@@ -160,11 +169,13 @@ class GameManagerTest {
                 // Create GameManager Instance
                 GameManager manager = new GameManager();
 
-                // Start Game
+                // Start New Game Session
                 manager.startGame();
 
                 // Create Final Level
-                var finalLevel = LevelFactory.createLevel(LevelConfig.getFinalLevel(), new Score());
+                Level finalLevel = LevelFactory.createLevel(
+                                LevelConfig.getFinalLevel(),
+                                new Score());
 
                 // Set Final Level As Current Level
                 manager.getGameSession().setCurrentLevel(finalLevel);
@@ -240,7 +251,9 @@ class GameManagerTest {
                 assertEquals(0, manager.getScore());
 
                 // Verify Game Returned To First Level
-                assertEquals(LevelConfig.getStartingLevel(), manager.getCurrentLevel().getLevelNumber());
+                assertEquals(
+                                LevelConfig.getStartingLevel(),
+                                manager.getCurrentLevel().getLevelNumber());
 
                 // Verify Game Session Started
                 assertTrue(manager.getGameSession().isStarted());
@@ -285,11 +298,13 @@ class GameManagerTest {
                 int totalMaxScore = manager.getTotalMaxScore();
 
                 // Verify Total Maximum Score Matches Configuration
-                assertEquals(LevelConfig.getTotalMaxScore(), totalMaxScore);
+                assertEquals(
+                                LevelConfig.getTotalMaxScore(),
+                                totalMaxScore);
         }
 
         // Find Exit Position On Game Board
-        private int[] findExitPosition(models.levels.Level level) {
+        private int[] findExitPosition(Level level) {
 
                 // Get Game Board
                 var gameBoard = level.getGameBoard();
@@ -304,7 +319,8 @@ class GameManagerTest {
                                 var object = gameBoard.getGameObjectAt(row, col);
 
                                 // Check If Current Object Is Exit
-                                if (object != null && object.getType() == GameObjectType.EXIT) {
+                                if (object != null
+                                                && object.getType() == GameObjectType.EXIT) {
 
                                         // Return Exit Row And Column
                                         return new int[] { row, col };
@@ -330,36 +346,52 @@ class GameManagerTest {
                 if (isWalkable(gameBoard, exit[0], exit[1] - 1)) {
 
                         // Return Position And Right Direction
-                        return new Object[] { new int[] { exit[0], exit[1] - 1 }, Direction.RIGHT };
+                        return new Object[] {
+                                        new int[] { exit[0], exit[1] - 1 },
+                                        Direction.RIGHT
+                        };
                 }
 
                 // Check Position To Right Of Exit
                 if (isWalkable(gameBoard, exit[0], exit[1] + 1)) {
 
                         // Return Position And Left Direction
-                        return new Object[] { new int[] { exit[0], exit[1] + 1 }, Direction.LEFT };
+                        return new Object[] {
+                                        new int[] { exit[0], exit[1] + 1 },
+                                        Direction.LEFT
+                        };
                 }
 
                 // Check Position Above Exit
                 if (isWalkable(gameBoard, exit[0] - 1, exit[1])) {
 
                         // Return Position And Down Direction
-                        return new Object[] { new int[] { exit[0] - 1, exit[1] }, Direction.DOWN };
+                        return new Object[] {
+                                        new int[] { exit[0] - 1, exit[1] },
+                                        Direction.DOWN
+                        };
                 }
 
                 // Check Position Below Exit
                 if (isWalkable(gameBoard, exit[0] + 1, exit[1])) {
 
                         // Return Position And Up Direction
-                        return new Object[] { new int[] { exit[0] + 1, exit[1] }, Direction.UP };
+                        return new Object[] {
+                                        new int[] { exit[0] + 1, exit[1] },
+                                        Direction.UP
+                        };
                 }
 
                 // Throw Error When Exit Cannot Be Reached
-                throw new IllegalStateException("Exit Has No Walkable Approach.");
+                throw new IllegalStateException(
+                                "Exit Has No Walkable Approach.");
         }
 
         // Check If Board Position Is Walkable
-        private boolean isWalkable(GameBoard gameBoard, int row, int col) {
+        private boolean isWalkable(
+                        GameBoard gameBoard,
+                        int row,
+                        int col) {
 
                 // Reject Positions Outside Game Board
                 if (!gameBoard.isValidPosition(row, col)) {

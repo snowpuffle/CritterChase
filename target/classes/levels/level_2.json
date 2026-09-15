@@ -12,11 +12,12 @@
         "enemy": "/assets/animals/fox.png",
         "wall1": "/assets/walls/tree_2.png",
         "wall2": "/assets/walls/tree_1.png",
-        "exit": "/assets/others/house.png"
+        "exit": "/assets/others/house.png",
+        "weapon": "/assets/weapons/dagger.png"
     },
     "maze": [
         "#####################",
-        "#     #      F#    E#",
+        "#     #W     F#    E#",
         "# ### # ##### # ### #",
         "# #F  #     # #   # #",
         "# # ####### # ### # #",
@@ -30,11 +31,11 @@
         "# ####### ####### # #",
         "#       # E     # # #",
         "# ##### # ##### # # #",
-        "# #   #       #    F#",
+        "# #W  #       #    F#",
         "# # # ### ### # #####",
-        "# # #  F#  F# #     #",
+        "# # #  F#   # #     #",
         "# % ### # # # ##### #",
-        "#F      # #         X",
+        "#F      # #   F     X",
         "#####################"
     ]
 }

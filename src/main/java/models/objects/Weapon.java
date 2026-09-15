@@ -21,14 +21,18 @@ public class Weapon extends GameObject {
         this.usesRemaining = MAX_USES;
     }
 
-    // Use Weapon One Time
-    public boolean use() {
+    // Check if Weapon Can Be Used
+    public boolean canBeUsed() {
+        return usesRemaining > 0;
+    }
+
+    // Consume One Weapon Use
+    public void consumeUse() {
         if (usesRemaining <= 0) {
-            return false;
+            return;
         }
 
         usesRemaining--;
-        return true;
     }
 
     // Check if Weapon Has No Uses Remaining
@@ -44,6 +48,16 @@ public class Weapon extends GameObject {
     // Get Weapon Name
     public String getName() {
         return name;
+    }
+
+    // Get Weapon Uses Remaining
+    public int getUsesRemaining() {
+        return usesRemaining;
+    }
+
+    // Get Weapon Image Path
+    public String getImagePath() {
+        return super.getImagePath();
     }
 
     // Get Weapon Type

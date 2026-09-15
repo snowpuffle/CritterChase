@@ -1,5 +1,6 @@
 package models.levels;
 
+import models.entities.Enemy;
 import models.entities.Player;
 import models.game.GameBoard;
 import models.game.GameBoardConfig;
@@ -105,24 +106,42 @@ public class Level {
         return false;
     }
 
-    // Move Player to Target Position
+    // Move Player
     private boolean movePlayer(int row, int col) {
 
-        // Check Enemy Collision Before Player Movement
-        if (enemyManager.handlePlayerCollision(row, col)) {
+        // Check if Destination Contains an Enemy
+        Enemy enemy = enemyManager.getEnemyAt(row, col);
+
+        if (enemy != null) {
+
+            // Check if Player Has a Usable Weapon
+            if (player.hasWeapon()
+                    && player.getWeapon().canBeUsed()) {
+                return false;
+            }
+
+            // Player Takes Damage From Enemy
+            player.getHealth().takeDamage(enemy.getDamage());
+
+            // Player Cannot Move Into Enemy Position
             return false;
         }
 
-        // Check GameObject Collision Before Player Movement
+        // Check if Player Can Move to Requested Position
         if (!collisionManager.canPlayerMoveTo(row, col)) {
             return false;
         }
 
-        // Move Player to New Position
-        player.setPosition(row, col);
+        // Consume One Weapon Use from Movement
+        if (player.hasWeapon() && player.getWeapon().canBeUsed()) {
+            player.getWeapon().consumeUse();
+        }
 
-        // Collect Weapon at Player Position
-        collectWeapon(row, col);
+        // Collect Weapon at Requested Position
+        collectGameObject(row, col);
+
+        // Update Player Position
+        player.setPosition(row, col);
 
         return true;
     }
@@ -134,8 +153,8 @@ public class Level {
         enemyManager.moveEnemies();
     }
 
-    // Collect Weapon at Player Position
-    private void collectWeapon(int row, int col) {
+    // Collect GameObject at Player Position
+    private void collectGameObject(int row, int col) {
 
         // Get GameObject at Player Position
         GameObject object = gameBoard.getGameObjectAt(row, col);

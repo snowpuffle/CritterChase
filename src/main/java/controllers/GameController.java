@@ -13,6 +13,8 @@ import models.game.GameManager;
 import models.game.GameTurnResult;
 import models.levels.Level;
 import models.utils.Direction;
+import models.entities.Player;
+import models.objects.Weapon;
 
 // GameController Controls Gameplay and User Input
 public class GameController {
@@ -186,15 +188,55 @@ public class GameController {
                 "HEALTH: " + level.getPlayer().getHealth().getCurrentHealth());
 
         // Update Weapon Display
-        weaponLabel.setText("WEAPON:");
+        updateWeaponHUD();
+    }
 
-        if (level.getPlayer().hasWeapon()) {
+    // Update Weapon HUD
+    private void updateWeaponHUD() {
+
+        // Get Current Level
+        Level level = gameManager.getCurrentLevel();
+
+        // Get Current Player
+        Player player = level.getPlayer();
+
+        // Check if Player Has a Usable Weapon
+        if (player.hasWeapon()
+                && player.getWeapon().canBeUsed()) {
+
+            // Get Equipped Weapon
+            Weapon weapon = player.getWeapon();
+
+            // Display Remaining Weapon Uses
+            weaponLabel.setText(
+                    "(" + weapon.getUsesRemaining() + ")");
+
+            // Display Weapon Picture
             weaponImage.setImage(new Image(
                     getClass().getResourceAsStream(
-                            level.getPlayer().getWeapon().getImagePath())));
+                            weapon.getImagePath())));
+
+            // Show Weapon Image and Label
             weaponImage.setVisible(true);
+            weaponImage.setManaged(true);
+
+            weaponLabel.setVisible(true);
+            weaponLabel.setManaged(true);
+
         } else {
+
+            // Display No Usable Weapon
+            weaponLabel.setText("");
+
+            // Clear Weapon Image
+            weaponImage.setImage(null);
+
+            // Hide Weapon Image and Label
             weaponImage.setVisible(false);
+            weaponImage.setManaged(false);
+
+            weaponLabel.setVisible(false);
+            weaponLabel.setManaged(false);
         }
     }
 
@@ -211,6 +253,7 @@ public class GameController {
         }
     }
 
+    // Update Level Background
     private void updateLevelBackground(String backgroundPath) {
         Image image = new Image(
                 getClass().getResourceAsStream(backgroundPath));

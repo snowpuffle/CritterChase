@@ -6,7 +6,10 @@ import models.objects.Weapon;
 // Player Class Represents the Player Object in the Game
 public class Player extends Entity {
 
+    // Player's Equipped Weapon
     private Weapon weapon;
+
+    // Player's Health
     private final Health health;
 
     // Player Constructor
@@ -21,19 +24,9 @@ public class Player extends Entity {
         this.weapon = weapon;
     }
 
-    // Use the Equipped Weapon
-    public boolean useWeapon() {
-        if (weapon == null) {
-            return false;
-        }
-
-        boolean used = weapon.use();
-
-        if (weapon.isBroken()) {
-            weapon = null;
-        }
-
-        return used;
+    // Remove Equipped Weapon
+    public void removeWeapon() {
+        this.weapon = null;
     }
 
     // Check if Player Has a Weapon

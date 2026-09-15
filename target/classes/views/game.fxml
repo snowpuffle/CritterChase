@@ -125,18 +125,26 @@
 
                <children>
 
+                  <!-- Weapon Title -->
                   <Label
-                     fx:id="weaponLabel"
                      styleClass="hud-label"
                      text="WEAPON:" />
 
+                  <!-- Weapon Picture -->
                   <ImageView
                      fx:id="weaponImage"
                      fitHeight="30.0"
                      fitWidth="30.0"
                      pickOnBounds="true"
                      preserveRatio="true"
-                     visible="false" />
+                     visible="false"
+                     managed="false" />
+
+                  <!-- Weapon Uses -->
+                  <Label
+                     fx:id="weaponLabel"
+                     styleClass="hud-label"
+                     text="" />
 
                </children>
             </HBox>

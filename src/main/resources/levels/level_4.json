@@ -12,13 +12,14 @@
         "enemy": "/assets/animals/eagle.png",
         "wall1": "/assets/walls/blue_square.png",
         "wall2": "/assets/walls/cloud.png",
-        "exit": "/assets/others/house.png"
+        "exit": "/assets/others/house.png",
+        "weapon": "/assets/weapons/dagger.png"
     },
     "maze": [
         "#####################",
         "#     #       F     #",
         "# ### # ##### ### # #",
-        "#   # #   F   #   # #",
+        "#   # #   F   #W  # #",
         "### # ##### ### ### #",
         "#   #     #       E #",
         "# ### # # # ### ### #",
@@ -30,7 +31,7 @@
         "### ### # # ####### #",
         "# F   # #F#   #     #",
         "# ### # # # ### ### #",
-        "#   # #       # #   #",
+        "#  W# #       # #   #",
         "# # # ##### # # # # #",
         "# #   F   # #   E # #",
         "# ### ### # ##### ###",

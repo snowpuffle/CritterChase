@@ -53,11 +53,13 @@ public class GameManager {
 
         // Reject Turns After Game Over
         if (isGameOver()) {
+
             return GameTurnResult.INVALID_MOVE;
         }
 
         // Reject Turns After Game Won
         if (isGameWon()) {
+
             return GameTurnResult.INVALID_MOVE;
         }
 
