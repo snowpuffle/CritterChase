@@ -12,7 +12,8 @@
         "enemy": "/assets/animals/shark.png",
         "wall1": "/assets/walls/wave.png",
         "wall2": "/assets/walls/coral.png",
-        "exit": "/assets/others/house.png"
+        "exit": "/assets/others/house.png",
+        "weapon": "/assets/weapons/dagger.png"
     },
     "maze": [
         "#####################",

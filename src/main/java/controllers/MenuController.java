@@ -1,5 +1,6 @@
 package controllers;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
@@ -37,6 +38,6 @@ public class MenuController {
     // Handle the Exit Button Click Event
     @FXML
     private void handleExit() {
-        System.out.println("Exit clicked!");
+        Platform.exit();
     }
 }
